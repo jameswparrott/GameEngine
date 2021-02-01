@@ -13,6 +13,7 @@ import main.engine.rendering.Mesh;
 import main.engine.rendering.Texture;
 import main.engine.rendering.meshLoading.PrimitiveModel2D;
 import main.engine.rendering.meshLoading.PrimitiveModel2D.Primitive2D;
+import main.engine.rendering.meshLoading.Terrain;
 
 public class TestGame extends Game {
 	
@@ -22,7 +23,7 @@ public class TestGame extends Game {
 	
 	public void init() {
 		
-		player = new Player(new Vector3D(16, 0.475f, 16));
+		player = new Player(new Vector3D(0, 0.475f, 0));
 		
 		addObject(player);
 		
@@ -34,19 +35,31 @@ public class TestGame extends Game {
 //		
 //		addObject(ss);
 		
-		GameObject planeObject = new GameObject();
+		GameObject terrainObject = new GameObject();
+		
+		Terrain terrain = new Terrain(-10, -10, 10, 10, 1, 20, 0, 0);
+		
+		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 2f, new Texture("tiledfloor_normal.png"));
+		
+		MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
+		
+		terrainObject.addComponent(terrainRenderer);
+		
+		addObject(terrainObject);
+		
+		//GameObject planeObject = new GameObject();
 		
 		//Material planeMaterial = new Material(new Texture("008-brownstone.png"), 1, 8, new Texture("008-brownstone_normal.png"));
 		
-		Material planeMaterial = new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"));
+		//Material planeMaterial = new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"));
 		
-		PrimitiveModel2D plane = new PrimitiveModel2D(Primitive2D.rectangle, new Vector3D(16, 0, 16), 1f, 1f, true, false, true, false);
+		//PrimitiveModel2D plane = new PrimitiveModel2D(Primitive2D.rectangle, new Vector3D(16, 0, 16), 1f, 1f, true, false, true, false);
 		
-		MeshRenderer planeRenderer = new MeshRenderer(plane.getMesh(), planeMaterial);
+		//MeshRenderer planeRenderer = new MeshRenderer(plane.getMesh(), planeMaterial);
 		
-		planeObject.addComponent(planeRenderer);
+		//planeObject.addComponent(planeRenderer);
 		
-		addObject(planeObject);
+		//addObject(planeObject);
 		
 		GameObject monkeyObject = new GameObject();
 		
@@ -60,7 +73,7 @@ public class TestGame extends Game {
 		
 		monkeyObject.addComponent(monkeyRenderer);
 		
-		monkeyObject.getTransform().setPos(16, 1 , 15);
+		monkeyObject.getTransform().setPos(0, 5, 0);
 		
 		monkeyObject.getTransform().setScale(0.5f, 0.5f, 0.5f);
 		
@@ -72,7 +85,7 @@ public class TestGame extends Game {
 		
 		pointLightObject.addComponent(pointLight);
 		
-		pointLightObject.getTransform().setPos(16, 1.5f, 16);
+		pointLightObject.getTransform().setPos(0, 1.0f, 0);
 		
 		addObject(pointLightObject);
 		

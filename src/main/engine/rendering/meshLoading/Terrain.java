@@ -2,47 +2,98 @@ package main.engine.rendering.meshLoading;
 
 import java.util.ArrayList;
 
+import main.engine.core.Util;
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
+import main.engine.rendering.Mesh;
 import main.engine.rendering.Vertex;
 
 public class Terrain {
-	
-	//private HashMap<Vector3D, >
 	
 	private ArrayList<Vertex> vertices;
 	
 	private ArrayList<Integer> indices;
 	
-	private Vector2D texCoords1 = new Vector2D(0, 0);
+	private Mesh mesh;
 	
-	private Vector2D texCoords2 = new Vector2D(1, 0);
-	
-	private Vector2D texCoords3 = new Vector2D(0, 1);
-	
-	private Vector2D texCoords4 = new Vector2D(1, 1);
-	
-	public Terrain(Vector2D start, Vector2D end, float width, float depth, float minHeight, float maxHeight) {
+	public Terrain(int x_start, int z_start, int x_end, int z_end, int width, int texDensity, float minHeight, float maxHeight) {
 		
-		int x = (int) ((end.getX() - start.getX()) / width);
+		vertices = new ArrayList<Vertex>();
 		
-		int z = (int) ((end.getY() - start.getY()) / depth);
+		indices = new ArrayList<Integer>();
 		
-		for (int i = 0; i < x; i ++) {
+		System.out.println("Loading terrain...");
+		
+		int ncols = (int) ((x_end - x_start + 1)/ width);
+		
+		int nrows = (int) ((z_end - z_start + 1)/ width);
+		
+		for (int i = 0; i < ncols; i ++) {
 			
-			for (int j = 0; j < z; j ++) {
+			for (int j = 0; j < nrows; j ++) {
 				
-				vertices.add(new Vertex(new Vector3D(start.getX() + i * width, 0, start.getY() + j * depth), texCoords1));
+				vertices.add(
+						new Vertex(
+								new Vector3D(x_start + i * width, (float) Math.random(), z_start + j * width), 
+								new Vector2D((float) texDensity * i/ (float) ncols, (float) texDensity * j/ (float) nrows)));
 				
-				vertices.add(new Vertex(new Vector3D(start.getX() + (i + 1) * width, 0, start.getY() + j * depth), texCoords2));
-				
-				vertices.add(new Vertex(new Vector3D(start.getX() + i * width, 0, start.getY() + (j + 1) * depth), texCoords3));
-				
-				vertices.add(new Vertex(new Vector3D(start.getX() + (i + 1) * width, 0, start.getY() + (j + 1) * depth), texCoords4));
+				if (i < ncols - 1 && j < nrows - 1) {
+					
+					//First triangle
+					
+					indices.add((i + 1) * nrows + j);
+					
+					indices.add(i * nrows + j);
+					
+					indices.add(i * nrows + j + 1);
+					
+					//Second triangle
+					
+					indices.add(i * nrows + j + 1);
+					
+					indices.add((i + 1) * nrows + j + 1);
+					
+					indices.add((i + 1) * nrows + j);
+					
+				}
 				
 			}
 			
 		}
+		
+//		for (int i = 0; i < vertices.size(); i ++) {
+//			
+//			System.out.println("Position:" + vertices.get(i).getPos().toString());
+//			
+//			System.out.println("Normal:" + vertices.get(i).getNormal());
+//			
+//		}
+//		
+//		for (int i = 0; i < indices.size(); i ++) {
+//			
+//			System.out.println("Index" + indices.get(i));
+//			
+//		}
+		
+		Vertex[] vertArray = new Vertex[vertices.size()];
+		
+		int[] intArray = new int[indices.size()];
+		
+		Integer[] integerArray = new Integer[indices.size()];
+		
+		vertices.toArray(vertArray);
+		
+		indices.toArray(integerArray);
+		
+		intArray = Util.toIntArray(integerArray);
+		
+		mesh = new Mesh(vertArray, intArray, true);
+		
+	}
+	
+	public Mesh getMesh() {
+		
+		return this.mesh;
 		
 	}
 
