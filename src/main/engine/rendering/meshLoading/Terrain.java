@@ -16,7 +16,13 @@ public class Terrain {
 	
 	private Mesh mesh;
 	
-	public Terrain(int x_start, int z_start, int x_end, int z_end, int width, int texDensity, float minHeight, float maxHeight) {
+	public Terrain(int x_start, int z_start, int x_end, int z_end, float width) {
+		
+		//-5, -5, 5, 5, 0.1f, 40, 0, 0
+		
+	}
+	
+	public Terrain(int x_start, int z_start, int x_end, int z_end, float width, float minHeight, float maxHeight) {
 		
 		vertices = new ArrayList<Vertex>();
 		
@@ -28,13 +34,15 @@ public class Terrain {
 		
 		int nrows = (int) ((z_end - z_start + 1)/ width);
 		
+		int texDensity = (int) ((x_end - x_start) * 20 * width);
+		
 		for (int i = 0; i < ncols; i ++) {
 			
 			for (int j = 0; j < nrows; j ++) {
 				
 				vertices.add(
 						new Vertex(
-								new Vector3D(x_start + i * width, (float) Math.random(), z_start + j * width), 
+								new Vector3D(x_start + i * width, 0.15f * (float) Math.random(), z_start + j * width), 
 								new Vector2D((float) texDensity * i/ (float) ncols, (float) texDensity * j/ (float) nrows)));
 				
 				if (i < ncols - 1 && j < nrows - 1) {

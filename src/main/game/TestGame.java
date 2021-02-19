@@ -37,7 +37,7 @@ public class TestGame extends Game {
 		
 		GameObject terrainObject = new GameObject();
 		
-		Terrain terrain = new Terrain(-10, -10, 10, 10, 1, 20, 0, 0);
+		Terrain terrain = new Terrain(-5, -5, 5, 5, 0.1f, 0, 0);
 		
 		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 2f, new Texture("tiledfloor_normal.png"));
 		

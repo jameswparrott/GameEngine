@@ -13,17 +13,23 @@ public class Texture {
 
 	private int id;
 	
+	private int width;
+	
+	private int height;
+	
 	public Texture(String fileName) {
 		
-		this(loadTexture(fileName));
+		//this(loadTexture(fileName));
+		
+		this.id = loadTexture(fileName);
 		
 	}
 	
-	public Texture(int id) {
-		
-		this.id = id;
-			
-	}
+//	public Texture(int id) {
+//		
+//		this.id = id;
+//			
+//	}
 	
 	public void bind() {
 		
@@ -48,11 +54,11 @@ public class Texture {
 	}
 
     
-    private static int loadTexture(String file) {
+    private int loadTexture(String file) {
     	
         ByteBuffer image;
         
-        int width, height, id;
+        int id;
         
         String path = "./res/textures/" + file;
         
@@ -101,6 +107,19 @@ public class Texture {
             }
         
         return id;
+        
+    }
+    
+    public int getWidth() {
+    	
+    	return this.width;
+    	
+    }
+    
+    public int getHeight() {
+    	
+    	return this.height;
+    	
     }
 	
     public void delete() {

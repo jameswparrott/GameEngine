@@ -47,7 +47,7 @@ public class RenderingEngine {
 		
 		//mainCamera = new Camera((float) Math.toRadians(70.0f), (float) CoreEngine.getWidth() / (float) CoreEngine.getHeight(), 0.01f, 1000.0f);
 		
-		ambientLight = new Vector3D(0.5f, 0.5f, 0.5f);
+		ambientLight = new Vector3D(0.0f, 0.0f, 0.0f);
 		
 		lights = new ArrayList<BaseLight>();
 		
