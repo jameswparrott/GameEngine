@@ -109,6 +109,8 @@ public class RenderingEngine {
 		
 		glDisable(GL_BLEND);
 		
+		//Move back into main core loop
+		
 		glfwSwapBuffers(CoreEngine.getWindow());
 		
 		glfwPollEvents();

@@ -1,0 +1,50 @@
+package main.engine.rendering;
+
+import main.engine.core.Matrix4x4;
+import main.engine.core.Transform;
+
+public class HudShader extends Shader{
+
+	public static final HudShader instance = new HudShader();
+	
+	public static HudShader getInstance() {
+		
+		return instance;
+		
+	}
+	
+	public HudShader() {
+		
+		super();
+		
+		addVertexShaderFromFile("hud.vs");
+		
+		addFragmentShaderFromFile("hud.fs");
+		
+		compileShader();
+		
+		addUniform("MVP");
+		
+		addUniform("texture_sampler");
+		
+		addUniform("baseColor");
+		
+	}
+	
+	public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
+		
+		Matrix4x4 world = transform.getTransformation();
+		
+		//Change to orthographic projection
+		
+		Matrix4x4 orthographic = renderingEngine.getMainCamera().getViewProjection().mult(world);
+			
+		material.getTexture("diffuse").bind(0);
+		
+		setUniform("MVP", orthographic);
+		
+		setUniform("ambientIntensity", renderingEngine.getAmbientLight());
+		
+	}
+	
+}

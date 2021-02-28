@@ -58,6 +58,16 @@ public class GameObject {
 		
 	}
 	
+	public void removeComponent(GameComponent component) {
+		
+		if (components.contains(component)) {
+			
+			components.remove(component);
+			
+		}
+		
+	}
+	
 	public void input(float delta) {
 		
 		transform.update();
