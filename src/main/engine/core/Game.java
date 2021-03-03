@@ -1,10 +1,13 @@
 package main.engine.core;
 
 import main.engine.rendering.RenderingEngine;
+import main.game.Hud;
 
 public abstract class Game {
 	
 	private GameObject root;
+	
+	private Hud hud = new Hud();
 	
 	public void init() {
 		
@@ -26,7 +29,7 @@ public abstract class Game {
 	
 	public void render(RenderingEngine renderingEngine) {
 		
-		renderingEngine.render(getRootObject());
+		renderingEngine.render(getRootObject(), hud);
 		
 	}
 	

@@ -37,7 +37,7 @@ public class HudShader extends Shader{
 		
 		//Change to orthographic projection
 		
-		Matrix4x4 orthographic = renderingEngine.getMainCamera().getViewProjection().mult(world);
+		Matrix4x4 orthographic = renderingEngine.getOrthogonal().mult(world);
 			
 		material.getTexture("diffuse").bind(0);
 		
