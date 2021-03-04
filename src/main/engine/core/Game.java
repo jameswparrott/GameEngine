@@ -30,7 +30,7 @@ public abstract class Game {
 	
 	public void render(RenderingEngine renderingEngine) {
 		
-		//Yuck, but what to do when there are other things to render besides the gameworld..?
+		//Yuck, but what to do when there are other things to render besides the gameworld?
 		renderingEngine.render(getRootObject(), hud);
 		
 	}
