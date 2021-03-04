@@ -143,7 +143,7 @@ public class RenderingEngine {
 		
 	}
 	
-	public void render(GameObject object, IHud hud) {
+	public void render(GameObject object, GameObject hudObject) {
 		
 		clearScreen();
 		
@@ -189,7 +189,7 @@ public class RenderingEngine {
 		
 		Shader hudShader = HudShader.getInstance();
 		
-		hud.getRootObject().render(hudShader, this);
+		hudObject.render(hudShader, this);
 		
 		glDepthFunc(GL_LESS);
 		

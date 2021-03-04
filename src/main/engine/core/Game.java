@@ -1,18 +1,14 @@
 package main.engine.core;
 
 import main.engine.rendering.RenderingEngine;
-import main.game.Hud;
 
 public abstract class Game {
 	
 	private GameObject root;
 	
-	//Probably not a good way of doing this...
-	private Hud hud = new Hud();
+	private GameObject hudRoot;
 	
 	public void init() {
-		
-		
 		
 	}
 	
@@ -20,24 +16,33 @@ public abstract class Game {
 		
 		getRootObject().input(delta);
 		
+		getHudRoot().update(delta);
+		
 	}
 	
 	public void update(float delta) {
 		
 		getRootObject().update(delta);
 		
+		getHudRoot().update(delta);
+		
 	}
 	
 	public void render(RenderingEngine renderingEngine) {
-		
-		//Yuck, but what to do when there are other things to render besides the gameworld?
-		renderingEngine.render(getRootObject(), hud);
+
+		renderingEngine.render(getRootObject(), getHudRoot());
 		
 	}
 	
 	public void addObject(GameObject gameObject) {
 		
 		getRootObject().addChild(gameObject);
+		
+	}
+	
+	public void addHudObject(GameObject hudObject) {
+		
+		getHudRoot().addChild(hudObject);
 		
 	}
 	
@@ -48,6 +53,16 @@ public abstract class Game {
 			root = new GameObject();
 		
 		return root;
+		
+	}
+	
+	private GameObject getHudRoot() {
+		
+		if(hudRoot == null)
+			
+			root = new GameObject();
+		
+		return hudRoot;
 		
 	}
 	
