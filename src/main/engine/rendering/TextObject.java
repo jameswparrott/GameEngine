@@ -43,7 +43,7 @@ public class TextObject extends GameObject{
 		
 		textRenderer = new MeshRenderer(textMesh, textMaterial);
 		
-		this.addComponent(textRenderer);
+		addComponent(textRenderer);
 		
 	}
 	
@@ -60,6 +60,12 @@ public class TextObject extends GameObject{
 			e.printStackTrace();
 			
 		}
+		
+//		for (int i = 0; i < result.length; i ++) {
+//		
+//			System.out.println(result[i]);
+//		
+//		}
 		
 		return result;
 		

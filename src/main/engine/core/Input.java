@@ -42,6 +42,8 @@ public class Input {
 		
 	}
 	
+	//TODO: Sticky key support with glfwSetInputMode
+	
 	public static boolean getKey(int keyCode) {
 				
 		return keys[keyCode];
@@ -165,6 +167,8 @@ public class Input {
 		glfwSetCursorPos(CoreEngine.getWindow(), pos.getX(), pos.getY());
 		
 	}
+	
+	//TODO: Clean up this cursor mess(ONE method for disabling the cursor, and ONE method for enabling the cursor)
 
 	public static void disableCursor(boolean enabled) {
 		

@@ -60,7 +60,7 @@ public abstract class Game {
 		
 		if(hudRoot == null)
 			
-			root = new GameObject();
+			hudRoot = new GameObject();
 		
 		return hudRoot;
 		

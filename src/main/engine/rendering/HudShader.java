@@ -33,6 +33,8 @@ public class HudShader extends Shader{
 	
 	public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
 		
+		//TODO: Fix projection!!
+		
 		Matrix4x4 world = transform.getTransformation();
 		
 		//Change to orthographic projection
@@ -43,7 +45,9 @@ public class HudShader extends Shader{
 		
 		setUniform("MVP", orthographic);
 		
-		setUniform("ambientIntensity", renderingEngine.getAmbientLight());
+		//TODO: find a good way to pass in a shading color
+		
+		setUniform("baseColor", renderingEngine.getAmbientLight());
 		
 	}
 	

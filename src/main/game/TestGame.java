@@ -3,16 +3,14 @@ package main.game;
 import main.engine.components.DirectionalLight;
 import main.engine.components.MeshRenderer;
 import main.engine.components.PointLight;
-import main.engine.components.SpotLight;
 import main.engine.core.Game;
 import main.engine.core.GameObject;
 import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
 import main.engine.rendering.Material;
 import main.engine.rendering.Mesh;
+import main.engine.rendering.TextObject;
 import main.engine.rendering.Texture;
-import main.engine.rendering.meshLoading.PrimitiveModel2D;
-import main.engine.rendering.meshLoading.PrimitiveModel2D.Primitive2D;
 import main.engine.rendering.meshLoading.Terrain;
 
 public class TestGame extends Game {
@@ -99,13 +97,23 @@ public class TestGame extends Game {
 		
 		directionalLightObject.getTransform().setRot(new Quaternion(new Vector3D(1, 0, 0), (float) -Math.toRadians(45.0)));
 		
-		GameObject playerSpot = new GameObject();
+//		GameObject playerSpot = new GameObject();
+//		
+//		SpotLight spot = new SpotLight(new Vector3D(1, 1, 1), 0.1f, new Vector3D(0, 0, 0.1f), 0.9f);
+//		
+//		playerSpot.addComponent(spot);
+//		
+//		player.addChild(playerSpot);
 		
-		SpotLight spot = new SpotLight(new Vector3D(1, 1, 1), 0.1f, new Vector3D(0, 0, 0.1f), 0.9f);
+		//TODO: Find out why object isn't rendering
 		
-		playerSpot.addComponent(spot);
+		GameObject textObject = new TextObject("TEST TEXT", "AdventurerFont.png", 1, 1);
 		
-		player.addChild(playerSpot);
+		textObject.getTransform().setScale(10, 10, 10);
+		
+		//addHudObject(textObject);
+		
+		addObject(textObject);
 		
 	}
 	
