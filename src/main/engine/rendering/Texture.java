@@ -21,7 +21,7 @@ public class Texture {
 		
 		//this(loadTexture(fileName));
 		
-		this.id = loadTexture(fileName);
+		loadTexture(fileName);
 		
 	}
 	
@@ -54,11 +54,9 @@ public class Texture {
 	}
 
     
-    private int loadTexture(String file) {
+    private void loadTexture(String file) {
     	
         ByteBuffer image;
-        
-        int id;
         
         String path = "./res/textures/" + file;
         
@@ -105,8 +103,6 @@ public class Texture {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 			
             }
-        
-        return id;
         
     }
     

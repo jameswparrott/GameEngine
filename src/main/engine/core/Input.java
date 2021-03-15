@@ -10,6 +10,10 @@ public class Input {
 		
 	private static boolean hideCursor = false;
 	
+	private static int width, height;
+	
+	private static boolean updateWindowSize = false;
+	
 	private static short NUM_KEYS = 348;
 	
 	private static byte NUM_BUTTONS = 5;
@@ -109,6 +113,22 @@ public class Input {
 			buttons[i] = false;
 			
 		}
+		
+	}
+	
+	//TODO: Use callback
+	
+	public static void windowSizeInput() {
+		
+		glfwSetWindowSizeCallback(CoreEngine.getWindow(), (window, w, h) -> {
+			
+			if( width != w || height != h) {
+				
+				updateWindowSize = true;
+				
+			}
+			
+		});
 		
 	}
 	

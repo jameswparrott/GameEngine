@@ -190,7 +190,7 @@ public class Matrix4x4 {
 		
 	}
 	
-	public Matrix4x4 initOrthogonal(float left, float right, float bottom, float top, float near, float far) {
+	public Matrix4x4 initOrthographic(float left, float right, float bottom, float top, float near, float far) {
 		
 		float width = right - left;
 		
@@ -212,13 +212,45 @@ public class Matrix4x4 {
 		
 		m[1][1] = 2/height;
 		
-		m[2][2] = -2/depth;
+		//Positive value because fuck screen coordinates
+		
+		m[2][2] = 2/depth;
 		
 		m[0][3] = -(right + left)/width;
 		
 		m[1][3] = -(top + bottom)/height;
 		
 		m[2][3] = -(far + near)/depth;
+		
+		m[3][3] = 1;
+		
+		return this;
+		
+	}
+	
+	public Matrix4x4 initOrthoScale(float left, float right, float bottom, float top, float near, float far) {
+		
+		float width = right - left;
+		
+		float height = top - bottom;
+		
+		float depth = far - near;
+		
+		for (byte i = 0; i < 4; i++) {
+			
+			for (byte j = 0; j < 4; j++) {
+					
+					m[i][j] = 0;
+				
+			}
+			
+		}
+		
+		m[0][0] = 2/width;
+		
+		m[1][1] = 2/height;
+		
+		m[2][2] = 2/depth;
 		
 		m[3][3] = 1;
 		
@@ -357,6 +389,27 @@ public class Matrix4x4 {
 	public void set(int x, int y, float val) {
 		
 		m[x][y] = val;
+		
+	}
+	
+	public void print() {
+		
+		for (byte i = 0; i < 4; i++) {
+			
+			System.out.print("[");
+			
+			for (byte j = 0; j < 4; j++) {
+					
+					System.out.print(m[i][j]);
+					
+					if (j < 3)
+						System.out.print(", ");
+				
+			}
+			
+			System.out.println("]");
+			
+		}
 		
 	}
 	

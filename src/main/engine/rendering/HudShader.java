@@ -27,8 +27,6 @@ public class HudShader extends Shader{
 		
 		addUniform("texture_sampler");
 		
-		addUniform("baseColor");
-		
 	}
 	
 	public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
@@ -37,17 +35,25 @@ public class HudShader extends Shader{
 		
 		Matrix4x4 world = transform.getTransformation();
 		
-		//Change to orthographic projection
-		
 		Matrix4x4 orthographic = renderingEngine.getOrthogonal().mult(world);
 			
 		material.getTexture("diffuse").bind(0);
 		
 		setUniform("MVP", orthographic);
 		
-		//TODO: find a good way to pass in a shading color
+//		System.out.println("Hud world matrix: ");
+//		
+//		world.print();
+//		
+//		System.out.println("Hud orthographic matrix: ");
+//		
+//		renderingEngine.getOrthogonal().print();
+//		
+//		System.out.println("Hud multiplied matrix: ");
+//		
+//		orthographic.print();
 		
-		setUniform("baseColor", renderingEngine.getAmbientLight());
+		//TODO: find a good way to pass in a shading color
 		
 	}
 	

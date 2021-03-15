@@ -35,7 +35,19 @@ public class ForwardAmbient extends Shader{
 		
 		Matrix4x4 world = transform.getTransformation();
 		
+		//System.out.println("Ambient world matrix: ");
+		
+		//world.print();
+		
+		//System.out.println("Ambient projected matrix: ");
+		
+		//renderingEngine.getMainCamera().getViewProjection().print();
+		
 		Matrix4x4 projected = renderingEngine.getMainCamera().getViewProjection().mult(world);
+		
+		//System.out.println("Ambient multiplied matrix: ");
+		
+		//projected.print();
 			
 		material.getTexture("diffuse").bind(0);
 		

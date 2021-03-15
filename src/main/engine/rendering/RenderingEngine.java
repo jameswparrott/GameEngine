@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_EQUAL;
 import static org.lwjgl.opengl.GL11.GL_LESS;
 import static org.lwjgl.opengl.GL11.GL_ONE;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -26,6 +27,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glFrontFace;
 import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
+import static org.lwjgl.opengl.GL32.GL_FRAMEBUFFER_SRGB;
 
 import java.util.ArrayList;
 
@@ -40,7 +42,7 @@ public class RenderingEngine {
 	
 	private Camera mainCamera;
 	
-	private Matrix4x4 orthogonal;
+	private Matrix4x4 orthographic;
 	
 	private Vector3D ambientLight;
 	
@@ -60,26 +62,19 @@ public class RenderingEngine {
 		
 		glEnable(GL_DEPTH_TEST);
 		
-//		glEnable(GL_BLEND);
-//		
-//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
 		glEnable(GL_DEPTH_CLAMP);
 		
-		//glEnable(GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 		
-		//glEnable(GL_FRAMEBUFFER_SRGB);
+		glEnable(GL_FRAMEBUFFER_SRGB);
 		
 		//mainCamera = new Camera((float) Math.toRadians(70.0f), (float) CoreEngine.getWidth() / (float) CoreEngine.getHeight(), 0.01f, 1000.0f);
 		
-		ambientLight = new Vector3D(0.0f, 0.0f, 0.0f);
+		ambientLight = new Vector3D(0.05f, 0.05f, 0.05f);
 		
 		lights = new ArrayList<BaseLight>();
 		
-		orthogonal = new Matrix4x4().initOrthogonal(-CoreEngine.getWidth()/2, 
-													CoreEngine.getWidth()/2, 
-													-CoreEngine.getHeight()/2, 
-													CoreEngine.getHeight()/2, 0, 0);
+		orthographic = new Matrix4x4().initOrthographic(0, CoreEngine.getWidth(), 0, CoreEngine.getHeight(), -1, 1);
 		
 	}
 	
@@ -95,14 +90,6 @@ public class RenderingEngine {
 		
 		lights.clear();
 		
-		//glEnable(GL_BLEND);
-		
-		//Use only for sprites!
-		
-		//glEnable(GL_BLEND);
-		
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
 		object.addToRenderingEngine(this);
 		
 		Shader forwardAmbient = ForwardAmbient.getInstance();
@@ -110,14 +97,6 @@ public class RenderingEngine {
 		object.render(forwardAmbient, this);
 		
 		glEnable(GL_BLEND);
-		
-		//glBlendFunc(GL_ONE, GL_ONE);
-		
-		//glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		
-		//glBlendFunc(GL_SRC_ALPHA, GL_EQUAL);
 		
 		glBlendFunc(GL_ONE, GL_ONE);
 		
@@ -149,14 +128,6 @@ public class RenderingEngine {
 		
 		lights.clear();
 		
-		//glEnable(GL_BLEND);
-		
-		//Use only for sprites!
-		
-		//glEnable(GL_BLEND);
-		
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
 		object.addToRenderingEngine(this);
 		
 		Shader forwardAmbient = ForwardAmbient.getInstance();
@@ -164,14 +135,6 @@ public class RenderingEngine {
 		object.render(forwardAmbient, this);
 		
 		glEnable(GL_BLEND);
-		
-		//glBlendFunc(GL_ONE, GL_ONE);
-		
-		//glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		
-		//glBlendFunc(GL_SRC_ALPHA, GL_EQUAL);
 		
 		glBlendFunc(GL_ONE, GL_ONE);
 		
@@ -187,13 +150,15 @@ public class RenderingEngine {
 			
 		}
 		
-		Shader hudShader = HudShader.getInstance();
-		
-		hudObject.render(hudShader, this);
-		
 		glDepthFunc(GL_LESS);
 		
 		glDepthMask(true);
+		
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		
+		Shader hudShader = HudShader.getInstance();
+		
+		hudObject.render(hudShader, this);
 		
 		glDisable(GL_BLEND);
 		
@@ -274,7 +239,7 @@ public class RenderingEngine {
 	
 	public Matrix4x4 getOrthogonal() {
 		
-		return this.orthogonal;
+		return this.orthographic;
 		
 	}
 

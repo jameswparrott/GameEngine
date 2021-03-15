@@ -33,31 +33,31 @@ public class TestGame extends Game {
 //		
 //		addObject(ss);
 		
-		GameObject terrainObject = new GameObject();
+//		GameObject terrainObject = new GameObject();
+//		
+//		Terrain terrain = new Terrain(-5, -5, 5, 5, 0.1f, 0, 0);
+//		
+//		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 2f, new Texture("tiledfloor_normal.png"));
+//		
+//		MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
+//		
+//		terrainObject.addComponent(terrainRenderer);
+//		
+//		addObject(terrainObject);
 		
-		Terrain terrain = new Terrain(-5, -5, 5, 5, 0.1f, 0, 0);
-		
-		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 2f, new Texture("tiledfloor_normal.png"));
-		
-		MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
-		
-		terrainObject.addComponent(terrainRenderer);
-		
-		addObject(terrainObject);
-		
-		//GameObject planeObject = new GameObject();
-		
-		//Material planeMaterial = new Material(new Texture("008-brownstone.png"), 1, 8, new Texture("008-brownstone_normal.png"));
-		
-		//Material planeMaterial = new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"));
-		
-		//PrimitiveModel2D plane = new PrimitiveModel2D(Primitive2D.rectangle, new Vector3D(16, 0, 16), 1f, 1f, true, false, true, false);
-		
-		//MeshRenderer planeRenderer = new MeshRenderer(plane.getMesh(), planeMaterial);
-		
-		//planeObject.addComponent(planeRenderer);
-		
-		//addObject(planeObject);
+//		GameObject planeObject = new GameObject();
+//		
+//		Material planeMaterial = new Material(new Texture("008-brownstone.png"), 1, 8, new Texture("008-brownstone_normal.png"));
+//		
+//		Material planeMaterial = new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.jpg"));
+//		
+//		PrimitiveModel2D plane = new PrimitiveModel2D(Primitive2D.rectangle, new Vector3D(16, 0, 16), 1f, 1f, true, false, true, false);
+//		
+//		MeshRenderer planeRenderer = new MeshRenderer(plane.getMesh(), planeMaterial);
+//		
+//		planeObject.addComponent(planeRenderer);
+//		
+//		addObject(planeObject);
 		
 		GameObject monkeyObject = new GameObject();
 		
@@ -70,10 +70,6 @@ public class TestGame extends Game {
 		MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
 		
 		monkeyObject.addComponent(monkeyRenderer);
-		
-		monkeyObject.getTransform().setPos(0, 5, 0);
-		
-		monkeyObject.getTransform().setScale(0.5f, 0.5f, 0.5f);
 		
 		addObject(monkeyObject);
 		
@@ -107,13 +103,13 @@ public class TestGame extends Game {
 		
 		//TODO: Find out why object isn't rendering
 		
-		GameObject textObject = new TextObject("TEST TEXT", "AdventurerFont.png", 1, 1);
+		GameObject textObject = new TextObject("Bottom Text", "AdventurerFont.png", 16, 16);
 		
-		textObject.getTransform().setScale(10, 10, 10);
+		textObject.getTransform().setPos(400, 200, 0);
 		
-		//addHudObject(textObject);
+		addHudObject(textObject);
 		
-		addObject(textObject);
+		//addObject(textObject);
 		
 	}
 	

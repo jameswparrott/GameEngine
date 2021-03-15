@@ -81,9 +81,9 @@ public class TextObject extends GameObject{
 		
 		ArrayList<Integer> indices = new ArrayList<Integer>();
 		
-		float tileWidth = fontTexture.getWidth() / (float) numCols;
+		float tileWidth = fontTexture.getWidth() / (float) (numCols);
 		
-		float tileHeight = fontTexture.getHeight() / (float) numRows;
+		float tileHeight = fontTexture.getHeight() / (float) (numRows);
 		
 		for(int i = 0; i < numChars; i ++) {
 			
@@ -91,19 +91,28 @@ public class TextObject extends GameObject{
 			
 			int col = nextChar % numCols;
 			
-			int row = nextChar / numCols;
+			int row = numRows - 1 - nextChar / numCols;
+			
+			if (row > numRows || col > numCols) {
+				row = 0;
+				col = 0;
+			}
+			
+			float texWidth = 1.0f / (float) numCols;
+			
+			float texHeight = 1.0f / (float) numRows;
 			
 			vertices.add(new Vertex(new Vector3D( i * tileWidth, 0, ZPOS), 
-									new Vector2D((float) col/ (float) numCols, (float) row/ (float) numRows))); //v0
+									new Vector2D(col * texWidth, row * texHeight))); //v0
 			
 			vertices.add(new Vertex(new Vector3D( i * tileWidth, tileHeight, ZPOS), 
-									new Vector2D((float) col/ (float) numCols, (float) (row + 1)/ (float) numRows))); //v1
+									new Vector2D(col * texWidth, (row + 1) * texHeight))); //v1
 			
-			vertices.add(new Vertex(new Vector3D( i * tileWidth + tileWidth, tileHeight, ZPOS), 
-									new Vector2D((float) (col + 1)/ (float) numCols, (float) (row + 1)/ (float) numRows))); //v2
+			vertices.add(new Vertex(new Vector3D( (i + 1) * tileWidth, tileHeight, ZPOS), 
+									new Vector2D((col + 1) * texWidth, (row + 1) * texHeight))); //v2
 			
-			vertices.add(new Vertex(new Vector3D( i * tileWidth + tileWidth, 0, ZPOS), 
-									new Vector2D((float) (col + 1)/ (float) numCols, (float) row/ (float) numRows))); //v3
+			vertices.add(new Vertex(new Vector3D( (i + 1) * tileWidth, 0, ZPOS), 
+									new Vector2D((col + 1) * texWidth, row * texHeight))); //v3
 			
 			indices.add(i * VERTICES + 3);
 			

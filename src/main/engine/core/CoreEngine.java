@@ -414,6 +414,10 @@ public class CoreEngine {
 		
 		glfwSetErrorCallback(null).free();
 		
+		//Unload library
+		
+		GL.destroy();
+		
 		System.out.println("GLFW terminated.");
 		
 		System.out.println("Exiting system...");
@@ -456,6 +460,18 @@ public class CoreEngine {
 		
 		return new Vector2D(getWidth()/2, getHeight()/2);
 	
+	}
+	
+	public boolean getRunning() {
+		
+		return isRunning;
+		
+	}
+	
+	public void setRunning(boolean isRunning) {
+		
+		this.isRunning = isRunning;
+		
 	}
 	
 }
