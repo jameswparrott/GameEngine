@@ -237,9 +237,15 @@ public class RenderingEngine {
 	
 	}
 	
-	public Matrix4x4 getOrthogonal() {
+	public Matrix4x4 getOrthographic() {
 		
 		return this.orthographic;
+		
+	}
+	
+	public void setOrthographic(int width, int height) {
+		
+		this.orthographic = orthographic.initOrthographic(0, width, 0, height, -1, 1);
 		
 	}
 

@@ -35,7 +35,7 @@ public class HudShader extends Shader{
 		
 		Matrix4x4 world = transform.getTransformation();
 		
-		Matrix4x4 orthographic = renderingEngine.getOrthogonal().mult(world);
+		Matrix4x4 orthographic = renderingEngine.getOrthographic().mult(world);
 			
 		material.getTexture("diffuse").bind(0);
 		

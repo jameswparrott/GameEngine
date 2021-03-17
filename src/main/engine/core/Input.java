@@ -10,9 +10,9 @@ public class Input {
 		
 	private static boolean hideCursor = false;
 	
-	private static int width, height;
+	private static boolean windowUpdate = false;
 	
-	private static boolean updateWindowSize = false;
+	private static int width, height;
 	
 	private static short NUM_KEYS = 348;
 	
@@ -116,15 +116,17 @@ public class Input {
 		
 	}
 	
-	//TODO: Use callback
-	
 	public static void windowSizeInput() {
 		
 		glfwSetWindowSizeCallback(CoreEngine.getWindow(), (window, w, h) -> {
 			
-			if( width != w || height != h) {
+			if( CoreEngine.getWidth() != w || CoreEngine.getHeight() != h) {
 				
-				updateWindowSize = true;
+				width = w; 
+				
+				height = h;
+				
+				windowUpdate = true;
 				
 			}
 			
@@ -165,6 +167,26 @@ public class Input {
 	public static boolean getButtonReleased(int buttonCode) {
 				
 		return !buttons[buttonCode] && lastButtons[buttonCode];
+		
+	}
+	
+	public static Vector2D getWindowSize() {
+		
+		return new Vector2D(width, height);
+		
+	}
+	
+	public static boolean getWindowUpdate() {
+		
+		if (windowUpdate) {
+			
+			windowUpdate = false;
+			
+			return true;
+			
+		}
+		
+		return windowUpdate;
 		
 	}
 	

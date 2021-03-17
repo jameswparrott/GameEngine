@@ -260,6 +260,8 @@ public class CoreEngine {
 		
 		Input.mouseButtonInput();
 		
+		Input.windowSizeInput();
+		
 		isRunning = true;
 		
 	}
@@ -319,6 +321,24 @@ public class CoreEngine {
 				game.update((float) frameTime);
 				
 				Input.update();
+				
+				if(Input.getWindowUpdate()) {
+					
+					System.out.println("Resizing window!");
+					
+					width = (int) Input.getWindowSize().getX();
+					
+					height = (int) Input.getWindowSize().getY();
+					
+					renderingEngine.setOrthographic(width, height);
+					
+					//TODO: Update camera class to add a method for updating the aspect ratio in a nicer way
+					
+					renderingEngine.getMainCamera().getViewProjection().initPerspective((float) Math.toRadians(70.0f), 
+																						(float) width/(float) height, 
+																						0.01f, 1000.0f);
+					
+				}
 				
 				if(frameCount >= 1.0d) {
 					
@@ -431,11 +451,23 @@ public class CoreEngine {
 		return width;
 	
 	}
+	
+	public void setWidth(int width) {
+		
+		this.width = width;
+		
+	}
 
 	public static int getHeight() {
 		
 		return height;
 	
+	}
+	
+	public void setHeight(int height) {
+		
+		this.height = height;
+		
 	}
 
 	public static double getFramerate() {
