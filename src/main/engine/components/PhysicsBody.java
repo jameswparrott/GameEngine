@@ -67,25 +67,11 @@ public class PhysicsBody extends GameComponent {
 	@Override
 	public void update(float delta) {
 		
-		updateVertices();
-		
 		acceleration = getTransform().getPos().sub(pos).scale(1f/delta).sub(velocity).scale(1f/(delta * delta));
 		
 		velocity = getTransform().getPos().sub(pos).scale(1f/delta);
 		
 		pos = getTransform().getPos();
-		
-	}
-	
-	private void updateVertices() {
-		
-		//Does this actually work?
-		
-		for (int i = 0; i < boundary.length; i ++) {
-			
-			boundary[i] = getTransform().getTransformation().transform(boundary[i]);
-			
-		}
 		
 	}
 	

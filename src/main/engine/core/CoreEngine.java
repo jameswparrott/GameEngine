@@ -322,7 +322,7 @@ public class CoreEngine {
 				
 				Input.update();
 				
-				if(Input.getWindowUpdate()) {
+				if(Input.shouldWindowUpdate()) {
 					
 					System.out.println("Resizing window!");
 					
@@ -331,6 +331,8 @@ public class CoreEngine {
 					height = (int) Input.getWindowSize().getY();
 					
 					renderingEngine.setOrthographic(width, height);
+					
+					System.out.println("New size: " + width + "x" + height);
 					
 					//TODO: Update camera class to add a method for updating the aspect ratio in a nicer way
 					

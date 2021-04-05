@@ -20,6 +20,8 @@ public class Bitmap {
         
 		try {
 			
+			//TODO: Replace with stb image methods
+			
 			BufferedImage image = ImageIO.read(new File(path));
 			
 			width = image.getWidth();

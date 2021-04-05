@@ -2,8 +2,10 @@ TODO:
 
 - Need clean up methods for all OpenGL based classes (Shader, mesh, etc.)
 
-- Make window resizable (update orthographic and perspective matrices)
-
 - Proper text rendering with stb lib
 
 - Color text (material)
+
+- Proper terrain (Perlin noise)
+
+- Physics engine

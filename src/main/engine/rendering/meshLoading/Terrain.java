@@ -16,52 +16,85 @@ public class Terrain {
 	
 	private Mesh mesh;
 	
-	public Terrain(int x_start, int z_start, int x_end, int z_end, float width) {
-		
-		//-5, -5, 5, 5, 0.1f, 40, 0, 0
-		
-	}
+	//TODO: Height map, can add different levels of noise
 	
-	public Terrain(int x_start, int z_start, int x_end, int z_end, float width, float minHeight, float maxHeight) {
+	public Terrain(int cellWidth, int gridWidth, int texDensity) {
 		
 		vertices = new ArrayList<Vertex>();
 		
 		indices = new ArrayList<Integer>();
 		
-		System.out.println("Loading terrain...");
+		mesh = perlin2D(cellWidth, gridWidth, vertices, indices);
 		
-		int ncols = (int) ((x_end - x_start + 1)/ width);
+	}
+	
+	public Mesh getMesh() {
 		
-		int nrows = (int) ((z_end - z_start + 1)/ width);
+		return this.mesh;
 		
-		int texDensity = (int) ((x_end - x_start) * 20 * width);
+	}
+	
+	public static Mesh perlin2D(int cellWidth, int gridWidth, ArrayList<Vertex> vertices, ArrayList<Integer> indices) {
 		
-		for (int i = 0; i < ncols; i ++) {
+		int nodeWidth = gridWidth + 1;
+		
+		int nodeSize = nodeWidth * nodeWidth;
+		
+		int mapWidth = cellWidth * gridWidth;
+		
+		float invCell = 1.0f / (float) cellWidth;
+		
+		Vector2D[] node = new Vector2D[nodeSize];
+		
+		for (int i = 0; i < nodeSize; i++) {
 			
-			for (int j = 0; j < nrows; j ++) {
+			node[i] = new Vector2D((float) (2 * Math.random() - 1), (float) (2 * Math.random() - 1));
+			
+			node[i].normalize();
+			
+		}
+		
+		//Offset vectors
+		Vector2D o1 = new Vector2D(0, 0);
+		Vector2D o2 = new Vector2D(0, 0);
+		Vector2D o3 = new Vector2D(0, 0);
+		Vector2D o4 = new Vector2D(0, 0);
+		
+		//Dot product values
+		float d1 = 0;
+		float d2 = 0;
+		float d3 = 0;
+		float d4 = 0;
+		
+		//Final height
+		float height;
+		
+		for (int y = 0; y < gridWidth; y ++) {
+			
+			for (float j = 0; j < 1; j += invCell) {
 				
-				vertices.add(
-						new Vertex(
-								new Vector3D(x_start + i * width, 0.15f * (float) Math.random(), z_start + j * width), 
-								new Vector2D((float) texDensity * i/ (float) ncols, (float) texDensity * j/ (float) nrows)));
-				
-				if (i < ncols - 1 && j < nrows - 1) {
+				for (int x = 0; x < gridWidth; x ++) {
 					
-					//First triangle
-					
-					indices.add((i + 1) * nrows + j);
-					
-					indices.add(i * nrows + j);
-					
-					indices.add(i * nrows + j + 1);
-					
-					//Second triangle
-					
-					indices.add(i * nrows + j + 1);
-					
-					indices.add((i + 1) * nrows + j + 1);
-					
-					indices.add((i + 1) * nrows + j);
+					for (float i = 0; i < 1; i += invCell) {
+						
+						o1.set(i, j);
+						o2.set(i - 1, j);
+						o3.set(i - 1, j - 1);
+						o4.set(i, j - 1);
+						
+						d1 = o1.dot(node[x + (nodeWidth * y)]);
+						d2 = o2.dot(node[x + (nodeWidth * y) + 1]);
+						d3 = o3.dot(node[x + (nodeWidth * y) + nodeWidth + 1]);
+						d4 = o4.dot(node[x + (nodeWidth * y) + nodeWidth]);
+						
+						height = interpCub(	interpCub(d1, d2, i), 
+											interpCub(d4, d3, i), 
+											j);
+						
+						vertices.add(new Vertex(new Vector3D(x + i, height, y + j), 
+												new Vector2D(x + i, y + j)));
+						
+					}
 					
 				}
 				
@@ -69,19 +102,23 @@ public class Terrain {
 			
 		}
 		
-//		for (int i = 0; i < vertices.size(); i ++) {
-//			
-//			System.out.println("Position:" + vertices.get(i).getPos().toString());
-//			
-//			System.out.println("Normal:" + vertices.get(i).getNormal());
-//			
-//		}
-//		
-//		for (int i = 0; i < indices.size(); i ++) {
-//			
-//			System.out.println("Index" + indices.get(i));
-//			
-//		}
+		for (int i = 0; i < mapWidth - 1; i ++) {
+			
+			for (int j = 0; j < mapWidth - 1; j ++) {
+				
+				//Lower triangle
+				indices.add(i + j * mapWidth);
+				indices.add(i + j * mapWidth + mapWidth);
+				indices.add(i + j * mapWidth + mapWidth + 1);
+				
+				//Upper triangle
+				indices.add(i + j * mapWidth + mapWidth + 1);
+				indices.add(i + j * mapWidth + 1);
+				indices.add(i + j * mapWidth);
+				
+			}
+			
+		}
 		
 		Vertex[] vertArray = new Vertex[vertices.size()];
 		
@@ -95,13 +132,25 @@ public class Terrain {
 		
 		intArray = Util.toIntArray(integerArray);
 		
-		mesh = new Mesh(vertArray, intArray, true);
+		return new Mesh(vertArray, intArray, true);
 		
 	}
 	
-	public Mesh getMesh() {
+	private static float interpLin(float a, float b, float s) {
 		
-		return this.mesh;
+		return a + (b - a) * s;
+		
+	}
+	
+	private static float interpCub(float a, float b, float s) {
+		
+		return s * s * (a - b) * (2 * s - 3) + a;
+		
+	}
+	
+	private static float interpQui(float a, float b, float s) {
+		
+		return s * s * s * (b - a) * (6 * s * s - 15 * s + 10) + a;
 		
 	}
 

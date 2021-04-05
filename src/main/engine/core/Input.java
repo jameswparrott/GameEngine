@@ -176,7 +176,7 @@ public class Input {
 		
 	}
 	
-	public static boolean getWindowUpdate() {
+	public static boolean shouldWindowUpdate() {
 		
 		if (windowUpdate) {
 			

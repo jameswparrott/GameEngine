@@ -22,12 +22,6 @@ public class Quaternion {
 		
 	}
 	
-//	public Quaternion() {
-//		
-//		this(0, 0, 0, 1);
-//		
-//	}
-	
 	public Quaternion(Vector3D axis, float angle) {
 		
 		float sinHalfAngle = (float) Math.sin(angle/2);
