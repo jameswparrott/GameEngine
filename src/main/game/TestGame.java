@@ -30,8 +30,9 @@ public class TestGame extends Game {
 //		addObject(ss);
 		
 		GameObject terrainObject = new GameObject();
-		Terrain terrain = new Terrain(20, 10, 100);
-		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 2f, new Texture("tiledfloor_normal.png"));
+		//Terrain terrain = new Terrain(20, 4, 1);
+		Terrain terrain = new Terrain(2, 3);
+		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f, new Texture("tiledfloor_normal.png"));
 		MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
 		terrainObject.addComponent(terrainRenderer);
 		addObject(terrainObject);
@@ -52,7 +53,7 @@ public class TestGame extends Game {
 //		addObject(monkeyObject);
 		
 		GameObject pointLightObject = new GameObject();
-		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0, 0, 0.5f));
+		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 1.0f, 0.25f));
 		pointLightObject.addComponent(pointLight);
 		pointLightObject.getTransform().setPos(0, 1.0f, 0);
 		addObject(pointLightObject);
