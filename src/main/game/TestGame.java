@@ -30,8 +30,11 @@ public class TestGame extends Game {
 //		addObject(ss);
 		
 		GameObject terrainObject = new GameObject();
-		//Terrain terrain = new Terrain(20, 4, 1);
-		Terrain terrain = new Terrain(2, 3);
+		Terrain terrain = new Terrain(30, 300);
+		terrain.addPerlin(1);
+		terrain.addPerlin(2);
+		terrain.addPerlin(1);
+		terrain.genMesh();
 		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f, new Texture("tiledfloor_normal.png"));
 		MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
 		terrainObject.addComponent(terrainRenderer);
@@ -55,11 +58,11 @@ public class TestGame extends Game {
 		GameObject pointLightObject = new GameObject();
 		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 1.0f, 0.25f));
 		pointLightObject.addComponent(pointLight);
-		pointLightObject.getTransform().setPos(0, 1.0f, 0);
+		pointLightObject.getTransform().setPos(0, 0.1f, 0);
 		addObject(pointLightObject);
 		
 		GameObject directionalLightObject = new GameObject();
-		DirectionalLight directionalLight = new DirectionalLight(new Vector3D(0.5f, 0.5f, 0.5f), 1f);
+		DirectionalLight directionalLight = new DirectionalLight(new Vector3D(0.5f, 0.5f, 0.5f), 0.5f);
 		directionalLightObject.addComponent(directionalLight);
 		directionalLightObject.getTransform().setRot(new Quaternion(new Vector3D(1, 0, 0), (float) -Math.toRadians(45.0)));
 		addObject(directionalLightObject);

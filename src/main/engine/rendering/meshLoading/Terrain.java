@@ -16,9 +16,10 @@ public class Terrain {
 	
 	private Mesh mesh;
 	
-	private int gridWidth;
-	private int cellWidth;
 	private int mapWidth;
+	private int subDivis;
+	
+	private float mapSteps;
 	
 	private float[][] heightMap;
 	
@@ -30,20 +31,17 @@ public class Terrain {
 		
 		indices = new ArrayList<Integer>();
 		
-		mesh = perlin2D(cellSubdiv, numCells, cellWidth, vertices, indices);
-		
 	}
 	
 	//TODO: Generate flat terrain, then add to height map with addPerlin
-	public Terrain(int gridWidth, int cellWidth) {
+	public Terrain(int mapWidth, int subDivis) {
 		
-		this.gridWidth = gridWidth;
+		this.mapWidth = mapWidth;
+		this.subDivis = subDivis;
 		
-		this.cellWidth = cellWidth;
+		this.mapSteps = (float) mapWidth / (float) subDivis;
 		
-		mapWidth = gridWidth * cellWidth;
-		
-		heightMap = new float[mapWidth][mapWidth];
+		this.heightMap = new float[subDivis][subDivis];
 		
 		init();
 		
@@ -51,9 +49,9 @@ public class Terrain {
 	
 	private void init() {
 		
-		for (int i = 0; i < mapWidth; i ++) {
+		for (int j = 0; j < subDivis; j ++) {
 			
-			for (int j = 0; j < mapWidth; j ++) {
+			for (int i = 0; i < subDivis; i ++) {
 				
 				heightMap[i][j] = 0.0f;
 				
@@ -63,178 +61,136 @@ public class Terrain {
 		
 	}
 	
-	public void addPerlin(int scale, int max, int min) {
+	//Add a layer of noise
+	public void addPerlin(int scale) {
 		
-		//Add a layer of noise
+		int numCells = mapWidth / scale + 1;
 		
-	}
-	
-	public void genMesh() {
+		int numNodes = numCells + 1;
 		
-		//Generate final mesh
-		vertices = new ArrayList<Vertex>();
+		float dw = (scale * numCells - mapWidth) * 0.5f;
 		
-		indices = new ArrayList<Integer>();
+		float invScale = 1.0f / (float) scale;
 		
-	}
-	
-	public Mesh perlin(int gridWidth, int cellWidth) {
+		float[] cellCoords = new float[numCells];
 		
-		int nodeWidth = gridWidth + 1;
-		int nodeSize = nodeWidth * nodeWidth;
-		int mapWidth = gridWidth * cellWidth;
-		int mapSize = mapWidth * mapWidth;
-		
-		float invGrid = 1.0f / (float) gridWidth;
-		float invCell = 1.0f / (float) cellWidth;
-		float invMap = invGrid * invCell;
-		
-		Vector2D[] node = new Vector2D[nodeSize];
-		
-		for (int i = 0; i < nodeSize; i++) {
+		for (int i = 0; i < numCells; i ++) {
 			
-			node[i] = new Vector2D((float) (2 * Math.random() - 1), (float) (2 * Math.random() - 1));
-			
-			node[i].normalize();
+			cellCoords[i] = ( (i + 1) * scale - dw)/ (float) mapSteps;
 			
 		}
 		
-		//Offset vectors
-		Vector2D o1 = new Vector2D(0, 0);
-		Vector2D o2 = new Vector2D(0, 0);
-		Vector2D o3 = new Vector2D(0, 0);
-		Vector2D o4 = new Vector2D(0, 0);
+		Vector2D[][] node = new Vector2D[numNodes][numNodes];
 		
-		//Dot product values
-		float d1 = 0;
-		float d2 = 0;
-		float d3 = 0;
-		float d4 = 0;
-		
-		//Final height
-		float height;
-		
-		int u, v, x, y, a, b;
-		
-		for (int i = 0; i < mapSize; i ++) {
+		for (int j = 0; j < numNodes; j++) {
 			
-			//Cell coordinates
-			u = i % cellWidth;
-			v = (int) (i * invMap);
-			
-			//Grid coordinates
-			x = (int) (u * invCell);
-			y = (int) (v * invCell);
-			
-			a = (int) (x * invGrid);
-			b = (int) (y * invGrid);
-			
-			o1.set(u - x, v - y);
-			o2.set(u - x + cellWidth, v - y);
-			o3.set(u - x + cellWidth, v - y + cellWidth);
-			o4.set(u - x, v - y + cellWidth);
-			
-			d1 = o1.dot(node[a + (nodeWidth * b)]);
-			d2 = o2.dot(node[a + (nodeWidth * b) + 1]);
-			d3 = o3.dot(node[a + (nodeWidth * b) + nodeWidth + 1]);
-			d4 = o4.dot(node[a + (nodeWidth * b) + nodeWidth]);
-			
-			height = interpCub(	interpCub(d1, d2, u - x), 
-								interpCub(d4, d3, u - x), 
-								v - y);
-
-			vertices.add(new Vertex(new Vector3D(u, height, v), 
-									new Vector2D(u, v)));
-			
-			//Lower triangle
-			indices.add(u + v * mapWidth);
-			indices.add(u + v * mapWidth + mapWidth);
-			indices.add(u + v * mapWidth + mapWidth + 1);
-			
-			//Upper triangle
-			indices.add(u + v * mapWidth + mapWidth + 1);
-			indices.add(u + v * mapWidth + 1);
-			indices.add(u + v * mapWidth);
-			
-		}
-		
-		Vertex[] vertArray = new Vertex[vertices.size()];
-		
-		int[] intArray = new int[indices.size()];
-		
-		Integer[] integerArray = new Integer[indices.size()];
-		
-		vertices.toArray(vertArray);
-		
-		indices.toArray(integerArray);
-		
-		intArray = Util.toIntArray(integerArray);
-		
-		return new Mesh(vertArray, intArray, true);
-		
-	}
-	
-	public static Mesh perlin2D(int cellSubdiv, int numCells, int cellWidth, ArrayList<Vertex> vertices, ArrayList<Integer> indices) {
-		
-		int nodeWidth = numCells + 1;
-		
-		int nodeSize = nodeWidth * nodeWidth;
-		
-		int mapWidth = cellSubdiv * numCells;
-		
-		float invCell = 1.0f / (float) cellSubdiv;
-		
-		Vector2D[] node = new Vector2D[nodeSize];
-		
-		for (int i = 0; i < nodeSize; i++) {
-			
-			node[i] = new Vector2D((float) (2 * Math.random() - 1), (float) (2 * Math.random() - 1));
-			
-			node[i].normalize();
-			
-		}
-		
-		//Offset vectors
-		Vector2D o1 = new Vector2D(0, 0);
-		Vector2D o2 = new Vector2D(0, 0);
-		Vector2D o3 = new Vector2D(0, 0);
-		Vector2D o4 = new Vector2D(0, 0);
-		
-		//Dot product values
-		float d1 = 0;
-		float d2 = 0;
-		float d3 = 0;
-		float d4 = 0;
-		
-		//Final height
-		float height;
-		
-		for (int y = 0; y < numCells; y ++) {
-			
-			for (float j = 0; j < 1; j += invCell) {
+			for (int i = 0; i < numNodes; i ++) {
 				
-				for (int x = 0; x < numCells; x ++) {
+				node[i][j] = new Vector2D((float) (2 * Math.random() - 1), (float) (2 * Math.random() - 1));
+				
+				node[i][j].normalize();
+				
+			}
+			
+		}
+		
+		//Offset vectors
+		Vector2D o1 = new Vector2D(0, 0);
+		Vector2D o2 = new Vector2D(0, 0);
+		Vector2D o3 = new Vector2D(0, 0);
+		Vector2D o4 = new Vector2D(0, 0);
+		
+		//Dot product values
+		float d1 = 0;
+		float d2 = 0;
+		float d3 = 0;
+		float d4 = 0;
+		
+		//Final height
+		float height;
+		
+		//Cell x and z values
+		int a = 0;
+		int b = 0;
+		
+		//Offset x and z values
+		float x = 0;
+		float y = 0;
+		
+		for (int j = 0; j < subDivis; j ++) {
+			
+			for (int k = 0; k < numCells; k ++) {
+				
+				if (j < cellCoords[k]) {
 					
-					for (float i = 0; i < 1; i += invCell) {
+					b = k;
+					break;
+					
+				}
+				
+			}
+			
+			for (int i = 0; i < subDivis; i ++) {
+				
+				for (int k = 0; k < numCells; k ++) {
+					
+					if (i < cellCoords[k]) {
 						
-						o1.set(i, j);
-						o2.set(i - 1, j);
-						o3.set(i - 1, j - 1);
-						o4.set(i, j - 1);
-						
-						d1 = o1.dot(node[x + (nodeWidth * y)]);
-						d2 = o2.dot(node[x + (nodeWidth * y) + 1]);
-						d3 = o3.dot(node[x + (nodeWidth * y) + nodeWidth + 1]);
-						d4 = o4.dot(node[x + (nodeWidth * y) + nodeWidth]);
-						
-						height = interpCub(	interpCub(d1, d2, i), 
-											interpCub(d4, d3, i), 
-											j);
-						
-						vertices.add(new Vertex(new Vector3D((x + i) * cellWidth, height, (y + j) * cellWidth), 
-												new Vector2D((x + i) * cellWidth, (y + j) * cellWidth)));
+						a = k;
+						break;
 						
 					}
+					
+				}
+				
+				x = (i * mapSteps + dw) * invScale - a;
+				y = (j * mapSteps + dw) * invScale - b;
+				
+				o1.set(x, y);
+				o2.set((x - 1), y);
+				o3.set((x - 1), (y - 1));
+				o4.set(x, (y - 1));
+				
+				d1 = o1.dot(node[a][b]);
+				d2 = o2.dot(node[a + 1][b]);
+				d3 = o3.dot(node[a + 1][b + 1]);
+				d4 = o4.dot(node[a][b + 1]);
+				
+				height = interpCub(	interpCub(d1, d2, x), 
+									interpCub(d4, d3, x), 
+									y);
+				
+				heightMap[i][j] = height;
+				
+			}
+			
+		}
+		
+	}
+	
+	//Generate final mesh from height map
+	public void genMesh() {
+		
+		vertices = new ArrayList<Vertex>();
+		indices = new ArrayList<Integer>();
+		
+		for (int j = 0; j < subDivis; j ++) {
+			
+			for (int i = 0; i < subDivis; i ++) {
+				
+				vertices.add(new Vertex(new Vector3D(i * mapSteps, heightMap[i][j], j * mapSteps), 
+						new Vector2D(i * mapSteps, j * mapSteps)));
+				
+				if (j < subDivis - 1 && i < subDivis - 1) {
+					
+					//Upper triangle
+					indices.add(i + j * subDivis + 1);
+					indices.add(i + j * subDivis);
+					indices.add(i + j * subDivis + subDivis);
+					//Lower triangle
+					indices.add(i + j * subDivis + subDivis);
+					indices.add(i + j * subDivis + subDivis + 1);
+					indices.add(i + j * subDivis + 1);
 					
 				}
 				
@@ -242,24 +198,6 @@ public class Terrain {
 			
 		}
 		
-		for (int i = 0; i < mapWidth - 1; i ++) {
-			
-			for (int j = 0; j < mapWidth - 1; j ++) {
-				
-				//Lower triangle
-				indices.add(i + j * mapWidth);
-				indices.add(i + j * mapWidth + mapWidth);
-				indices.add(i + j * mapWidth + mapWidth + 1);
-				
-				//Upper triangle
-				indices.add(i + j * mapWidth + mapWidth + 1);
-				indices.add(i + j * mapWidth + 1);
-				indices.add(i + j * mapWidth);
-				
-			}
-			
-		}
-		
 		Vertex[] vertArray = new Vertex[vertices.size()];
 		
 		int[] intArray = new int[indices.size()];
@@ -272,7 +210,7 @@ public class Terrain {
 		
 		intArray = Util.toIntArray(integerArray);
 		
-		return new Mesh(vertArray, intArray, true);
+		mesh =  new Mesh(vertArray, intArray, true);
 		
 	}
 	
