@@ -16,7 +16,7 @@ public abstract class Game {
 		
 		getRootObject().input(delta);
 		
-		getHudRoot().update(delta);
+		getHudRoot().input(delta);
 		
 	}
 	

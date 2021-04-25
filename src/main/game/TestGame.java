@@ -8,9 +8,9 @@ import main.engine.core.GameObject;
 import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
 import main.engine.rendering.Material;
-import main.engine.rendering.Mesh;
 import main.engine.rendering.TextObject;
 import main.engine.rendering.Texture;
+import main.engine.rendering.meshLoading.FibonacciSphere;
 import main.engine.rendering.meshLoading.Terrain;
 
 public class TestGame extends Game {
@@ -30,15 +30,22 @@ public class TestGame extends Game {
 //		addObject(ss);
 		
 		GameObject terrainObject = new GameObject();
-		Terrain terrain = new Terrain(30, 300);
-		terrain.addPerlin(1);
-		terrain.addPerlin(2);
+		Terrain terrain = new Terrain(3);
 		terrain.addPerlin(1);
 		terrain.genMesh();
 		Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f, new Texture("tiledfloor_normal.png"));
 		MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
 		terrainObject.addComponent(terrainRenderer);
 		addObject(terrainObject);
+		
+		GameObject planetObject = new GameObject();
+		FibonacciSphere planet = new FibonacciSphere(10, 5);
+		planet.genMesh();
+		Material planetMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f, new Texture("tiledfloor_normal.png"));
+		MeshRenderer planetRenderer = new MeshRenderer(planet.getMesh(), planetMaterial);
+		planetObject.addComponent(planetRenderer);
+		planetObject.getTransform().setPos(0, 2, 0);
+		addObject(planetObject);
 		
 //		GameObject planeObject = new GameObject();
 //		Material planeMaterial = new Material(new Texture("008-brownstone.png"), 1, 8, new Texture("008-brownstone_normal.png"));
@@ -72,9 +79,9 @@ public class TestGame extends Game {
 //		playerSpot.addComponent(spot);
 //		player.addChild(playerSpot);
 		
-		GameObject textObject = new TextObject("Bottom Text", "AdventurerFont.png", 16, 16);
-		textObject.getTransform().setPos(400, 200, 0);
-		addHudObject(textObject);
+//		GameObject textObject = new TextObject("Bottom Text", "AdventurerFont.png", 16, 16);
+//		textObject.getTransform().setPos(400, 200, 0);
+//		addHudObject(textObject);
 		
 //		GameObject monkeyObject2 = new GameObject();
 //		Mesh monkeyMesh2 = new Mesh("monkey1.obj");

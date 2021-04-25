@@ -34,6 +34,12 @@ public class Vector3D {
 		
 	}
 	
+	public float lengthSq() {
+		
+		return x * x + y * y + z * z;
+		
+	}
+	
 	public float dot(Vector3D v) {
 		
 		return x * v.getX() + y * v.getY() + z * v.getZ();

@@ -28,6 +28,12 @@ public class Vector2D {
 		
 	}
 	
+	public float lengthSq() {
+		
+		return x * x + y * y;
+		
+	}
+	
 	public float dot(Vector2D v) {
 		
 		return x * v.getX() + y * v.getY();

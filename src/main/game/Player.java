@@ -120,12 +120,6 @@ public class Player extends GameObject {
 			
 		}
 		
-//		if(Input.getKeyHeld(GLFW_KEY_LEFT_SHIFT ) && !Input.getKeyHeld(GLFW_KEY_S)) {
-//		
-//			moveAmount *= 2;
-//		
-//		}
-		
 		if(Input.getKeyHeld(GLFW_KEY_W)) {
 			
 			movement = movement.add(forward);
@@ -193,6 +187,8 @@ public class Player extends GameObject {
 	
 	@Override
 	public void update(float delta) {
+		
+		center = CoreEngine.getCenter();
 		
 		if ( movement.length() > 0) {
 			

@@ -10,10 +10,6 @@ import main.engine.rendering.Vertex;
 
 public class Terrain {
 	
-	private ArrayList<Vertex> vertices;
-	
-	private ArrayList<Integer> indices;
-	
 	private Mesh mesh;
 	
 	private int mapWidth;
@@ -23,13 +19,9 @@ public class Terrain {
 	
 	private float[][] heightMap;
 	
-	//TODO: Height map, can add different levels of noise
-	
-	public Terrain(int cellSubdiv, int numCells, int cellWidth) {
+	public Terrain(int mapWidth) {
 		
-		vertices = new ArrayList<Vertex>();
-		
-		indices = new ArrayList<Integer>();
+		this(mapWidth, 5 * mapWidth);
 		
 	}
 	
@@ -171,8 +163,8 @@ public class Terrain {
 	//Generate final mesh from height map
 	public void genMesh() {
 		
-		vertices = new ArrayList<Vertex>();
-		indices = new ArrayList<Integer>();
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+		ArrayList<Integer> indices = new ArrayList<Integer>();
 		
 		for (int j = 0; j < subDivis; j ++) {
 			
