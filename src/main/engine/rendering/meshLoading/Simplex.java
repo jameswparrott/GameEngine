@@ -6,29 +6,64 @@ public class Simplex {
 	
 	private Vector3D a, b, c, d;
 	
-	private int i, j, k, l;
+	private Sphere cSphere;
 	
-	private Vector3D mid;
-	
-	private Sphere circumScribeSphere;
-	
-	public Simplex(Vector3D a, Vector3D b, Vector3D c, Vector3D d, int i, int j, int k, int l) {
+	public Simplex(Vector3D a, Vector3D b, Vector3D c, Vector3D d) {
 		
 		this.a = a;
 		this.b = b;
 		this.c = c;
 		this.d = d;
 		
-		this.i = i;
-		this.j = j;
-		this.k = k;
-		this.l = l;
+		this.cSphere = calcCSphere(calcMid(a, b, c, d), a);
 		
 	}
 	
-	public void calcSphere() {
+	private static Vector3D calcMid(Vector3D a, Vector3D b, Vector3D c, Vector3D d) {
 		
-		this.circumScribeSphere = new Sphere(this.mid, a.sub(mid).lengthSq());
+		Vector3D u1 = b.sub(a);
+		Vector3D u2 = c.sub(a);
+		Vector3D u3 = d.sub(a);
+		
+		Vector3D dual = u2.cross(u3).scale(u1.lengthSq());
+		
+		dual = dual.add(u3.cross(u1).scale(u2.lengthSq()));
+		
+		dual = dual.add(u1.cross(u2).scale(u3.lengthSq()));
+		
+		float triProd =  1.0f / (2 * u1.dot(u2.cross(u3)));
+		
+		return a.add(dual.scale(triProd));
+		
+	}
+	
+	public static Sphere calcCSphere(Vector3D mid, Vector3D point) {
+		
+		return new Sphere(mid, point.sub(mid).lengthSq());
+		
+	}
+	
+	public void calcMesh() {
+		
+		
+		
+	}
+	
+	public void removeEdge() {
+		
+		
+		
+	}
+	
+	public void removeFace() {
+		
+		
+		
+	}
+	
+	public Sphere getCSphere() {
+		
+		return this.cSphere;
 		
 	}
 

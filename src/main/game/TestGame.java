@@ -2,15 +2,16 @@ package main.game;
 
 import main.engine.components.DirectionalLight;
 import main.engine.components.MeshRenderer;
+import main.engine.components.PhysicsBody;
 import main.engine.components.PointLight;
 import main.engine.core.Game;
 import main.engine.core.GameObject;
 import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
+import main.engine.physics.Boundary;
 import main.engine.rendering.Material;
-import main.engine.rendering.TextObject;
+import main.engine.rendering.Mesh;
 import main.engine.rendering.Texture;
-import main.engine.rendering.meshLoading.FibonacciSphere;
 import main.engine.rendering.meshLoading.Terrain;
 
 public class TestGame extends Game {
@@ -38,14 +39,14 @@ public class TestGame extends Game {
 		terrainObject.addComponent(terrainRenderer);
 		addObject(terrainObject);
 		
-		GameObject planetObject = new GameObject();
-		FibonacciSphere planet = new FibonacciSphere(10, 5);
-		planet.genMesh();
-		Material planetMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f, new Texture("tiledfloor_normal.png"));
-		MeshRenderer planetRenderer = new MeshRenderer(planet.getMesh(), planetMaterial);
-		planetObject.addComponent(planetRenderer);
-		planetObject.getTransform().setPos(0, 2, 0);
-		addObject(planetObject);
+//		GameObject planetObject = new GameObject();
+//		FibonacciSphere planet = new FibonacciSphere(10, 5);
+//		planet.genMesh();
+//		Material planetMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f, new Texture("tiledfloor_normal.png"));
+//		MeshRenderer planetRenderer = new MeshRenderer(planet.getMesh(), planetMaterial);
+//		planetObject.addComponent(planetRenderer);
+//		planetObject.getTransform().setPos(0, 2, 0);
+//		addObject(planetObject);
 		
 //		GameObject planeObject = new GameObject();
 //		Material planeMaterial = new Material(new Texture("008-brownstone.png"), 1, 8, new Texture("008-brownstone_normal.png"));
@@ -55,15 +56,26 @@ public class TestGame extends Game {
 //		planeObject.addComponent(planeRenderer);
 //		addObject(planeObject);
 		
-//		GameObject monkeyObject = new GameObject();
-//		Mesh monkeyMesh = new Mesh("monkey1.obj");
-//		Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
-//		MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
-//		monkeyObject.addComponent(monkeyRenderer);
-//		addObject(monkeyObject);
+		GameObject monkeyObject = new GameObject();
+		Mesh monkeyMesh = new Mesh("monkey1.obj");
+		Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
+		MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
+		monkeyObject.addComponent(monkeyRenderer);
+		monkeyObject.getTransform().setPos(0, 3, 0);
+		addObject(monkeyObject);
+		
+		GameObject monkeyObject2 = new GameObject();
+		MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
+		Boundary box = new Boundary(new Vector3D(0, 0, 0), 1, 1, 1);
+		PhysicsBody monkeyPhysics = new PhysicsBody(10, box, new Vector3D(0, 0.001f, 0), new Vector3D(0, -0.05f, 0));
+		monkeyObject2.addComponent(monkeyRenderer2);
+		monkeyObject2.addComponent(monkeyPhysics);
+		monkeyObject2.getTransform().setPos(0, 3, 3);
+		monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
+		addObject(monkeyObject2);
 		
 		GameObject pointLightObject = new GameObject();
-		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 1.0f, 0.25f));
+		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 2.0f, 1.5f));
 		pointLightObject.addComponent(pointLight);
 		pointLightObject.getTransform().setPos(0, 0.1f, 0);
 		addObject(pointLightObject);

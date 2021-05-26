@@ -1,6 +1,7 @@
 package main.engine.rendering.meshLoading;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
@@ -37,6 +38,8 @@ public class FibonacciSphere {
 		
 		init();
 		
+		delaunayTri();
+		
 	}
 	
 	public void init() {
@@ -48,25 +51,15 @@ public class FibonacciSphere {
 			a = (i * invPHI) % 1;
 			b = i / (float) n;
 			
-			System.out.println("i: " + i  + ",  a: " + a + ",  b: " + b);
-			
 			theta = 2 * PI * (a);
 			phi = (float) Math.acos(1 - 2 * b);
-			
-			System.out.println(" theta: " + theta + ",  psi: " + phi);
 			
 			x = (float) (Math.cos(theta) * Math.sin(phi));
 			y = (float) (Math.sin(theta) * Math.sin(phi));
 			z = (float) (Math.cos(phi));
 			
-			System.out.println("x: " + x + ",  y: " + y + ",  z: " + z);
-			
-			vertices[i] = new Vertex(	new Vector3D(x, y, z), 
+			vertices[i] = new Vertex(	new Vector3D(theta, 0, phi), 
 										new Vector2D(a, b));
-			
-			//new Vector2D(theta / (float) 360, psi / (float) 180)
-			
-			//System.out.println(vertices[i].getPos().toString());
 			
 		}
 		
@@ -74,17 +67,17 @@ public class FibonacciSphere {
 		indices[1] = 2;
 		indices[2] = 1;
 		
-		indices[3] = 0;
-		indices[4] = 3;
-		indices[5] = 2;
-		
-		indices[6] = 0;
-		indices[7] = 1;
-		indices[8] = 3;
-		
-		indices[9] = 1;
-		indices[10] = 2;
-		indices[11] = 3;
+//		indices[3] = 0;
+//		indices[4] = 3;
+//		indices[5] = 2;
+//		
+//		indices[6] = 0;
+//		indices[7] = 1;
+//		indices[8] = 3;
+//		
+//		indices[9] = 1;
+//		indices[10] = 2;
+//		indices[11] = 3;
 		
 	}
 	
@@ -100,9 +93,41 @@ public class FibonacciSphere {
 		
 	}
 	
-	private void delaunayTriangulation() {
+	private void delaunayTri() {
 		
+//		List<Simplex> delaunaySimplices = new ArrayList<Simplex>();
+//		
+//		Simplex test = new Simplex(vertices[0].getPos(), vertices[1].getPos(), vertices[2].getPos(), vertices[3].getPos());
+//		
+//		System.out.println("Center: " + test.getCSphere().getCenter());
+//		
+//		System.out.println("Radius Squared: " + test.getCSphere().getRadiusSq());
+//		
+//		for (int i = 0; i < n; i ++) {
+//			
+//			float diff = (test.getCSphere().getCenter().sub(vertices[i].getPos()).lengthSq()) - test.getCSphere().getRadiusSq();
+//			
+//			System.out.println("Diff[" + i + "]: " + diff);
+//			
+//		}
 		
+//		for (int i = 5; i < n; i ++) {
+//			
+//			if (test.getCSphere().getCenter().sub(vertices[i].getPos()).lengthSq() < test.getCSphere().getRadiusSq()) {
+//				
+//				System.out.println("Invalid delaunay simplex!");
+//				
+//				System.out.println("i: " + i);
+//				
+//				System.out.println("Sphere center: " + test.getCSphere().getCenter().toString());
+//				
+//				System.out.println("Sphere radius squared: " + test.getCSphere().getRadiusSq());
+//				
+//				System.out.println("Vertex: " + vertices[i].getPos().toString());
+//				
+//			}
+//			
+//		}
 		
 	}
 	

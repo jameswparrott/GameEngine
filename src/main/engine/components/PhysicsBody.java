@@ -1,62 +1,38 @@
 package main.engine.components;
 
-import java.util.ArrayList;
-
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
-import main.engine.rendering.Vertex;
+import main.engine.physics.Boundary;
 import main.game.Door;
 import main.game.Level;
 
 public class PhysicsBody extends GameComponent {
 	
-	private Vector3D[] boundary;
+	private Boundary boundary;
 	
 	private Vector3D acceleration;
 	
 	private Vector3D velocity;
 	
-	private Vector3D pos;
-	
 	private float mass;
 	
-	public PhysicsBody(ArrayList<Vertex> vertices) {
+	public PhysicsBody(float mass, Boundary boundary) {
 		
-		boundary = new Vector3D[vertices.size()];
-		
-		for (int i = 0; i < vertices.size(); i ++) {
-			
-			boundary[i] = vertices.get(i).getPos();
-			
-		}
+		this(mass, boundary, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	
-	public PhysicsBody(float width, float height, float depth) {
+	public PhysicsBody(float mass, Boundary boundary, Vector3D acceleration, Vector3D velocity) {
 		
-		boundary = new Vector3D[8];
+		this.mass = mass;
 		
-		boundary[0] = new Vector3D(-width/2, -height/2, -depth/2);
+		this.boundary = boundary;
 		
-		boundary[1] = new Vector3D(width/2, -height/2, -depth/2);
+		this.acceleration = acceleration;
 		
-		boundary[2] = new Vector3D(width/2, -height/2, depth/2);
-		
-		boundary[3] = new Vector3D(-width/2, -height/2, depth/2);
-		
-		boundary[4] = new Vector3D(-width/2, height/2, -depth/2);
-		
-		boundary[5] = new Vector3D(width/2, height/2, -depth/2);
-		
-		boundary[6] = new Vector3D(width/2, height/2, depth/2);
-		
-		boundary[7] = new Vector3D(-width/2, height/2, depth/2);
+		this.velocity = velocity;
 		
 	}
-	
-	/*TODO: WE NEED a collision check that can take in a physics body (Method can be in this class) and 
-	another "Mesh" or terrain. Some nice way of detecting a collision with THIS SPECIFIC BODY and terrain
-	or even another physics body...*/
 	
 	public Vector3D getCollision(PhysicsBody body) {
 		
@@ -67,29 +43,19 @@ public class PhysicsBody extends GameComponent {
 	@Override
 	public void update(float delta) {
 		
-		acceleration = getTransform().getPos().sub(pos).scale(1f/delta).sub(velocity).scale(1f/(delta * delta));
+		//TODO: make everything in terms of SI units
 		
-		velocity = getTransform().getPos().sub(pos).scale(1f/delta);
+		float time = delta * 60;
 		
-		pos = getTransform().getPos();
+		velocity = velocity.add(acceleration.getScaled(time * 0.5f));
 		
-	}
-	
-	public Vector3D[] getBoundary(){
-		
-		return boundary;
+		getTransform().setPos(getTransform().getPos().add(velocity.getScaled(time)));
 		
 	}
 	
 	public float getMass() {
 		
 		return mass;
-		
-	}
-	
-	public Vector3D getPos() {
-		
-		return pos;
 		
 	}
 	

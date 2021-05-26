@@ -48,6 +48,18 @@ public class Vector3D {
 	
 	public Vector3D abs() {
 		
+		x = Math.abs(x);
+		
+		y = Math.abs(y);
+		
+		z = Math.abs(z);
+		
+		return this;
+		
+	}
+	
+	public Vector3D getAbs() {
+		
 		return new Vector3D(Math.abs(x), Math.abs(y), Math.abs(z));
 		
 	}
@@ -59,8 +71,6 @@ public class Vector3D {
 	}
 	
 	public Vector3D lerp(Vector3D v, float lerpFactor) {
-		
-		//return v.sub(this).getScaled(lerpFactor).add(this);
 		
 		//x - (y - x) * lerp
 		
@@ -76,7 +86,7 @@ public class Vector3D {
 		
 		float z1 = x * v.getY() - y * v.getX();
 		
-		return new Vector3D(x1,y1,z1);
+		return new Vector3D(x1, y1, z1);
 		
 	}
 	
@@ -124,6 +134,28 @@ public class Vector3D {
 		
 		Quaternion q = rotation.mult(this).mult(conjugate);
 		
+		this.x = q.getX();
+		
+		this.y = q.getY();
+		
+		this.z = q.getZ();
+		
+		return this;
+		
+	}
+	
+	public Vector3D getRotated(Vector3D axis, float angle) {
+		
+		return this.getRotated(new Quaternion(axis, angle));
+		
+	}
+	
+	public Vector3D getRotated(Quaternion rotation) {
+		
+		Quaternion conjugate = rotation.conjugate();
+		
+		Quaternion q = rotation.mult(this).mult(conjugate);
+		
 		return new Vector3D(q.getX(), q.getY(), q.getZ());
 		
 	}
@@ -146,14 +178,6 @@ public class Vector3D {
 		
 	}
 	
-	//Wtf is this bullshit? Make it not so ambiguous
-	
-	public Vector3D getScaled(float c) {
-		
-		return new Vector3D(x * c, y * c, z * c);
-		
-	}
-	
 	public Vector3D scale(float c) {
 		
 		x *= c;
@@ -163,6 +187,12 @@ public class Vector3D {
 		z *= c;
 		
 		return this;
+		
+	}
+	
+	public Vector3D getScaled(float c) {
+		
+		return new Vector3D(x * c, y * c, z * c);
 		
 	}
 	

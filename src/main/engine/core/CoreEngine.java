@@ -183,7 +183,7 @@ public class CoreEngine {
 		//Give the window focus
 		glfwFocusWindow(window);
 		
-		//Set window opacity... for whatever reason you may have?
+		//Set window opacity... for whatever reason
 		//glfwSetWindowOpacity(window, 0.5f);
 		
 		/*
@@ -351,6 +351,8 @@ public class CoreEngine {
 					passedTimeString = passedTimeString.substring(0, 5);
 					
 					System.out.println("Run time: " + passedTimeString + " seconds");
+					
+					System.out.println("Frame time/delta: " + frameTime);
 					
 					frames = 0;
 					

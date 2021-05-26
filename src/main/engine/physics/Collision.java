@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import main.engine.core.Vector3D;
 
+
+//TODO: move into Boundary class as a method
 public class Collision {
 	
 	private static ArrayList<Vector3D> simplex;

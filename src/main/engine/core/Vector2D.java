@@ -42,6 +42,16 @@ public class Vector2D {
 	
 	public Vector2D abs() {
 		
+		x = Math.abs(x);
+		
+		y = Math.abs(y);
+		
+		return this;
+		
+	}
+	
+	public Vector2D getAbs() {
+		
 		return new Vector2D(Math.abs(x), Math.abs(y));
 		
 	}
@@ -73,12 +83,10 @@ public class Vector2D {
 			x /= length;
 			
 			y /= length;
-		
-			return this;
 			
 		}
 		
-		else return this;
+		return this;
 		
 	}
 	
@@ -97,6 +105,20 @@ public class Vector2D {
 	}
 	
 	public Vector2D rotate(float alpha) {
+		
+		double rad = Math.toRadians(alpha);
+		
+		float oldx = this.x;
+		
+		this.x = (float)(x * Math.cos(rad) - y * Math.sin(rad));
+		
+		this.y = (float)(oldx * Math.sin(rad) + y * Math.cos(rad));
+		
+		return this;
+		
+	}
+	
+	public Vector2D getRotated(float alpha) {
 		
 		double rad = Math.toRadians(alpha);
 		

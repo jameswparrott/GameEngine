@@ -1,5 +1,7 @@
 TODO:
 
+- Remove all AWT dependencies
+
 - Need clean up methods for all OpenGL based classes (Shader, mesh, etc.)
 
 - Proper text rendering with stb lib
@@ -9,3 +11,5 @@ TODO:
 - Proper terrain (Perlin noise)
 
 - Physics engine
+
+- Add profiler

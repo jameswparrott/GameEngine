@@ -10,6 +10,18 @@ public class Quaternion {
 	
 	private float z;
 	
+	private static final Vector3D FORWARD = 	new Vector3D(0, 0, 1);
+	
+	private static final Vector3D BACKWARD = 	new Vector3D(0, 0, -1);
+	
+	private static final Vector3D RIGHT = 		new Vector3D(1, 0, 0);
+	
+	private static final Vector3D LEFT = 		new Vector3D(-1, 0, 0);
+	
+	private static final Vector3D UP = 			new Vector3D(0, 1, 0);
+	
+	private static final Vector3D DOWN = 		new Vector3D(0, -1, 0);
+	
 	public Quaternion(float x, float y, float z, float w) {
 		
 		this.x = x;
@@ -62,7 +74,7 @@ public class Quaternion {
 		
 	}
 	
-	public Quaternion norm() {
+	public Quaternion normalize() {
 		
 		float length = length();
 		
@@ -75,15 +87,13 @@ public class Quaternion {
 			z /= length;
 			
 			w /= length;
-			
-			return this;
 		}
 		
-		else return this;
+		return this;
 		
 	}
 	
-	public Quaternion normalized() {
+	public Quaternion getNorm() {
 		
 		float length = length();
 		
@@ -145,37 +155,37 @@ public class Quaternion {
 	
 	public Vector3D getForward() {
 		
-		return new Vector3D(0, 0, 1).rotate(this);
+		return FORWARD.getRotated(this);
 		
 	}
 	
 	public Vector3D getBack() {
 		
-		return new Vector3D(0, 0, -1).rotate(this);
+		return BACKWARD.getRotated(this);
 		
 	}
 	
 	public Vector3D getUp() {
 		
-		return new Vector3D(0, 1, 0).rotate(this);
+		return UP.getRotated(this);
 		
 	}
 	
 	public Vector3D getDown() {
 		
-		return new Vector3D(0, -1, 0).rotate(this);
+		return DOWN.getRotated(this);
 		
 	}
 	
 	public Vector3D getRight() {
 		
-		return new Vector3D(1, 0, 0).rotate(this);
+		return RIGHT.getRotated(this);
 		
 	}
 	
 	public Vector3D getLeft() {
 		
-		return new Vector3D(-1, 0, 0).rotate(this);
+		return LEFT.getRotated(this);
 		
 	}
 	

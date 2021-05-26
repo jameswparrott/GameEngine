@@ -86,7 +86,7 @@ public class Transform {
 	
 	public void rotate(Vector3D axis, float angle) {
 		
-		rot = new Quaternion(axis, angle).mult(rot).normalized();
+		rot = new Quaternion(axis, angle).mult(rot).getNorm();
 			
 	}
 	
