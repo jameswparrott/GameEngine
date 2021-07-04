@@ -4,13 +4,15 @@ import main.engine.components.DirectionalLight;
 import main.engine.components.MeshRenderer;
 import main.engine.components.PhysicsBody;
 import main.engine.components.PointLight;
+import main.engine.core.CoreEngine;
 import main.engine.core.Game;
 import main.engine.core.GameObject;
 import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
-import main.engine.physics.Boundary;
+import main.engine.physics.boundaries.AABB;
 import main.engine.rendering.Material;
 import main.engine.rendering.Mesh;
+import main.engine.rendering.TextObject;
 import main.engine.rendering.Texture;
 import main.engine.rendering.meshLoading.Terrain;
 
@@ -66,13 +68,18 @@ public class TestGame extends Game {
 		
 		GameObject monkeyObject2 = new GameObject();
 		MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
-		Boundary box = new Boundary(new Vector3D(0, 0, 0), 1, 1, 1);
-		PhysicsBody monkeyPhysics = new PhysicsBody(10, box, new Vector3D(0, 0.001f, 0), new Vector3D(0, -0.05f, 0));
+		AABB monkeyBox = new AABB(new Vector3D(0, 0, 0), new Vector3D(1, 1, 1));
+		//CMB box = new CMB(new Vector3D(0, 0, 0), monkeyMesh);
+		PhysicsBody monkeyPhysics = new PhysicsBody(10, monkeyBox, new Vector3D(0, 0.001f, 0), new Vector3D(0, 1, 0), new Vector3D(0, 3, 3));
 		monkeyObject2.addComponent(monkeyRenderer2);
 		monkeyObject2.addComponent(monkeyPhysics);
 		monkeyObject2.getTransform().setPos(0, 3, 3);
 		monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
 		addObject(monkeyObject2);
+		
+//		System.out.println("Monkey pos:" + monkeyPhysics.getPos().toString());
+//		monkeyPhysics.integrate(20);
+//		System.out.println("Monkey pos:" + monkeyPhysics.getPos().toString());
 		
 		GameObject pointLightObject = new GameObject();
 		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 2.0f, 1.5f));
@@ -91,9 +98,14 @@ public class TestGame extends Game {
 //		playerSpot.addComponent(spot);
 //		player.addChild(playerSpot);
 		
-//		GameObject textObject = new TextObject("Bottom Text", "AdventurerFont.png", 16, 16);
-//		textObject.getTransform().setPos(400, 200, 0);
-//		addHudObject(textObject);
+		GameObject textObject = new TextObject("Bottom Text", "AdventurerFont.png", 16, 16);
+		textObject.getTransform().setPos(0, 0, 0);
+		addHudObject(textObject);
+		
+		GameObject cross = new TextObject(".", "AdventurerFont.png", 16, 16);
+		cross.getTransform().setScale(0.5f, 0.5f, 0.5f);
+		cross.getTransform().setPos(CoreEngine.getCenter().getX(), CoreEngine.getCenter().getY(), 0);
+		addHudObject(cross);
 		
 //		GameObject monkeyObject2 = new GameObject();
 //		Mesh monkeyMesh2 = new Mesh("monkey1.obj");

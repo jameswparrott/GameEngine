@@ -3,6 +3,7 @@ package main.engine.core;
 import java.util.ArrayList;
 
 import main.engine.components.GameComponent;
+import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
 import main.engine.rendering.Shader;
 

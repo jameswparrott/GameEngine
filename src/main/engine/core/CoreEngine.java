@@ -56,6 +56,7 @@ import org.lwjgl.openal.ALUtil;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
 import main.engine.sound.AudioEngine;
 import main.game.TestGame;
@@ -75,6 +76,8 @@ public class CoreEngine {
 	private static String title;
 	
 	private RenderingEngine renderingEngine;
+	
+	private PhysicsEngine physicsEngine;
 	
 	private AudioEngine audioEngine;
 	
@@ -200,6 +203,8 @@ public class CoreEngine {
 		
 		renderingEngine = new RenderingEngine();
 		
+		physicsEngine = new PhysicsEngine();
+		
 		/*
 		 Initializing OpenAL, creating a device (default if null is
 		 specified) and a context which is made current. After create
@@ -316,6 +321,8 @@ public class CoreEngine {
 				
 				//Time.setDelta(frameTime);
 				
+				//game.simulate(physicsEngine);
+				
 				game.input((float) frameTime);
 				
 				game.update((float) frameTime);
@@ -344,15 +351,15 @@ public class CoreEngine {
 				
 				if(frameCount >= 1.0d) {
 					
-					System.out.println("FPS: " + frames);
+					//System.out.println("FPS: " + frames);
 					
 					passedTimeString = Double.toString(passedTime);
 					
 					passedTimeString = passedTimeString.substring(0, 5);
 					
-					System.out.println("Run time: " + passedTimeString + " seconds");
+					//System.out.println("Run time: " + passedTimeString + " seconds");
 					
-					System.out.println("Frame time/delta: " + frameTime);
+					//System.out.println("Frame time/delta: " + frameTime);
 					
 					frames = 0;
 					

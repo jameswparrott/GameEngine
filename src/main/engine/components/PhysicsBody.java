@@ -2,7 +2,8 @@ package main.engine.components;
 
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
-import main.engine.physics.Boundary;
+import main.engine.physics.boundaries.Boundary;
+import main.engine.physics.boundaries.CMB;
 import main.game.Door;
 import main.game.Level;
 
@@ -14,15 +15,17 @@ public class PhysicsBody extends GameComponent {
 	
 	private Vector3D velocity;
 	
+	private Vector3D pos;
+	
 	private float mass;
 	
 	public PhysicsBody(float mass, Boundary boundary) {
 		
-		this(mass, boundary, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+		this(mass, boundary, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	
-	public PhysicsBody(float mass, Boundary boundary, Vector3D acceleration, Vector3D velocity) {
+	public PhysicsBody(float mass, Boundary boundary, Vector3D acceleration, Vector3D velocity, Vector3D pos) {
 		
 		this.mass = mass;
 		
@@ -31,6 +34,8 @@ public class PhysicsBody extends GameComponent {
 		this.acceleration = acceleration;
 		
 		this.velocity = velocity;
+		
+		this.pos = pos;
 		
 	}
 	
@@ -41,21 +46,40 @@ public class PhysicsBody extends GameComponent {
 	}
 	
 	@Override
+	public void input(float delta) {
+		
+		//TODO: take some input 
+		
+	}
+	
+	@Override
 	public void update(float delta) {
 		
 		//TODO: make everything in terms of SI units
 		
-		float time = delta * 60;
+		//velocity = velocity.add(acceleration.getScaled(delta * 0.5f));
 		
-		velocity = velocity.add(acceleration.getScaled(time * 0.5f));
+		//getTransform().setPos(getTransform().getPos().add(velocity.getScaled(delta)));
 		
-		getTransform().setPos(getTransform().getPos().add(velocity.getScaled(time)));
+		getTransform().setPos(pos);
+		
+	}
+	
+	public void integrate(float delta) {
+		
+		this.pos = this.pos.add(velocity.scale(delta));
 		
 	}
 	
 	public float getMass() {
 		
 		return mass;
+		
+	}
+	
+	public Vector3D getPos() {
+		
+		return pos;
 		
 	}
 	
@@ -71,15 +95,9 @@ public class PhysicsBody extends GameComponent {
 		
 	}
 	
-	public Vector3D bodyCheck() {
+	public Boundary getBoundary() {
 		
-		return new Vector3D(0, 0, 0);
-		
-	}
-	
-	public Vector3D terrainCheck() {
-		
-		return new Vector3D(0, 0, 0);
+		return boundary;
 		
 	}
 	

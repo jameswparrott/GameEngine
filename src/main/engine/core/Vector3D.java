@@ -70,6 +70,24 @@ public class Vector3D {
 		
 	}
 	
+	public Vector3D getMax(Vector3D v) {
+		
+		return new Vector3D(x > v.getX() ? x : v.getX(), y > v.getY() ? y : v.getY(), z > v.getZ() ? z : v.getZ());
+		
+	}
+	
+	public float min() {
+		
+		return Math.min(x, Math.min(y, z));
+		
+	}
+	
+	public Vector3D getMin(Vector3D v) {
+		
+		return new Vector3D(x < v.getX() ? x : v.getX(), y < v.getY() ? y : v.getY(), z < v.getZ() ? z : v.getZ());
+		
+	}
+	
 	public Vector3D lerp(Vector3D v, float lerpFactor) {
 		
 		//x - (y - x) * lerp

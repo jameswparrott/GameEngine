@@ -2,6 +2,7 @@ package main.engine.components;
 
 import main.engine.core.GameObject;
 import main.engine.core.Transform;
+import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
 import main.engine.rendering.Shader;
 
@@ -22,6 +23,10 @@ public abstract class GameComponent {
 	}
 	
 	public void addToRenderingEngine(RenderingEngine renderingEngine) {
+		
+	}
+	
+	public void addToPhysicsEngine(PhysicsEngine physicsEngine) {	
 		
 	}
 	

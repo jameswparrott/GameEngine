@@ -17,6 +17,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import main.engine.core.Util;
 import main.engine.core.Vector3D;
@@ -29,11 +30,13 @@ public class Mesh {
 	
 	private int size;
 	
+	private ArrayList<Vector3D> positions;
+	
 	public Mesh(String fileName) {
 		
 		initMeshData();
 		
-		loadMesh(fileName);
+		positions = loadMesh(fileName);
 		
 	}
 	
@@ -93,7 +96,7 @@ public class Mesh {
 		
 	}
 	
-	private Mesh loadMesh(String fileName) {
+	private ArrayList<Vector3D> loadMesh(String fileName) {
 		
 		String[] splitArray = fileName.split("\\.");
 		
@@ -101,7 +104,7 @@ public class Mesh {
 		
 		if (!ext.equals("obj")) {
 			
-			System.err.println("Error: Failed to load " + fileName + " mesh. File type " + ext + "not supported.");
+			System.err.println("Error: Failed to load " + fileName + " mesh. File type '" + ext + "' not supported.");
 			
 			new Exception().printStackTrace();
 			
@@ -133,7 +136,7 @@ public class Mesh {
 		
 		addVertices(vertexData, Util.toIntArray(indexData), false);
 		
-		return null;
+		return model.getPositions();
 		
 	}
 	
@@ -250,6 +253,12 @@ public class Mesh {
 			vertices[i].setTangent(vertices[i].getTangent().getNorm());
 			
 		}
+		
+	}
+	
+	public ArrayList<Vector3D> getPositions() {
+		
+		return positions;
 		
 	}
 	
