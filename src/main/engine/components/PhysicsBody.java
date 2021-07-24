@@ -2,14 +2,13 @@ package main.engine.components;
 
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
-import main.engine.physics.boundaries.Boundary;
-import main.engine.physics.boundaries.CMB;
+import main.engine.physics.boundaries.BoundingSphere;
 import main.game.Door;
 import main.game.Level;
 
 public class PhysicsBody extends GameComponent {
 	
-	private Boundary boundary;
+	private BoundingSphere boundary;
 	
 	private Vector3D acceleration;
 	
@@ -19,13 +18,13 @@ public class PhysicsBody extends GameComponent {
 	
 	private float mass;
 	
-	public PhysicsBody(float mass, Boundary boundary) {
+	public PhysicsBody(float mass, BoundingSphere boundary) {
 		
 		this(mass, boundary, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	
-	public PhysicsBody(float mass, Boundary boundary, Vector3D acceleration, Vector3D velocity, Vector3D pos) {
+	public PhysicsBody(float mass, BoundingSphere boundary, Vector3D acceleration, Vector3D velocity, Vector3D pos) {
 		
 		this.mass = mass;
 		
@@ -36,12 +35,6 @@ public class PhysicsBody extends GameComponent {
 		this.velocity = velocity;
 		
 		this.pos = pos;
-		
-	}
-	
-	public Vector3D getCollision(PhysicsBody body) {
-		
-		return new Vector3D(0, 0, 0);
 		
 	}
 	
@@ -63,11 +56,13 @@ public class PhysicsBody extends GameComponent {
 		
 		getTransform().setPos(pos);
 		
+		boundary.setPos(pos);
+		
 	}
 	
 	public void integrate(float delta) {
 		
-		this.pos = this.pos.add(velocity.scale(delta));
+		pos = pos.add(velocity.getScaled(delta));
 		
 	}
 	
@@ -77,9 +72,21 @@ public class PhysicsBody extends GameComponent {
 		
 	}
 	
+	public void setMass(float mass) {
+		
+		this.mass = mass;
+		
+	}
+	
 	public Vector3D getPos() {
 		
 		return pos;
+		
+	}
+	
+	public void setPos(Vector3D pos) {
+		
+		this.pos = pos;
 		
 	}
 	
@@ -89,13 +96,25 @@ public class PhysicsBody extends GameComponent {
 		
 	}
 	
+	public void setVelocity(Vector3D velocity) {
+		
+		this.velocity = velocity;
+		
+	}
+	
 	public Vector3D getAcceleration() {
 		
 		return acceleration;
 		
 	}
 	
-	public Boundary getBoundary() {
+	public void setAcceleration(Vector3D acceleration) {
+		
+		this.acceleration = acceleration;
+		
+	}
+	
+	public BoundingSphere getBoundary() {
 		
 		return boundary;
 		

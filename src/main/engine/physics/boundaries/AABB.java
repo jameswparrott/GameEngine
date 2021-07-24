@@ -4,7 +4,7 @@ import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 
-public class AABB extends Boundary{
+public class AABB{
 	
 	private Vector3D maxExtend;
 	
@@ -19,8 +19,6 @@ public class AABB extends Boundary{
 	 * @param maxExtend
 	 */
 	public AABB(Vector3D pos, Vector3D maxExtend) {
-		
-		super(pos, Type.AABB);
 		
 		this.maxExtend = maxExtend;
 		
@@ -44,11 +42,13 @@ public class AABB extends Boundary{
 	
 	public IntersectData intersect(AABB aabb) {
 		
-		float distanceToCenter = getPos().sub(aabb.getPos()).length();
+		//float distanceToCenter = getPos().sub(aabb.getPos()).length();
 		
-		float distanceToBoundary = getPos().add(minExtend).sub(aabb.getPos().add(aabb.getMaxExtend())).getMax(getPos().add(maxExtend).sub(aabb.getPos().add(aabb.getMinExtend()))).max();
+		//float distanceToBoundary = getPos().add(minExtend).sub(aabb.getPos().add(aabb.getMaxExtend())).getMax(getPos().add(maxExtend).sub(aabb.getPos().add(aabb.getMinExtend()))).max();
 		
-		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
+		//return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
+		
+		return null;
 		
 	}
 	
@@ -73,13 +73,6 @@ public class AABB extends Boundary{
 	public IntersectData intersect(CMB cmb) {
 		
 		return new IntersectData(false, 0, 0);
-		
-	}
-	
-	@Override
-	public void update(Transform transform) {
-		
-		setPos(transform.getPos());
 		
 	}
 	

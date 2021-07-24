@@ -28,7 +28,7 @@ public class Input {
 	
 	public static void update() {
 		
-		for(int i = 0; i < NUM_KEYS; i++) {
+		for(short i = 0; i < NUM_KEYS; i++) {
 			
 			lastKeys[i] = false;
 			
@@ -241,7 +241,7 @@ public class Input {
 			
 			hideCursor = true;
 		
-		} 
+		}
 		
 		else {
 			

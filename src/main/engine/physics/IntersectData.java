@@ -4,9 +4,13 @@ import main.engine.core.Vector3D;
 
 public class IntersectData {
 	
-	private Vector3D initialVelocityA;
+	private float massA;
 	
-	private Vector3D initialVelocityB;
+	private float massB;
+	
+	private Vector3D velocityA;
+	
+	private Vector3D velocityB;
 	
 	private Vector3D finalVelocityA;
 	
@@ -19,11 +23,10 @@ public class IntersectData {
 	private float distanceToBoundary;
 	
 	/**
-	 * Stores data about two objects, whether they intersect or not, their distance from one another, and the final
-	 * velocities after collision.
-	 * @param intersect
-	 * @param distanceToCenter
-	 * @param distanceToBoundary
+	 * Stores intersect data about two boundaries. 
+	 * @param intersect true if the boundaries intersect, false otherwise.
+	 * @param distanceToCenter distance between the centers of the two boundaries.
+	 * @param distanceToBoundary minimal distance between the boundaries.
 	 */
 	public IntersectData(boolean intersect, float distanceToCenter, float distanceToBoundary) {
 		

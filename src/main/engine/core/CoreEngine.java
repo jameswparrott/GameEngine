@@ -259,6 +259,10 @@ public class CoreEngine {
 		
 		game = new TestGame();
 		
+		game.addPhysicsEngine(physicsEngine);
+		
+		game.addAudioEngine(audioEngine);
+		
 		game.init();
 		
 		Input.keyInput();
@@ -318,10 +322,6 @@ public class CoreEngine {
 					stop();
 					
 				}
-				
-				//Time.setDelta(frameTime);
-				
-				//game.simulate(physicsEngine);
 				
 				game.input((float) frameTime);
 				

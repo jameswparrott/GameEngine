@@ -3,24 +3,34 @@ package main.engine.physics.boundaries;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 
-public class BoundingSphere extends Boundary{
+public class BoundingSphere{
 	
-	float radius;
+	private Vector3D pos;
 	
-	float radiusSq;
+	private float radius;
 	
 	/**
 	 * Constructs a bounding sphere for a physics body to use in collision detection.
 	 * @param pos the position of the center of the bounding sphere
-	 * @param radius the bounding sphere's radius
+	 * @param radius the bounding sphere radius
 	 */
 	public BoundingSphere(Vector3D pos, float radius) {
 		
-		super(pos, Type.Sphere);
+		this.pos = pos;
 		
 		this.radius = radius;
 		
-		this.radiusSq = radius * radius;
+	}
+	
+	public Vector3D getPos() {
+		
+		return this.pos;
+		
+	}
+	
+	public void setPos(Vector3D pos) {
+		
+		this.pos = pos;
 		
 	}
 	
@@ -34,19 +44,16 @@ public class BoundingSphere extends Boundary{
 		
 		this.radius = radius;
 		
-		this.radiusSq = radius * radius;
-		
 	}
 	
-	public float getRadiusSq() {
-		
-		return this.radiusSq;
-		
-	}
-	
+	/**
+	 * Returns intersect data. Intersect data contains a boolean, does intersect
+	 * @param sphere sphere to test intersection with
+	 * @return intersect data
+	 */
 	public IntersectData intersect(BoundingSphere sphere) {
 		
-		float distanceToCenter = getPos().sub(sphere.getPos()).length();
+		float distanceToCenter = pos.sub(sphere.getPos()).length();
 		
 		float distanceToBoundary = distanceToCenter - (getRadius() + sphere.getRadius());
 				

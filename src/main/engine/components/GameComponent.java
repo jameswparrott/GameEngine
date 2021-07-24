@@ -5,6 +5,7 @@ import main.engine.core.Transform;
 import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
 import main.engine.rendering.Shader;
+import main.engine.sound.AudioEngine;
 
 public abstract class GameComponent {
 	
@@ -23,10 +24,6 @@ public abstract class GameComponent {
 	}
 	
 	public void addToRenderingEngine(RenderingEngine renderingEngine) {
-		
-	}
-	
-	public void addToPhysicsEngine(PhysicsEngine physicsEngine) {	
 		
 	}
 	

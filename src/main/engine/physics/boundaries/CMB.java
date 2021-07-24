@@ -7,7 +7,7 @@ import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.rendering.geometry.Triangle;
 
-public class CMB extends Boundary{
+public class CMB{
 	
 	private ArrayList<Vector3D> convexBoundary;
 	
@@ -16,8 +16,6 @@ public class CMB extends Boundary{
 	private Vector3D dir;
 	
 	public CMB(Vector3D pos, ArrayList<Vector3D> vertices) {
-		
-		super(pos, Type.CMB);
 		
 		dir = new Vector3D(1, 1, 1);
 		
@@ -38,22 +36,11 @@ public class CMB extends Boundary{
 	}
 	
 	/**
-	 * Updates the boundary according to the transform
-	 * @param transform
+	 * @param p The first set of vertices.
+	 * @param q The second set of vertices.
+	 * @param initial Any random initial direction.
+	 * @return True if the convex hulls of each set of points intersect, false otherwise.
 	 */
-	@Override
-	public void update(Transform transform) {
-		
-		setPos(transform.getPos());
-		
-		for (int i = 0; i < convexBoundary.size(); i ++) {
-			
-			convexBoundary.set(i, transform.getTransformation().transform(convexBoundary.get(i)));
-			
-		}
-		
-	}
-	
 	public boolean GJK(ArrayList<Vector3D> p, ArrayList<Vector3D> q, Vector3D initial) {
 
 		Vector3D a = directionalMax(p, initial).sub(directionalMax(q, initial.getScaled(-1)));

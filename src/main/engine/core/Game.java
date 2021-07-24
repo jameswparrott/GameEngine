@@ -1,6 +1,9 @@
 package main.engine.core;
 
+import main.engine.components.GameComponent;
+import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
+import main.engine.sound.AudioEngine;
 
 public abstract class Game {
 	
@@ -8,7 +11,23 @@ public abstract class Game {
 	
 	private GameObject hudRoot;
 	
+	private PhysicsEngine physicsEngine;
+	
+	private AudioEngine audioEngine;
+	
 	public void init() {
+		
+	}
+	
+	public void addPhysicsEngine(PhysicsEngine physicsEngine) {
+		
+		this.physicsEngine = physicsEngine;
+		
+	}
+	
+	public void addAudioEngine(AudioEngine audioEngine) {
+		
+		this.audioEngine = audioEngine;
 		
 	}
 	
@@ -40,9 +59,45 @@ public abstract class Game {
 		
 	}
 	
+	public void removeObject(GameObject gameObject) {
+		
+		getRootObject().removeChild(gameObject);
+		
+	}
+	
+	public void addComponent(GameComponent component) {
+		
+		getRootObject().addComponent(component);
+		
+	}
+	
+	public void removeComponent(GameComponent component) {
+		
+		getRootObject().removeComponent(component);
+		
+	}
+	
 	public void addHudObject(GameObject hudObject) {
 		
 		getHudRoot().addChild(hudObject);
+		
+	}
+	
+	public void removeHudObject(GameObject hudObject) {
+		
+		getHudRoot().removeChild(hudObject);
+		
+	}
+	
+	public PhysicsEngine getPhysicsEngine() {
+		
+		return physicsEngine;
+		
+	}
+	
+	public AudioEngine getAudioEngine() {
+		
+		return audioEngine;
 		
 	}
 	

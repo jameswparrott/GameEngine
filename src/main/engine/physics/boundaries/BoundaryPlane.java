@@ -3,7 +3,7 @@ package main.engine.physics.boundaries;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 
-public class BoundaryPlane extends Boundary{
+public class BoundaryPlane{
 	
 	private Vector3D normal;
 	
@@ -15,81 +15,77 @@ public class BoundaryPlane extends Boundary{
 
 	public BoundaryPlane(Vector3D pos, Vector3D normal) {
 		
-		super(pos, Type.Plane);
-		
 		this.normal = normal.getNorm();
 		
 	}
 	
 	public IntersectData intersect(BoundaryPlane plane) {
 		
-		float distanceToCenter = getPos().sub(plane.getPos()).length();
+//		float distanceToCenter = getPos().sub(plane.getPos()).length();
+//		
+//		boolean intersect = !getNormal().equals(plane.getNormal());
+//		
+//		float distanceToBoundary = intersect ? 0 : distanceToCenter;
+//		
+//		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
 		
-		boolean intersect = !getNormal().equals(plane.getNormal());
-		
-		float distanceToBoundary = intersect ? 0 : distanceToCenter;
-		
-		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
+		return null;
 		
 	}
 	
 	public IntersectData intersect(BoundingSphere sphere) {
 		
-		float distanceToCenter = Math.abs(sphere.getPos().sub(getPos()).dot(normal));
+//		float distanceToCenter = Math.abs(sphere.getPos().sub(getPos()).dot(normal));
+//		
+//		float distanceToBoundary = distanceToCenter - sphere.getRadius();
+//		
+//		boolean intersect = distanceToCenter < sphere.getRadius();
+//		
+//		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
 		
-		float distanceToBoundary = distanceToCenter - sphere.getRadius();
-		
-		boolean intersect = distanceToCenter < sphere.getRadius();
-		
-		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
+		return null;
 		
 	}
 	
 	public IntersectData intersect(AABB aabb) {
 		
-		float distanceToCenter = Math.abs(aabb.getPos().sub(getPos()).dot(normal));
+//		float distanceToCenter = Math.abs(aabb.getPos().sub(getPos()).dot(normal));
+//		
+//		float distanceToBoundary = distanceToCenter;
+//		
+//		if(normal.getX() != 0 && normal.getY() != 0 && normal.getZ() != 0) {
+//			
+//			distanceToBoundary -= aabb.getDxyz();
+//			
+//		} else if(normal.getX() == 0 && normal.getY() == 0) {
+//			
+//			distanceToBoundary -= aabb.getMaxExtend().getZ();
+//			
+//		} else if(normal.getX() == 0 && normal.getZ() == 0) {
+//			
+//			distanceToBoundary -= aabb.getMaxExtend().getY();
+//			
+//		} else if(normal.getY() == 0 && normal.getZ() == 0) {
+//			
+//			distanceToBoundary -= aabb.getMaxExtend().getX();
+//			
+//		} else if(normal.getX() == 0) {
+//			
+//			distanceToBoundary -= aabb.getDyz();
+//			
+//		} else if(normal.getY() == 0) {
+//			
+//			distanceToBoundary -= aabb.getDxz();
+//			
+//		} else if(normal.getZ() == 0) {
+//			
+//			distanceToBoundary -= aabb.getDxy();
+//			
+//		}
+//		
+//		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
 		
-		float distanceToBoundary = distanceToCenter;
-		
-		if(normal.getX() != 0 && normal.getY() != 0 && normal.getZ() != 0) {
-			
-			distanceToBoundary -= aabb.getDxyz();
-			
-		} else if(normal.getX() == 0 && normal.getY() == 0) {
-			
-			distanceToBoundary -= aabb.getMaxExtend().getZ();
-			
-		} else if(normal.getX() == 0 && normal.getZ() == 0) {
-			
-			distanceToBoundary -= aabb.getMaxExtend().getY();
-			
-		} else if(normal.getY() == 0 && normal.getZ() == 0) {
-			
-			distanceToBoundary -= aabb.getMaxExtend().getX();
-			
-		} else if(normal.getX() == 0) {
-			
-			distanceToBoundary -= aabb.getDyz();
-			
-		} else if(normal.getY() == 0) {
-			
-			distanceToBoundary -= aabb.getDxz();
-			
-		} else if(normal.getZ() == 0) {
-			
-			distanceToBoundary -= aabb.getDxy();
-			
-		}
-		
-		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
-		
-	}
-	
-	public IntersectData intersect(CMB cmb) {
-		
-		float distanceToCenter = Math.abs(cmb.getPos().sub(getPos()).dot(normal));
-		
-		return new IntersectData(false, distanceToCenter, 0);
+		return null;
 		
 	}
 	
