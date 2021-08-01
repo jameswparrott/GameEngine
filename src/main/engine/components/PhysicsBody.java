@@ -2,13 +2,13 @@ package main.engine.components;
 
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
-import main.engine.physics.boundaries.BoundingSphere;
+import main.engine.physics.boundaries.Boundary;
 import main.game.Door;
 import main.game.Level;
 
 public class PhysicsBody extends GameComponent {
 	
-	private BoundingSphere boundary;
+	private Boundary boundary;
 	
 	private Vector3D acceleration;
 	
@@ -18,13 +18,19 @@ public class PhysicsBody extends GameComponent {
 	
 	private float mass;
 	
-	public PhysicsBody(float mass, BoundingSphere boundary) {
+	public PhysicsBody(float mass, Boundary boundary) {
 		
 		this(mass, boundary, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	
-	public PhysicsBody(float mass, BoundingSphere boundary, Vector3D acceleration, Vector3D velocity, Vector3D pos) {
+	public PhysicsBody(float mass, Boundary boundary, Vector3D pos) {
+		
+		this(mass, boundary, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), pos);
+		
+	}
+	
+	public PhysicsBody(float mass, Boundary boundary, Vector3D acceleration, Vector3D velocity, Vector3D pos) {
 		
 		this.mass = mass;
 		
@@ -47,12 +53,6 @@ public class PhysicsBody extends GameComponent {
 	
 	@Override
 	public void update(float delta) {
-		
-		//TODO: make everything in terms of SI units
-		
-		//velocity = velocity.add(acceleration.getScaled(delta * 0.5f));
-		
-		//getTransform().setPos(getTransform().getPos().add(velocity.getScaled(delta)));
 		
 		getTransform().setPos(pos);
 		
@@ -114,7 +114,7 @@ public class PhysicsBody extends GameComponent {
 		
 	}
 	
-	public BoundingSphere getBoundary() {
+	public Boundary getBoundary() {
 		
 		return boundary;
 		

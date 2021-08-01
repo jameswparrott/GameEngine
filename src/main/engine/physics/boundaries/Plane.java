@@ -3,7 +3,7 @@ package main.engine.physics.boundaries;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 
-public class BoundaryPlane{
+public class Plane extends Boundary{
 	
 	private Vector3D normal;
 	
@@ -13,13 +13,15 @@ public class BoundaryPlane{
 	
 	//private boolean dx, dy, dz;
 
-	public BoundaryPlane(Vector3D pos, Vector3D normal) {
+	public Plane(Vector3D pos, Vector3D normal) {
+		
+		super(boundaryType.TYPE_PLANE, pos);
 		
 		this.normal = normal.getNorm();
 		
 	}
 	
-	public IntersectData intersect(BoundaryPlane plane) {
+	public IntersectData intersect(Plane plane) {
 		
 //		float distanceToCenter = getPos().sub(plane.getPos()).length();
 //		
@@ -33,7 +35,7 @@ public class BoundaryPlane{
 		
 	}
 	
-	public IntersectData intersect(BoundingSphere sphere) {
+	public IntersectData intersect(Sphere sphere) {
 		
 //		float distanceToCenter = Math.abs(sphere.getPos().sub(getPos()).dot(normal));
 //		

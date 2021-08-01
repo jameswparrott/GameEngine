@@ -3,7 +3,10 @@ package main.engine.physics;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_I;
+
 import main.engine.components.PhysicsBody;
+import main.engine.core.Input;
 
 public class PhysicsEngine {
 	
@@ -42,6 +45,14 @@ public class PhysicsEngine {
 			for (int j = i + 1; j < physicsBodies.size(); j ++) {
 				
 				IntersectData intersectData = physicsBodies.get(i).getBoundary().intersect(physicsBodies.get(j).getBoundary());
+				
+				if (Input.getKeyPressed(GLFW_KEY_I)) {
+					
+					System.out.println("A pos: " + physicsBodies.get(i).getPos().toString());
+					
+					System.out.println("B pos: " + physicsBodies.get(j).getPos().toString());
+					
+				}
 				
 				if (intersectData.getIntersect()) {
 					

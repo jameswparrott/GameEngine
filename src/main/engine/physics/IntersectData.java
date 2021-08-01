@@ -24,9 +24,9 @@ public class IntersectData {
 	
 	/**
 	 * Stores intersect data about two boundaries. 
-	 * @param intersect true if the boundaries intersect, false otherwise.
-	 * @param distanceToCenter distance between the centers of the two boundaries.
-	 * @param distanceToBoundary minimal distance between the boundaries.
+	 * @param intersect true if the boundaries intersect, false otherwise
+	 * @param distanceToCenter distance between the centers of the two boundaries
+	 * @param distanceToBoundary minimal distance between the boundaries
 	 */
 	public IntersectData(boolean intersect, float distanceToCenter, float distanceToBoundary) {
 		

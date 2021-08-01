@@ -1,24 +1,22 @@
 package main.engine.physics.boundaries;
 
-import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 
-public class AABB{
+public class AABB extends Boundary{
 	
 	private Vector3D maxExtend;
-	
-	private Vector3D minExtend;
 	
 	private float dxyz, dxy, dyz, dxz;
 	
 	/**
-	 * Axis-Aligned Bounding Box for physics bodies to detect collisions with other physics
-	 * bodies.
-	 * @param pos
-	 * @param maxExtend
+	 * Constructs an Axis-Aligned Bounding Box for a physics body to use in collision detection.
+	 * @param pos position of the center of the aabb
+	 * @param maxExtend from the center, the distances in the positive x y and z directions
 	 */
 	public AABB(Vector3D pos, Vector3D maxExtend) {
+		
+		super(boundaryType.TYPE_AABB, pos);
 		
 		this.maxExtend = maxExtend;
 		
@@ -27,8 +25,6 @@ public class AABB{
 	}
 	
 	private void resize(Vector3D maxExtend) {
-		
-		minExtend = maxExtend.getScaled(-1.0f);
 		
 		dxyz = maxExtend.length();
 		
@@ -42,17 +38,17 @@ public class AABB{
 	
 	public IntersectData intersect(AABB aabb) {
 		
-		//float distanceToCenter = getPos().sub(aabb.getPos()).length();
+		float distanceToCenter = getPos().sub(aabb.getPos()).length();
 		
-		//float distanceToBoundary = getPos().add(minExtend).sub(aabb.getPos().add(aabb.getMaxExtend())).getMax(getPos().add(maxExtend).sub(aabb.getPos().add(aabb.getMinExtend()))).max();
+		//float distanceToBoundary = getPos().add(getMinExtend()).sub(aabb.getPos().add(aabb.getMaxExtend())).getMax(getPos().add(getMaxExtend()).sub(aabb.getPos().add(aabb.getMinExtend()))).max();
 		
-		//return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
+		float distanceToBoundary = aabb.getMin().sub(getMax()).getMax(getMin().sub(aabb.getMax())).max();
 		
-		return null;
+		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
 		
 	}
 	
-	public IntersectData intersect(BoundaryPlane plane) {
+	public IntersectData intersect(Plane plane) {
 		
 		float distanceToCenter = 0;
 		
@@ -64,7 +60,7 @@ public class AABB{
 		
 	}
 	
-	public IntersectData intersect(BoundingSphere sphere) {
+	public IntersectData intersect(Sphere sphere) {
 		
 		return new IntersectData(false, 0, 0);
 		
@@ -92,7 +88,19 @@ public class AABB{
 	
 	public Vector3D getMinExtend() {
 		
-		return minExtend;
+		return maxExtend.getScaled(-1.0f);
+		
+	}
+	
+	public Vector3D getMax() {
+		
+		return getPos().add(getMaxExtend());
+		
+	}
+	
+	public Vector3D getMin() {
+		
+		return getPos().add(getMinExtend());
 		
 	}
 

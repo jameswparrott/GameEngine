@@ -7,7 +7,7 @@ import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.rendering.geometry.Triangle;
 
-public class CMB{
+public class CMB extends Boundary{
 	
 	private ArrayList<Vector3D> convexBoundary;
 	
@@ -16,6 +16,8 @@ public class CMB{
 	private Vector3D dir;
 	
 	public CMB(Vector3D pos, ArrayList<Vector3D> vertices) {
+		
+		super(boundaryType.TYPE_CMB, pos);
 		
 		dir = new Vector3D(1, 1, 1);
 		

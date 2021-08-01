@@ -1,35 +1,28 @@
 package main.engine.physics.materials;
 
 public class PhysicsMaterial {
-
-	private static enum hardness {
+	
+	private boolean permeable;
+	
+	private boolean elastic;
+	
+	public PhysicsMaterial(boolean permeable, boolean elastic) {
 		
-		veryHard,
+		this.permeable = permeable;
 		
-		hard,
-		
-		medium,
-		
-		soft,
-		
-		verySoft;
+		this.elastic = elastic;
 		
 	}
 	
-	private static enum phase {
+	public boolean getPermeable() {
 		
-		solid,
-		
-		liquid,
-		
-		gas,
-		
-		plasma;
+		return permeable;
 		
 	}
 	
-	public PhysicsMaterial() {
+	public boolean getElastic() {
 		
+		return elastic;
 		
 	}
 	
