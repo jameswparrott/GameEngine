@@ -1,6 +1,6 @@
 package main.engine.components;
 
-import main.engine.sound.AudioEngine;
+import main.engine.audio.AudioEngine;
 
 public class AudioEngineComponent extends GameComponent{
 

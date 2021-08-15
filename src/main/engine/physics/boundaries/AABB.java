@@ -40,8 +40,7 @@ public class AABB extends Boundary{
 		
 		float distanceToCenter = getPos().sub(aabb.getPos()).length();
 		
-		//float distanceToBoundary = getPos().add(getMinExtend()).sub(aabb.getPos().add(aabb.getMaxExtend())).getMax(getPos().add(getMaxExtend()).sub(aabb.getPos().add(aabb.getMinExtend()))).max();
-		
+		//Gets maximum component from B_min - A_max and A_min - B_max
 		float distanceToBoundary = aabb.getMin().sub(getMax()).getMax(getMin().sub(aabb.getMax())).max();
 		
 		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
@@ -61,6 +60,12 @@ public class AABB extends Boundary{
 	}
 	
 	public IntersectData intersect(Sphere sphere) {
+		
+		float distanceToCenter = 0;
+		
+		float distanceToBoundary = 0;
+		
+		boolean intersect = false;
 		
 		return new IntersectData(false, 0, 0);
 		

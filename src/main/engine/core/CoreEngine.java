@@ -56,9 +56,9 @@ import org.lwjgl.openal.ALUtil;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import main.engine.audio.AudioEngine;
 import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
-import main.engine.sound.AudioEngine;
 import main.game.TestGame;
 
 public class CoreEngine {

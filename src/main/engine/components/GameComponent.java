@@ -1,11 +1,11 @@
 package main.engine.components;
 
+import main.engine.audio.AudioEngine;
 import main.engine.core.GameObject;
 import main.engine.core.Transform;
 import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
 import main.engine.rendering.Shader;
-import main.engine.sound.AudioEngine;
 
 public abstract class GameComponent {
 	

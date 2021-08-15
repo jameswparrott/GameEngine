@@ -6,12 +6,6 @@ import main.engine.physics.IntersectData;
 public class Plane extends Boundary{
 	
 	private Vector3D normal;
-	
-	//private boolean dxyz;
-	
-	//private boolean dxy, dyz, dxz;
-	
-	//private boolean dx, dy, dz;
 
 	public Plane(Vector3D pos, Vector3D normal) {
 		
@@ -23,29 +17,25 @@ public class Plane extends Boundary{
 	
 	public IntersectData intersect(Plane plane) {
 		
-//		float distanceToCenter = getPos().sub(plane.getPos()).length();
-//		
-//		boolean intersect = !getNormal().equals(plane.getNormal());
-//		
-//		float distanceToBoundary = intersect ? 0 : distanceToCenter;
-//		
-//		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
+		float distanceToCenter = getPos().sub(plane.getPos()).length();
 		
-		return null;
+		boolean intersect = !getNormal().equals(plane.getNormal());
+		
+		float distanceToBoundary = intersect ? 0 : distanceToCenter;
+		
+		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
 		
 	}
 	
 	public IntersectData intersect(Sphere sphere) {
 		
-//		float distanceToCenter = Math.abs(sphere.getPos().sub(getPos()).dot(normal));
-//		
-//		float distanceToBoundary = distanceToCenter - sphere.getRadius();
-//		
-//		boolean intersect = distanceToCenter < sphere.getRadius();
-//		
-//		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
+		float distanceToCenter = Math.abs(sphere.getPos().sub(getPos()).dot(normal));
 		
-		return null;
+		float distanceToBoundary = distanceToCenter - sphere.getRadius();
+		
+		boolean intersect = distanceToBoundary < 0;
+		
+		return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
 		
 	}
 	

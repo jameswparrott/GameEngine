@@ -13,6 +13,7 @@ import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
 import main.engine.physics.boundaries.AABB;
 import main.engine.physics.boundaries.Sphere;
+import main.engine.physics.materials.PhysicsMaterial;
 import main.engine.rendering.Material;
 import main.engine.rendering.Mesh;
 import main.engine.rendering.TextObject;
@@ -71,13 +72,21 @@ public class TestGame extends Game {
 //		planeObject.addComponent(planeRenderer);
 //		addObject(planeObject);
 		
+		GameObject gubObject = new GameObject();
+		Mesh gubMesh = new Mesh("box1.obj");
+		Material gubMaterial = new Material();
+		MeshRenderer gubRenderer = new MeshRenderer(gubMesh, gubMaterial);
+		gubObject.addComponent(gubRenderer);
+		addObject(gubObject);
+		
 		GameObject monkeyObject = new GameObject();
 		Mesh monkeyMesh = new Mesh("monkey1.obj");
 		Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
 		MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
 		Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), 1.0f);
 		AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
-		PhysicsBody monkeyPhysics = new PhysicsBody(10, aAABB, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0.1f), new Vector3D(0, 3, 0));
+		PhysicsMaterial aMaterial = new PhysicsMaterial(false, true);
+		PhysicsBody monkeyPhysics = new PhysicsBody(10, aAABB, aMaterial, new Vector3D(0, 0, 0.1f), new Vector3D(0, 0, 0.1f), new Vector3D(0, 3, 0));
 		monkeyObject.addComponent(monkeyRenderer);
 		monkeyObject.addComponent(monkeyPhysics);
 		pec.add(monkeyPhysics);
@@ -87,7 +96,8 @@ public class TestGame extends Game {
 		MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
 		Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), 1.0f);
 		AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
-		PhysicsBody monkeyPhysics2 = new PhysicsBody(10, bAABB, new Vector3D(0, 0, 0), new Vector3D(0, 0, -0.2f), new Vector3D(0, 3, 10));
+		PhysicsMaterial bMaterial = new PhysicsMaterial(false, true);
+		PhysicsBody monkeyPhysics2 = new PhysicsBody(10, bAABB, bMaterial, new Vector3D(0, 0, -0.1f), new Vector3D(0, 0, -0.2f), new Vector3D(0, 3, 10));
 		monkeyObject2.addComponent(monkeyRenderer2);
 		monkeyObject2.addComponent(monkeyPhysics2);
 		monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
@@ -98,7 +108,8 @@ public class TestGame extends Game {
 		MeshRenderer monkeyRenderer3 = new MeshRenderer(monkeyMesh, monkeyMaterial);
 		Sphere cSphere = new Sphere(new Vector3D(10, 3, 0), 1.0f);
 		AABB cAABB = new AABB(new Vector3D(10, 3, 0), new Vector3D(1, 1, 1));
-		PhysicsBody monkeyPhysics3 = new PhysicsBody(10, cAABB, new Vector3D(0, 0, 0), new Vector3D(-0.2f, 0, 0), new Vector3D(10, 3, 0));
+		PhysicsMaterial cMaterial = new PhysicsMaterial(false, true);
+		PhysicsBody monkeyPhysics3 = new PhysicsBody(10, cAABB, cMaterial, new Vector3D(-0.1f, 0, 0), new Vector3D(-0.2f, 0, 0), new Vector3D(10, 3, 0));
 		monkeyObject3.addComponent(monkeyRenderer3);
 		monkeyObject3.addComponent(monkeyPhysics3);
 		monkeyObject3.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(90));

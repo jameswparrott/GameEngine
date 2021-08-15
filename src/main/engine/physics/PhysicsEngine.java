@@ -46,29 +46,25 @@ public class PhysicsEngine {
 				
 				IntersectData intersectData = physicsBodies.get(i).getBoundary().intersect(physicsBodies.get(j).getBoundary());
 				
-				if (Input.getKeyPressed(GLFW_KEY_I)) {
+				if (!physicsBodies.get(i).getMaterial().getPermeable() && !physicsBodies.get(j).getMaterial().getPermeable()) {
 					
-					System.out.println("A pos: " + physicsBodies.get(i).getPos().toString());
-					
-					System.out.println("B pos: " + physicsBodies.get(j).getPos().toString());
-					
-				}
-				
-				if (intersectData.getIntersect()) {
-					
-					System.out.println("Collision!");
-					
-					System.out.println("Distance to center: " + intersectData.getDistanceToCenter());
-					
-					System.out.println("Distance to boundary: " + intersectData.getDistanceToBoundary());
-					
-					//System.out.println("Object 1 position: " + physicsBodies.get(i).getPos().toString());
-					
-					//System.out.println("Object 2 position: " + physicsBodies.get(j).getPos().toString());
-					
-					physicsBodies.get(i).setVelocity(physicsBodies.get(i).getVelocity().getScaled(-1.0f));
-					
-					physicsBodies.get(j).setVelocity(physicsBodies.get(j).getVelocity().getScaled(-1.0f));
+					if (intersectData.getIntersect()) {
+						
+						System.out.println("Collision!");
+						
+						System.out.println("Distance to center: " + intersectData.getDistanceToCenter());
+						
+						System.out.println("Distance to boundary: " + intersectData.getDistanceToBoundary());
+						
+						//System.out.println("Object 1 position: " + physicsBodies.get(i).getPos().toString());
+						
+						//System.out.println("Object 2 position: " + physicsBodies.get(j).getPos().toString());
+						
+						physicsBodies.get(i).setVelocity(physicsBodies.get(i).getVelocity().getScaled(-1.0f));
+						
+						physicsBodies.get(j).setVelocity(physicsBodies.get(j).getVelocity().getScaled(-1.0f));
+						
+					}	
 					
 				}
 				

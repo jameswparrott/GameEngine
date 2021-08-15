@@ -1,4 +1,4 @@
-package main.engine.sound;
+package main.engine.audio;
 
 import static org.lwjgl.openal.AL10.alListener3f;
 import static org.lwjgl.openal.AL10.alListenerfv;

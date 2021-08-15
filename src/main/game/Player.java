@@ -12,6 +12,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
+import main.engine.audio.AudioEngine;
 import main.engine.components.Camera;
 import main.engine.components.Listener;
 import main.engine.components.SpotLight;
@@ -21,7 +22,6 @@ import main.engine.core.Input;
 import main.engine.core.Quaternion;
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
-import main.engine.sound.AudioEngine;
 
 public class Player extends GameObject {
 	

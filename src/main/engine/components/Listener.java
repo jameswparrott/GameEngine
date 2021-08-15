@@ -1,7 +1,7 @@
 package main.engine.components;
 
+import main.engine.audio.AudioListener;
 import main.engine.core.Vector3D;
-import main.engine.sound.AudioListener;
 
 public class Listener extends GameComponent {
 	

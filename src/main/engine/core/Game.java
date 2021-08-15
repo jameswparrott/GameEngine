@@ -1,9 +1,9 @@
 package main.engine.core;
 
+import main.engine.audio.AudioEngine;
 import main.engine.components.GameComponent;
 import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
-import main.engine.sound.AudioEngine;
 
 public abstract class Game {
 	

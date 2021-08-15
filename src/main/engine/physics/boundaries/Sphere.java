@@ -1,6 +1,7 @@
 package main.engine.physics.boundaries;
 
 import main.engine.core.Vector3D;
+import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
 
 public class Sphere extends Boundary{
@@ -45,6 +46,30 @@ public class Sphere extends Boundary{
 		float distanceToBoundary = distanceToCenter - (getRadius() + sphere.getRadius());
 				
 		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
+		
+	}
+	
+	public CollisionData collide(Sphere sphere, boolean elasticA, boolean elasticB, float massA, float massB, Vector3D velocityA, Vector3D velocityB) {
+		
+		Vector3D finalVelocityA = velocityA;
+		
+		Vector3D finalVelocityB = velocityB;
+		
+		Vector3D posA = getPos();
+		
+		Vector3D posB = sphere.getPos();
+		
+		if( !elasticA || !elasticB) {
+			
+			//Inelastic collision
+			
+		} else {
+			
+			//Elastic collision
+			
+		}
+		
+		return new CollisionData(finalVelocityA, finalVelocityB);
 		
 	}
 	

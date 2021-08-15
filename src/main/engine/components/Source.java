@@ -1,8 +1,8 @@
 package main.engine.components;
 
+import main.engine.audio.AudioEngine;
+import main.engine.audio.AudioSource;
 import main.engine.core.Vector3D;
-import main.engine.sound.AudioEngine;
-import main.engine.sound.AudioSource;
 
 public class Source extends GameComponent {
 	

@@ -1,4 +1,4 @@
-package main.engine.sound;
+package main.engine.audio;
 
 import java.util.ArrayList;
 import java.util.HashMap;

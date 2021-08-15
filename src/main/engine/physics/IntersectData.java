@@ -4,18 +4,6 @@ import main.engine.core.Vector3D;
 
 public class IntersectData {
 	
-	private float massA;
-	
-	private float massB;
-	
-	private Vector3D velocityA;
-	
-	private Vector3D velocityB;
-	
-	private Vector3D finalVelocityA;
-	
-	private Vector3D finalVelocityB;
-	
 	private boolean intersect;
 	
 	private float distanceToCenter;
@@ -53,18 +41,6 @@ public class IntersectData {
 	public float getDistanceToBoundary() {
 		
 		return distanceToBoundary;
-		
-	}
-	
-	public Vector3D getVelocityA() {
-		
-		return finalVelocityA;
-		
-	}
-	
-	public Vector3D getVelocityB() {
-		
-		return finalVelocityB;
 		
 	}
 
