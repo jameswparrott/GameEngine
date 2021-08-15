@@ -72,12 +72,12 @@ public class TestGame extends Game {
 //		planeObject.addComponent(planeRenderer);
 //		addObject(planeObject);
 		
-		GameObject gubObject = new GameObject();
-		Mesh gubMesh = new Mesh("box1.obj");
-		Material gubMaterial = new Material();
-		MeshRenderer gubRenderer = new MeshRenderer(gubMesh, gubMaterial);
-		gubObject.addComponent(gubRenderer);
-		addObject(gubObject);
+//		GameObject gubObject = new GameObject();
+//		Mesh gubMesh = new Mesh("box1.obj");
+//		Material gubMaterial = new Material();
+//		MeshRenderer gubRenderer = new MeshRenderer(gubMesh, gubMaterial);
+//		gubObject.addComponent(gubRenderer);
+//		addObject(gubObject);
 		
 		GameObject monkeyObject = new GameObject();
 		Mesh monkeyMesh = new Mesh("monkey1.obj");
