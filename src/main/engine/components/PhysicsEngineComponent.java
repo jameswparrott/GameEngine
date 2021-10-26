@@ -33,9 +33,9 @@ public class PhysicsEngineComponent extends GameComponent {
 		
 	}
 	
-	public void add(PhysicsBody physicsBody) {
+	public void add(PhysicsBodyComponent physicsBodyComponent) {
 		
-		physicsEngine.add(physicsBody);
+		physicsEngine.add(physicsBodyComponent.getPhysicsBody());
 		
 	}
 	

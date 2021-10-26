@@ -1,6 +1,7 @@
 package main.engine.physics.boundaries;
 
 import main.engine.core.Vector3D;
+import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
 
 public class Plane extends Boundary{
@@ -12,6 +13,36 @@ public class Plane extends Boundary{
 		super(boundaryType.TYPE_PLANE, pos);
 		
 		this.normal = normal.getNorm();
+		
+	}
+	
+	public IntersectData intersect(Boundary boundary) {
+		
+		switch(boundary.getType()) {
+		
+		case TYPE_PLANE:
+			
+			return intersect((Plane) boundary);
+			
+		case TYPE_SPHERE:
+			
+			return intersect((Sphere) boundary);
+				
+		case TYPE_CMB:
+			
+			return intersect((CMB) boundary);
+		
+		case TYPE_AABB:
+			
+			return intersect((AABB) boundary);
+			
+		default:
+			
+			System.err.println("Sphere attempted to intersect with an undefined boundary");
+			
+			return new IntersectData(false, 0, 0);
+		
+		}
 		
 	}
 	
@@ -78,6 +109,12 @@ public class Plane extends Boundary{
 //		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
 		
 		return null;
+		
+	}
+	
+	public CollisionData collide(Boundary boundary) {
+		
+		return new CollisionData(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	

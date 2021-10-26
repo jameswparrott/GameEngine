@@ -10,7 +10,21 @@ public class CollisionData {
 	
 	public CollisionData(Vector3D finalVelocityA, Vector3D finalVelocityB) {
 		
+		this.finalVelocityA = finalVelocityA;
 		
+		this.finalVelocityB = finalVelocityB;
+		
+	}
+	
+	public Vector3D getFinalVelocityA() {
+		
+		return finalVelocityA;
+		
+	}
+	
+	public Vector3D getFinalVelocityB() {
+		
+		return finalVelocityB;
 		
 	}
 

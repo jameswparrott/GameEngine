@@ -5,7 +5,6 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_I;
 
-import main.engine.components.PhysicsBody;
 import main.engine.core.Input;
 
 public class PhysicsEngine {
@@ -50,11 +49,11 @@ public class PhysicsEngine {
 					
 					if (intersectData.getIntersect()) {
 						
-						System.out.println("Collision!");
+						//System.out.println("Collision!");
 						
-						System.out.println("Distance to center: " + intersectData.getDistanceToCenter());
+						//System.out.println("Distance to center: " + intersectData.getDistanceToCenter());
 						
-						System.out.println("Distance to boundary: " + intersectData.getDistanceToBoundary());
+						//System.out.println("Distance to boundary: " + intersectData.getDistanceToBoundary());
 						
 						//System.out.println("Object 1 position: " + physicsBodies.get(i).getPos().toString());
 						

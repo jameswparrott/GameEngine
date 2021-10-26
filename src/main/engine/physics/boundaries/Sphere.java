@@ -33,6 +33,36 @@ public class Sphere extends Boundary{
 		
 	}
 	
+	public IntersectData intersect(Boundary boundary) {
+		
+		switch(boundary.getType()) {
+		
+		case TYPE_PLANE:
+			
+			return intersect((Plane) boundary);
+			
+		case TYPE_SPHERE:
+			
+			return intersect((Sphere) boundary);
+				
+		case TYPE_CMB:
+			
+			return intersect((CMB) boundary);
+		
+		case TYPE_AABB:
+			
+			return intersect((AABB) boundary);
+			
+		default:
+			
+			System.err.println("Sphere attempted to intersect with an undefined boundary");
+			
+			return new IntersectData(false, 0, 0);
+		
+		}
+		
+	}
+	
 	/**
 	 * Returns intersect data containing information about the intersection. If the intersection occurs, the distance
 	 * between the two centers, and the minimal distance between the boundaries.
@@ -46,30 +76,6 @@ public class Sphere extends Boundary{
 		float distanceToBoundary = distanceToCenter - (getRadius() + sphere.getRadius());
 				
 		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
-		
-	}
-	
-	public CollisionData collide(Sphere sphere, boolean elasticA, boolean elasticB, float massA, float massB, Vector3D velocityA, Vector3D velocityB) {
-		
-		Vector3D finalVelocityA = velocityA;
-		
-		Vector3D finalVelocityB = velocityB;
-		
-		Vector3D posA = getPos();
-		
-		Vector3D posB = sphere.getPos();
-		
-		if( !elasticA || !elasticB) {
-			
-			//Inelastic collision
-			
-		} else {
-			
-			//Elastic collision
-			
-		}
-		
-		return new CollisionData(finalVelocityA, finalVelocityB);
 		
 	}
 	
@@ -106,6 +112,36 @@ public class Sphere extends Boundary{
 	public IntersectData intersect(CMB cmb) {
 		
 		return new IntersectData(false, 0, 0);
+		
+	}
+	
+	public CollisionData collide(Boundary boundary) {
+		
+		return new CollisionData(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+		
+	}
+	
+	public CollisionData collide(Sphere sphere, boolean elasticA, boolean elasticB, float massA, float massB, Vector3D velocityA, Vector3D velocityB) {
+		
+		Vector3D finalVelocityA = velocityA;
+		
+		Vector3D finalVelocityB = velocityB;
+		
+		Vector3D posA = getPos();
+		
+		Vector3D posB = sphere.getPos();
+		
+		if( !elasticA || !elasticB) {
+			
+			//Inelastic collision
+			
+		} else {
+			
+			//Elastic collision
+			
+		}
+		
+		return new CollisionData(finalVelocityA, finalVelocityB);
 		
 	}
 	

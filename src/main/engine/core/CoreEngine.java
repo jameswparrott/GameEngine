@@ -40,6 +40,7 @@ import static org.lwjgl.openal.ALC10.alcOpenDevice;
 import static org.lwjgl.openal.ALC11.ALC_ALL_DEVICES_SPECIFIER;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -91,13 +92,13 @@ public class CoreEngine {
 		
 		isRunning = false;
 		
-		width = 800;
+		width = 1280;
 		
-		height = 600;
+		height = 720;
 		
 		framerate = 60.0;
 		
-		title = "Game Engine 0.4.8";
+		title = "Game Engine v0.4.9";
 		
 	}
 	
@@ -337,12 +338,14 @@ public class CoreEngine {
 					
 					height = (int) Input.getWindowSize().getY();
 					
+					//Necessary to resize on machines running Windows OS...
+					glViewport(0, 0, width, height);
+					
 					renderingEngine.setOrthographic(width, height);
 					
 					System.out.println("New size: " + width + "x" + height);
 					
 					//TODO: Update camera class to add a method for updating the aspect ratio in a nicer way
-					
 					renderingEngine.getMainCamera().getViewProjection().initPerspective((float) Math.toRadians(70.0f), 
 																						(float) width/(float) height, 
 																						0.01f, 1000.0f);

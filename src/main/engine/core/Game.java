@@ -15,6 +15,14 @@ public abstract class Game {
 	
 	private AudioEngine audioEngine;
 	
+	public Game() {
+		
+		root = new GameObject();
+		
+		hudRoot = new GameObject();
+		
+	}
+	
 	public void init() {
 		
 	}
@@ -103,9 +111,9 @@ public abstract class Game {
 	
 	private GameObject getRootObject() {
 		
-		if(root == null)
-			
-			root = new GameObject();
+//		if(root == null)
+//			
+//			root = new GameObject();
 		
 		return root;
 		
@@ -113,9 +121,9 @@ public abstract class Game {
 	
 	private GameObject getHudRoot() {
 		
-		if(hudRoot == null)
-			
-			hudRoot = new GameObject();
+//		if(hudRoot == null)
+//			
+//			hudRoot = new GameObject();
 		
 		return hudRoot;
 		

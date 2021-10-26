@@ -3,7 +3,7 @@ package main.game;
 import main.engine.components.AudioEngineComponent;
 import main.engine.components.DirectionalLight;
 import main.engine.components.MeshRenderer;
-import main.engine.components.PhysicsBody;
+import main.engine.components.PhysicsBodyComponent;
 import main.engine.components.PhysicsEngineComponent;
 import main.engine.components.PointLight;
 import main.engine.core.CoreEngine;
@@ -11,6 +11,7 @@ import main.engine.core.Game;
 import main.engine.core.GameObject;
 import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
+import main.engine.physics.PhysicsBody;
 import main.engine.physics.boundaries.AABB;
 import main.engine.physics.boundaries.Sphere;
 import main.engine.physics.materials.PhysicsMaterial;
@@ -86,10 +87,16 @@ public class TestGame extends Game {
 		Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), 1.0f);
 		AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
 		PhysicsMaterial aMaterial = new PhysicsMaterial(false, true);
-		PhysicsBody monkeyPhysics = new PhysicsBody(10, aAABB, aMaterial, new Vector3D(0, 0, 0.1f), new Vector3D(0, 0, 0.1f), new Vector3D(0, 3, 0));
+		PhysicsBody monkeyPhysics = new PhysicsBody(	10, 
+														aAABB, 
+														aMaterial, 
+														new Vector3D(0, 0, 0.1f), 
+														new Vector3D(0, 0, 0.1f), 
+														new Vector3D(0, 3, 0));
+		PhysicsBodyComponent monkeyPhysicsComponent = new PhysicsBodyComponent(monkeyPhysics);
 		monkeyObject.addComponent(monkeyRenderer);
-		monkeyObject.addComponent(monkeyPhysics);
-		pec.add(monkeyPhysics);
+		monkeyObject.addComponent(monkeyPhysicsComponent);
+		pec.add(monkeyPhysicsComponent);
 		addObject(monkeyObject);
 		
 		GameObject monkeyObject2 = new GameObject();
@@ -97,11 +104,17 @@ public class TestGame extends Game {
 		Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), 1.0f);
 		AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
 		PhysicsMaterial bMaterial = new PhysicsMaterial(false, true);
-		PhysicsBody monkeyPhysics2 = new PhysicsBody(10, bAABB, bMaterial, new Vector3D(0, 0, -0.1f), new Vector3D(0, 0, -0.2f), new Vector3D(0, 3, 10));
+		PhysicsBody monkeyPhysics2 = new PhysicsBody(	10, 
+														bAABB, 
+														bMaterial, 
+														new Vector3D(0, 0, -0.1f), 
+														new Vector3D(0, 0, -0.2f), 
+														new Vector3D(0, 3, 10));
+		PhysicsBodyComponent monkeyPhysicsComponent2 = new PhysicsBodyComponent(monkeyPhysics2);
 		monkeyObject2.addComponent(monkeyRenderer2);
-		monkeyObject2.addComponent(monkeyPhysics2);
+		monkeyObject2.addComponent(monkeyPhysicsComponent2);
 		monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
-		pec.add(monkeyPhysics2);
+		pec.add(monkeyPhysicsComponent2);
 		addObject(monkeyObject2);
 		
 		GameObject monkeyObject3 = new GameObject();
@@ -109,11 +122,17 @@ public class TestGame extends Game {
 		Sphere cSphere = new Sphere(new Vector3D(10, 3, 0), 1.0f);
 		AABB cAABB = new AABB(new Vector3D(10, 3, 0), new Vector3D(1, 1, 1));
 		PhysicsMaterial cMaterial = new PhysicsMaterial(false, true);
-		PhysicsBody monkeyPhysics3 = new PhysicsBody(10, cAABB, cMaterial, new Vector3D(-0.1f, 0, 0), new Vector3D(-0.2f, 0, 0), new Vector3D(10, 3, 0));
+		PhysicsBody monkeyPhysics3 = new PhysicsBody(	10, 
+														cAABB, 
+														cMaterial, 
+														new Vector3D(-0.1f, 0, 0), 
+														new Vector3D(-0.2f, 0, 0), 
+														new Vector3D(10, 3, 0));
+		PhysicsBodyComponent monkeyPhysicsComponent3 = new PhysicsBodyComponent(monkeyPhysics3);
 		monkeyObject3.addComponent(monkeyRenderer3);
-		monkeyObject3.addComponent(monkeyPhysics3);
+		monkeyObject3.addComponent(monkeyPhysicsComponent3);
 		monkeyObject3.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(90));
-		pec.add(monkeyPhysics3);
+		pec.add(monkeyPhysicsComponent3);
 		addObject(monkeyObject3);
 		
 //		System.out.println("Monkey pos:" + monkeyPhysics.getPos().toString());
