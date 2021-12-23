@@ -11,7 +11,7 @@ public class CMB extends Boundary{
 	
 	private ArrayList<Vector3D> convexBoundary;
 	
-	private ArrayList<Vector3D> simplex;
+	//private ArrayList<Vector3D> simplex;
 	
 	private Vector3D dir;
 	
@@ -98,11 +98,11 @@ public class CMB extends Boundary{
 		for (int i = 0; i < verts.size(); i ++) {
 			
 			//Which side of the plane is this vertex on?
-			if (p_normal.dot(verts.get(i).sub(p_point)) >= 0) {
+			if (p_normal.dot(verts.get(i).sub(p_point)) > 0) {
 				
 				setA.add(verts.get(i));
 				
-			} else {
+			} else if (p_normal.dot(verts.get(i).sub(p_point)) < 0) {
 				
 				setB.add(verts.get(i));
 				
@@ -118,7 +118,7 @@ public class CMB extends Boundary{
 		
 	}
 	
-	private static void findHull(ArrayList<Vector3D> result, ArrayList<Vector3D> subset, Vector3D[] base, Vector3D dir) {
+	private static void findHull(ArrayList<Vector3D> result, ArrayList<Vector3D> subset, Vector3D[] base, Vector3D norm) {
 		
 		if (subset.isEmpty()) {
 			
@@ -140,11 +140,9 @@ public class CMB extends Boundary{
 		
 		int index = 0;
 		
-		index = dirMaxInt(subset, dir);
+		index = dirMaxInt(subset, norm);
 		
 		result.add(subset.get(index));
-		
-		subset.remove(index);
 		
 		a_base[0] = subset.get(index);
 		
@@ -152,11 +150,11 @@ public class CMB extends Boundary{
 		
 		a_base[2] = base[1];
 		
-		Vector3D p_normal = a_base[2].sub(a_base[1]).cross(a_base[0].sub(a_base[1]));
+		Vector3D p_normal = a_base[0].sub(a_base[1]).cross(a_base[2].sub(a_base[1]));
 		
 		for (int i = 0; i < subset.size(); i ++) {
 			
-			if (p_normal.dot(subset.get(i).sub(a_base[0])) >= 0) {
+			if (p_normal.dot(subset.get(i).sub(a_base[0])) > 0) {
 				
 				setA.add(subset.get(i));
 				
@@ -172,11 +170,11 @@ public class CMB extends Boundary{
 		
 		b_base[2] = base[2];
 		
-		p_normal = b_base[2].sub(b_base[1]).cross(b_base[0].sub(b_base[1]));
+		p_normal = b_base[0].sub(b_base[1]).cross(b_base[2].sub(b_base[1]));
 		
 		for (int i = 0; i < subset.size(); i ++) {
 			
-			if (p_normal.dot(subset.get(i).sub(b_base[0])) >= 0) {
+			if (p_normal.dot(subset.get(i).sub(b_base[0])) > 0) {
 				
 				setB.add(subset.get(i));
 				
@@ -192,11 +190,11 @@ public class CMB extends Boundary{
 		
 		c_base[2] = base[0];
 		
-		p_normal = c_base[2].sub(c_base[1]).cross(c_base[0].sub(c_base[1]));
+		p_normal = c_base[0].sub(c_base[1]).cross(c_base[2].sub(c_base[1]));
 		
 		for (int i = 0; i < subset.size(); i ++) {
 			
-			if (p_normal.dot(subset.get(i).sub(c_base[0])) >= 0) {
+			if (p_normal.dot(subset.get(i).sub(c_base[0])) > 0) {
 				
 				setC.add(subset.get(i));
 				
@@ -206,19 +204,25 @@ public class CMB extends Boundary{
 		
 		findHull(result, setC, c_base, p_normal);
 		
+		subset.remove(index);
+		
+		return;
+		
 	}
 	
 	/**
 	 * @param p The first set of vertices.
 	 * @param q The second set of vertices.
 	 * @param initial Any random initial direction.
-	 * @return True if the convex hulls of each set of points intersect, false otherwise.
+	 * @return True if the convex hulls intersect, false otherwise.
 	 */
-	public boolean GJK(ArrayList<Vector3D> p, ArrayList<Vector3D> q, Vector3D initial) {
+	public boolean GJK(ArrayList<Vector3D> p, ArrayList<Vector3D> q) {
+		
+		Vector3D initial = new Vector3D(1, 1, 1);
 
 		Vector3D a = dirMaxVec(p, initial).sub(dirMaxVec(q, initial.getScaled(-1)));
 		
-		simplex = new ArrayList<Vector3D>();
+		ArrayList<Vector3D> simplex = new ArrayList<Vector3D>();
 
 		simplex.add(a);
 
@@ -236,7 +240,7 @@ public class CMB extends Boundary{
 
 			simplex.add(a);
 
-			if (calcSimplex()) {
+			if (calcSimplex(simplex)) {
 
 				return true;
 
@@ -246,7 +250,7 @@ public class CMB extends Boundary{
 
 	}
 	
-	private boolean calcSimplex() {
+	private boolean calcSimplex(ArrayList<Vector3D> simplex) {
 
 		switch (simplex.size()) {
 
@@ -261,6 +265,8 @@ public class CMB extends Boundary{
 			break;
 
 		case 3:
+			
+			//U, D, AC, AB, A
 
 			ao = simplex.get(2).getScaled(-1);
 
@@ -270,39 +276,75 @@ public class CMB extends Boundary{
 
 			Vector3D abc = ac.cross(ab);
 			
-			if(ac.cross(abc).dot(ao) > 0) {
+			if (ac.cross(abc).dot(ao) > 0) {
 				
-				dir = ac.cross(ao).cross(ac);
-				
-				simplex.remove(1);
-				
-			}else if(abc.cross(ab).dot(ao) > 0) {
-				
-				dir = ab.cross(ao).cross(ab);
-				
-				simplex.remove(0);
+				//AC, A
+				 
+				if (ac.dot(ao) > 0) {
+					
+					//AC
+					
+					dir = ac.cross(ao).cross(ac);
+					
+					simplex.remove(0);
+					
+				} else {
+					
+					//A
+					
+					dir = ao;
+					
+					simplex.remove(0);
+					
+					simplex.remove(0);
+					
+				}
 				
 			} else {
 				
-				if(abc.dot(ao) > 0) {
+				//U, D, AB, A
+				
+				if (abc.cross(ab).dot(ao) > 0) {
 					
-					dir = abc;
+					//AB, A
 					
-				}else {
+					if (ab.dot(ao) > 0) {
+						
+						//AB
+						
+						dir = ab.cross(ao).cross(ab);
+						
+						simplex.remove(0);
+						
+					} else {
+						
+						//A
+						
+						dir = ao;
+						
+						simplex.remove(0);
+						
+						simplex.remove(0);
+						
+					}
 					
-					dir = abc.getScaled(-1);
+				} else {
 					
-					simplex.add(simplex.get(1));
-
-					simplex.add(simplex.get(0));
-
-					simplex.add(simplex.get(2));
-
-					simplex.remove(0);
-
-					simplex.remove(0);
-
-					simplex.remove(0);
+					//U, D
+					
+					if (abc.dot(ao) > 0) {
+						
+						//U
+						
+						dir = abc;
+						
+					} else {
+						
+						//D
+						
+						dir = abc.scale(-1);
+						
+					}
 					
 				}
 				
@@ -311,6 +353,8 @@ public class CMB extends Boundary{
 			break;
 
 		case 4:
+			
+			//8 cases to check: ABCD, ABC, ABD, ACD, AC, AB, AD, A
 
 			ao = simplex.get(3).getScaled(-1);
 
@@ -325,72 +369,125 @@ public class CMB extends Boundary{
 			Vector3D acd = ad.cross(ac);
 
 			Vector3D abd = ab.cross(ad);
-
+			
+			//Triangle case 1
 			if (abc.dot(ao) > 0) {
-
-				if (acd.dot(ao) > 0) {
-
-					dir = ac.cross(ao).cross(ac);
-
-					simplex.remove(2);
-
-					simplex.remove(0);
-
-				} else if (abd.dot(ao) > 0) {
-
-					dir = ab.cross(ao).cross(ab);
-
-					simplex.remove(1);
-
-					simplex.remove(0);
-
-				} else {
-
-					dir = abc;
-
-					simplex.remove(0);
-
-				}
-
-			} else {
-
-				if (acd.dot(ao) > 0) {
-
-					if (abd.dot(ao) > 0) {
-
-						dir = ad.cross(ao).cross(ad);
-
-						simplex.remove(2);
-
-						simplex.remove(1);
-
+				
+				//ABC, AB, AC, A
+				
+				if (abc.cross(ab).dot(ao) > 0) {
+					
+					//AB, A
+					
+					if (ab.dot(ao) > 0) {
+						
+						//AB
+						
+						dir = ab.cross(ao).cross(ab);
+						
+						simplex.remove(0);
+						
+						simplex.remove(0);
+						
 					} else {
-
-						dir = acd;
-
-						simplex.remove(2);
-
+						
+						//A
+						
+						dir = ao;
+						
+						simplex.remove(0);
+						
+						simplex.remove(0);
+						
+						simplex.remove(0);
+						
 					}
-
+					
 				} else {
-
-					if (abd.dot(ao) > 0) {
-
-						dir = abd;
-
-						simplex.remove(1);
-
+					
+					//ABC, AC, A
+					
+					if (ac.cross(abc).dot(ao) > 0) {
+						
+						//AC, A
+						
+						if (ac.dot(ao) > 0) {
+							
+							//AC
+							
+							dir = ac.cross(ao).cross(ac);
+							
+							simplex.remove(2);
+							
+							simplex.remove(0);
+							
+						} else {
+							
+							//A
+							
+							dir = ao;
+							
+							simplex.remove(0);
+							
+							simplex.remove(0);
+							
+							simplex.remove(0);
+							
+						}
+						
 					} else {
-
-						return true;
-
+						
+						//ABC
+						
+						dir = abc;
+						
+						simplex.remove(0);
+						
 					}
-
+					
 				}
-
+				
 			}
-
-			break;
+			
+			//Triangle case 2
+			if (acd.dot(ao) > 0) {
+				
+				//ACD, AC, AD, A
+				
+				if (ad.cross(acd).dot(ao) > 0) {
+					
+					//AD, A
+					
+					if (ad.dot(ao) > 0) {
+						
+						//AD
+						
+						dir = ad.cross(ao).cross(ad);
+						
+						simplex.remove(1);
+						
+						simplex.remove(1);
+						
+					}
+					
+				} else {
+					
+					//ADC, AC, A
+					
+				}
+				
+			}
+			
+			//Triangle case 3
+			if (abd.dot(ao) > 0) {
+				
+				//ABD, AB, AD, A
+				
+			}
+			
+			//ABCD
+			
+			return true;
 
 		}
 
@@ -461,22 +558,36 @@ public class CMB extends Boundary{
 		case TYPE_SPHERE:
 			
 			return intersect((Sphere) boundary);
-				
+			
 		case TYPE_CMB:
 			
 			return intersect((CMB) boundary);
-		
+			
 		case TYPE_AABB:
 			
 			return intersect((AABB) boundary);
 			
 		default:
 			
-			System.err.println("Sphere attempted to intersect with an undefined boundary");
+			System.err.println("CMB attempted to intersect with an undefined boundary");
 			
 			return new IntersectData(false, 0, 0);
 		
 		}
+		
+	}
+	
+	public IntersectData intersect(CMB cmb) {
+		
+		float distanceToCenter = getPos().sub(cmb.getPos()).length();
+		
+		float centerToBoundaryA = getPos().sub(getBoundary().get(dirMaxInt(getBoundary(), cmb.getPos()))).length();
+		
+		float centerToBoundaryB = cmb.getPos().sub(cmb.getBoundary().get(dirMaxInt(cmb.getBoundary(), getPos()))).length();
+		
+		float distanceToBoundary = distanceToCenter - centerToBoundaryA - centerToBoundaryB;
+		
+		return new IntersectData(GJK(this.getOffsetBoundary(), cmb.getOffsetBoundary()), distanceToCenter, distanceToBoundary);
 		
 	}
 	
@@ -486,9 +597,23 @@ public class CMB extends Boundary{
 		
 	}
 	
-	public ArrayList<Vector3D> getBoundary(){
+	public ArrayList<Vector3D> getBoundary() {
 		
 		return convexBoundary;
+		
+	}
+	
+	public ArrayList<Vector3D> getOffsetBoundary() {
+		
+		ArrayList<Vector3D> newBoundary = new ArrayList<Vector3D>();
+		
+		for (int i = 0; i < convexBoundary.size(); i ++) {
+			
+			newBoundary.add(convexBoundary.get(i).add(getPos()));
+			
+		}
+		
+		return newBoundary;
 		
 	}
 	

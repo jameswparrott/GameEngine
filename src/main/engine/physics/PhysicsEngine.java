@@ -3,10 +3,6 @@ package main.engine.physics;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_I;
-
-import main.engine.core.Input;
-
 public class PhysicsEngine {
 	
 	private List<PhysicsBody> physicsBodies;
@@ -49,21 +45,11 @@ public class PhysicsEngine {
 					
 					if (intersectData.getIntersect()) {
 						
-						//System.out.println("Collision!");
-						
-						//System.out.println("Distance to center: " + intersectData.getDistanceToCenter());
-						
-						//System.out.println("Distance to boundary: " + intersectData.getDistanceToBoundary());
-						
-						//System.out.println("Object 1 position: " + physicsBodies.get(i).getPos().toString());
-						
-						//System.out.println("Object 2 position: " + physicsBodies.get(j).getPos().toString());
-						
 						physicsBodies.get(i).setVelocity(physicsBodies.get(i).getVelocity().getScaled(-1.0f));
 						
 						physicsBodies.get(j).setVelocity(physicsBodies.get(j).getVelocity().getScaled(-1.0f));
 						
-					}	
+					}
 					
 				}
 				
