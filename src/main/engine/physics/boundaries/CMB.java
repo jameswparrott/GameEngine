@@ -11,9 +11,9 @@ public class CMB extends Boundary{
 	
 	private ArrayList<Vector3D> convexBoundary;
 	
-	//private ArrayList<Vector3D> simplex;
-	
 	private Vector3D dir;
+	
+	ArrayList<Vector3D> simplex;
 	
 	public CMB(Vector3D pos, Mesh mesh, boolean convex) {
 		
@@ -26,6 +26,8 @@ public class CMB extends Boundary{
 		super(boundaryType.TYPE_CMB, pos);
 		
 		dir = new Vector3D(1, 1, 1);
+		
+		simplex = new ArrayList<Vector3D>(4);
 		
 		if (convex) {
 			
@@ -218,21 +220,25 @@ public class CMB extends Boundary{
 	 */
 	public boolean GJK(ArrayList<Vector3D> p, ArrayList<Vector3D> q) {
 		
+		//Vector3D initial = p.get(0).sub(q.get(0));
+		
 		Vector3D initial = new Vector3D(1, 1, 1);
-
+		
 		Vector3D a = dirMaxVec(p, initial).sub(dirMaxVec(q, initial.getScaled(-1)));
 		
-		ArrayList<Vector3D> simplex = new ArrayList<Vector3D>();
+		simplex.clear();
 
 		simplex.add(a);
 
 		dir = a.getScaled(-1);
+		
+		int it = 0;
 
 		while (true) {
 
 			a = dirMaxVec(p, dir).sub(dirMaxVec(q, dir.getScaled(-1)));
 
-			if (a.dot(dir) < 0) {
+			if (a.dot(dir) <= 0) {
 
 				return false;
 
@@ -240,259 +246,201 @@ public class CMB extends Boundary{
 
 			simplex.add(a);
 
-			if (calcSimplex(simplex)) {
+			if (calcSimplex()) {
+				
+				System.out.print("Number of iterations: " + it);
 
 				return true;
 
 			}
+			
+			if (it > 20) {
+				
+				System.err.println("GJK did not converge, but instead exited after 21 iterations.");
+				
+				return false;
+				
+			}
+			
+			it ++;
 
 		}
 
 	}
 	
-	private boolean calcSimplex(ArrayList<Vector3D> simplex) {
-
+	private boolean calcSimplex() {
+		
+		System.out.println("Simplex size: " + simplex.size());
+		
 		switch (simplex.size()) {
-
+		
+		//Note: There will never be a case 1 or a case 5;
+		
 		case 2:
-
-			Vector3D ao = simplex.get(1).getScaled(-1);
-
-			Vector3D ab = simplex.get(0).sub(simplex.get(1));
-
-			dir = ab.cross(ao).cross(ab);
-
-			break;
-
+			
+			//Case 2, a line
+			return line();
+			
 		case 3:
 			
-			//U, D, AC, AB, A
-
-			ao = simplex.get(2).getScaled(-1);
-
-			ab = simplex.get(1).sub(simplex.get(2));
-
-			Vector3D ac = simplex.get(0).sub(simplex.get(2));
-
-			Vector3D abc = ac.cross(ab);
+			//Case 3, a triangle
+			return triangle();
 			
-			if (ac.cross(abc).dot(ao) > 0) {
+		case 4:
+			
+			//Case 4, a tetrahedron
+			return tetrahedron();
+			
+		default:
+			
+			System.err.println("Calc Simplex encountered a case outside of 2 to 4");
+			
+			return false;
+		
+		}
+		
+	}
+	
+	private boolean line() {
+		
+		Vector3D a	= simplex.get(1);
+		
+		Vector3D b 	= simplex.get(0);
+		
+		Vector3D ao = a.getScaled(-1.0f);
+		
+		Vector3D ab = b.sub(a);
+		
+		if (ab.dot(ao) > 0) {
+			
+			dir = ab.cross(ao).cross(ab);
+			
+		} else {
+			
+			simplex.remove(0);
+			
+			dir = ao;
+			
+		}
+		
+		return false;
+		
+	}
+	
+	private boolean triangle() {
+		
+		Vector3D a = simplex.get(2);
+		
+		Vector3D b = simplex.get(1);
+		
+		Vector3D c = simplex.get(0);
+		
+		Vector3D ao = a.getScaled(-1.0f);
+		
+		Vector3D ab = b.sub(a);
+		
+		Vector3D ac = c.sub(a);
+		
+		Vector3D abc = ab.cross(ac);
+		
+		if (abc.cross(ac).dot(ao) > 0) {
+			
+			if (ac.dot(ao) > 0) {
 				
-				//AC, A
-				 
-				if (ac.dot(ao) > 0) {
-					
-					//AC
-					
-					dir = ac.cross(ao).cross(ac);
-					
-					simplex.remove(0);
-					
-				} else {
-					
-					//A
-					
-					dir = ao;
-					
-					simplex.remove(0);
-					
-					simplex.remove(0);
-					
-				}
+				simplex.remove(1);
+				
+				dir = ac.cross(ao).cross(ac);
 				
 			} else {
 				
-				//U, D, AB, A
-				
-				if (abc.cross(ab).dot(ao) > 0) {
-					
-					//AB, A
-					
-					if (ab.dot(ao) > 0) {
-						
-						//AB
-						
-						dir = ab.cross(ao).cross(ab);
-						
-						simplex.remove(0);
-						
-					} else {
-						
-						//A
-						
-						dir = ao;
-						
-						simplex.remove(0);
-						
-						simplex.remove(0);
-						
-					}
-					
-				} else {
-					
-					//U, D
-					
-					if (abc.dot(ao) > 0) {
-						
-						//U
-						
-						dir = abc;
-						
-					} else {
-						
-						//D
-						
-						dir = abc.scale(-1);
-						
-					}
-					
-				}
+				simplex.remove(0);
 				
 			}
-
-			break;
-
-		case 4:
 			
-			//8 cases to check: ABCD, ABC, ABD, ACD, AC, AB, AD, A
-
-			ao = simplex.get(3).getScaled(-1);
-
-			ab = simplex.get(2).sub(simplex.get(3));
-
-			ac = simplex.get(1).sub(simplex.get(3));
-
-			Vector3D ad = simplex.get(0).sub(simplex.get(3));
-
-			abc = ac.cross(ab);
-
-			Vector3D acd = ad.cross(ac);
-
-			Vector3D abd = ab.cross(ad);
+		} else {
 			
-			//Triangle case 1
-			if (abc.dot(ao) > 0) {
+			if (ab.cross(abc).dot(ao) > 0) {
 				
-				//ABC, AB, AC, A
+				simplex.remove(0);
 				
-				if (abc.cross(ab).dot(ao) > 0) {
+			} else {
+				
+				if (abc.dot(ao) > 0) {
 					
-					//AB, A
-					
-					if (ab.dot(ao) > 0) {
-						
-						//AB
-						
-						dir = ab.cross(ao).cross(ab);
-						
-						simplex.remove(0);
-						
-						simplex.remove(0);
-						
-					} else {
-						
-						//A
-						
-						dir = ao;
-						
-						simplex.remove(0);
-						
-						simplex.remove(0);
-						
-						simplex.remove(0);
-						
-					}
+					dir = abc;
 					
 				} else {
 					
-					//ABC, AC, A
+					simplex.clear();
 					
-					if (ac.cross(abc).dot(ao) > 0) {
-						
-						//AC, A
-						
-						if (ac.dot(ao) > 0) {
-							
-							//AC
-							
-							dir = ac.cross(ao).cross(ac);
-							
-							simplex.remove(2);
-							
-							simplex.remove(0);
-							
-						} else {
-							
-							//A
-							
-							dir = ao;
-							
-							simplex.remove(0);
-							
-							simplex.remove(0);
-							
-							simplex.remove(0);
-							
-						}
-						
-					} else {
-						
-						//ABC
-						
-						dir = abc;
-						
-						simplex.remove(0);
-						
-					}
+					simplex.add(b);
+					
+					simplex.add(c);
+					
+					simplex.add(a);
+					
+					dir = abc.getScaled(-1.0f);
 					
 				}
 				
 			}
 			
-			//Triangle case 2
-			if (acd.dot(ao) > 0) {
-				
-				//ACD, AC, AD, A
-				
-				if (ad.cross(acd).dot(ao) > 0) {
-					
-					//AD, A
-					
-					if (ad.dot(ao) > 0) {
-						
-						//AD
-						
-						dir = ad.cross(ao).cross(ad);
-						
-						simplex.remove(1);
-						
-						simplex.remove(1);
-						
-					}
-					
-				} else {
-					
-					//ADC, AC, A
-					
-				}
-				
-			}
-			
-			//Triangle case 3
-			if (abd.dot(ao) > 0) {
-				
-				//ABD, AB, AD, A
-				
-			}
-			
-			//ABCD
-			
-			return true;
-
 		}
-
+		
 		return false;
-
+		
+	}
+	
+	private boolean tetrahedron() {
+		
+		Vector3D a = simplex.get(3);
+		
+		Vector3D b = simplex.get(2);
+		
+		Vector3D c = simplex.get(1);
+		
+		Vector3D d = simplex.get(0);
+		
+		Vector3D ao = a.getScaled(-1.0f);
+		
+		Vector3D ab = b.sub(a);
+		
+		Vector3D ac = c.sub(a);
+		
+		Vector3D ad = d.sub(a);
+		
+		Vector3D abc = ab.cross(ac);
+		
+		Vector3D acd = ac.cross(ad);
+		
+		Vector3D adb = ad.cross(ab);
+		
+		if (abc.dot(ao) > 0) {
+			
+			simplex.remove(0);
+			
+			return triangle();
+			
+		}
+		
+		if (acd.dot(ao) > 0) {
+			
+			simplex.remove(2);
+			
+			return triangle();
+			
+		}
+		
+		if (adb.dot(ao) > 0) {
+			
+			simplex.remove(1);
+			
+			return triangle();
+			
+		}
+			
+		return true;
+		
 	}
 	
 	private static Vector3D dirMaxVec(ArrayList<Vector3D> r, Vector3D v) {
