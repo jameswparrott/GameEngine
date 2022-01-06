@@ -7,7 +7,12 @@ import main.engine.physics.IntersectData;
 public class Plane extends Boundary{
 	
 	private Vector3D normal;
-
+	
+	/**
+	 * Constructs a plane for a physics body to use in collision detection.
+	 * @param pos position of the plane
+	 * @param normal normal vector of the plane
+	 */
 	public Plane(Vector3D pos, Vector3D normal) {
 		
 		super(boundaryType.TYPE_PLANE, pos);

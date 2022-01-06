@@ -1,8 +1,5 @@
 package main.engine.rendering.meshLoading;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import main.engine.core.Vector2D;
 import main.engine.core.Vector3D;
 import main.engine.rendering.Mesh;

@@ -9,6 +9,14 @@ import main.engine.rendering.Mesh;
 
 public class CMB extends Boundary{
 	
+	//TODO: Add GJK optimizations if possible (not important)
+	
+	//TODO: Add option to return lengths from GJK algorithm
+	
+	//TODO: Create a library for convex object creation and analysis
+	
+	//TODO: Add a max length variable to the object, derived from the construction of the convex boundary
+	
 	private ArrayList<Vector3D> convexBoundary;
 	
 	private Vector3D dir;
@@ -21,6 +29,12 @@ public class CMB extends Boundary{
 		
 	}
 	
+	/**
+	 * Constructs a Convex Mesh Boundary for a physics body to use in collision detection.
+	 * @param pos position of the center of the convex boundary
+	 * @param vertices arraylist of vertices defining the boundary
+	 * @param convex boolean specifying if the vertices are already convex or not
+	 */
 	public CMB(Vector3D pos, ArrayList<Vector3D> vertices, boolean convex) {
 		
 		super(boundaryType.TYPE_CMB, pos);
@@ -248,7 +262,7 @@ public class CMB extends Boundary{
 
 			if (calcSimplex()) {
 				
-				System.out.print("Number of iterations: " + it);
+				System.out.println("Number of iterations: " + it);
 
 				return true;
 
@@ -269,8 +283,6 @@ public class CMB extends Boundary{
 	}
 	
 	private boolean calcSimplex() {
-		
-		System.out.println("Simplex size: " + simplex.size());
 		
 		switch (simplex.size()) {
 		
