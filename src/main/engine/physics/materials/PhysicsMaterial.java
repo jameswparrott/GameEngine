@@ -4,6 +4,7 @@ public class PhysicsMaterial {
 	
 	private boolean permeable;
 	
+	//TODO: update elastic to be the coefficient of restitution of the material.
 	private boolean elastic;
 	
 	/**

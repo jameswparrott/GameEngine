@@ -90,10 +90,10 @@ public class TestGame extends Game {
 		CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
 		PhysicsMaterial aMaterial = new PhysicsMaterial(false, true);
 		PhysicsBody monkeyPhysics = new PhysicsBody(	10, 
-														aCMB, 
+														aSphere, 
 														aMaterial, 
-														new Vector3D(0, 0, 0.1f), 
-														new Vector3D(0, 0, 0.1f), 
+														new Vector3D(0, 0, 0), 
+														new Vector3D(0, 0.1f, 0.3f), 
 														new Vector3D(0, 3, 0));
 		PhysicsBodyComponent monkeyPhysicsComponent = new PhysicsBodyComponent(monkeyPhysics);
 		monkeyObject.addComponent(monkeyRenderer);
@@ -108,10 +108,10 @@ public class TestGame extends Game {
 		CMB bCMB = new CMB(new Vector3D(0, 3, 10), monkeyMesh, false);
 		PhysicsMaterial bMaterial = new PhysicsMaterial(false, true);
 		PhysicsBody monkeyPhysics2 = new PhysicsBody(	10, 
-														bCMB, 
+														bSphere, 
 														bMaterial, 
-														new Vector3D(0, 0, -0.1f), 
-														new Vector3D(0, 0, -0.2f), 
+														new Vector3D(0, 0, 0), 
+														new Vector3D(0, 0.1f, -0.3f), 
 														new Vector3D(0, 3, 10));
 		PhysicsBodyComponent monkeyPhysicsComponent2 = new PhysicsBodyComponent(monkeyPhysics2);
 		monkeyObject2.addComponent(monkeyRenderer2);
@@ -127,10 +127,10 @@ public class TestGame extends Game {
 		CMB cCMB = new CMB(new Vector3D(10, 3, 0), monkeyMesh, false);
 		PhysicsMaterial cMaterial = new PhysicsMaterial(false, true);
 		PhysicsBody monkeyPhysics3 = new PhysicsBody(	10, 
-														cCMB, 
+														cSphere, 
 														cMaterial, 
-														new Vector3D(-0.1f, 0, 0), 
-														new Vector3D(-0.2f, 0, 0), 
+														new Vector3D(0, 0, 0), 
+														new Vector3D(-0.3f, 0.1f, 0), 
 														new Vector3D(10, 3, 0));
 		PhysicsBodyComponent monkeyPhysicsComponent3 = new PhysicsBodyComponent(monkeyPhysics3);
 		monkeyObject3.addComponent(monkeyRenderer3);

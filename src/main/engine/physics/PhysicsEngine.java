@@ -55,50 +55,41 @@ public class PhysicsEngine {
 							
 							// d/dt(KE_i + KE_j) = 0
 							
-							float m_i = physicsBodies.get(i).getMass();
+							System.out.println("Elastic collision.");
 							
-							float m_j = physicsBodies.get(j).getMass();
+							Vector3D dx_i = physicsBodies.get(i).getPos().sub(physicsBodies.get(j).getPos());
+							
+							Vector3D dx_j = physicsBodies.get(j).getPos().sub(physicsBodies.get(i).getPos());
 							
 							Vector3D v_i = physicsBodies.get(i).getVelocity();
 							
 							Vector3D v_j = physicsBodies.get(j).getVelocity();
 							
-							Vector3D x_i = physicsBodies.get(i).getPos();
+							Vector3D dv_i = v_i.sub(v_j);
 							
-							Vector3D x_j = physicsBodies.get(j).getPos();
+							Vector3D dv_j = v_j.sub(v_i);
 							
-							Vector3D dx_i = x_i.sub(x_j);
+							float m_i = (-2.0f * physicsBodies.get(j).getMass()) / (physicsBodies.get(i).getMass() + physicsBodies.get(j).getMass());
 							
-							Vector3D dx_j = x_j.sub(x_i);
+							float m_j = (-2.0f * physicsBodies.get(i).getMass()) / (physicsBodies.get(i).getMass() + physicsBodies.get(j).getMass());
 							
-							float dot_i = (v_i.sub(v_j)).dot(dx_i);
+							float dot_i = dv_i.dot(dx_i);
 							
-							float dot_j = (v_j.sub(v_i)).dot(dx_j);
+							float dot_j = dv_j.dot(dx_j);
 							
-							float len_i = dx_i.lengthSq();
+							float len_sq = dx_i.lengthSq();
 							
-							float len_j = dx_j.lengthSq();
+							float s_i = (m_i * dot_i) / len_sq;
 							
-							float mas_i = (2 * m_j) / (m_i + m_j);
+							float s_j = (m_j * dot_j) / len_sq;
 							
-							float mas_j = (2 * m_i) / (m_i + m_j);
+							Vector3D u_i = v_i.add(dx_i.getScaled(s_i));
 							
-							Vector3D dv_i = v_i.sub(dx_i.getScaled((mas_i * dot_i) / len_i));
+							Vector3D u_j = v_j.add(dx_j.getScaled(s_j));
 							
-							Vector3D dv_j = v_j.sub(dx_j.getScaled((mas_j * dot_j) / len_j));
+							physicsBodies.get(i).setVelocity(u_i);
 							
-							physicsBodies.get(i).setVelocity(dv_i);
-							
-							physicsBodies.get(i).setVelocity(dv_j);
-							
-							//physicsBodies.get(i).setVelocity(physicsBodies.get(i).getVelocity().getScaled(-1.0f));
-							
-							//physicsBodies.get(j).setVelocity(physicsBodies.get(j).getVelocity().getScaled(-1.0f));
-							
-							// m_i * v_i + m_j * v_j = m_i * u_i + m_j * u_j
-							
-							// 0.5 * (m_i * (v_i).length * (v_i).length + m_j * (v_j).length * (v_j).length) = 
-							// 0.5 * (m_i * (u_i).length * (u_i).length + m_j * (u_j).length * (u_j).length)
+							physicsBodies.get(j).setVelocity(u_j);
 							
 						} else {
 							
@@ -106,9 +97,7 @@ public class PhysicsEngine {
 							
 							// d/dt(p_i + p_j) = 0
 							
-							physicsBodies.get(i).setVelocity(physicsBodies.get(i).getVelocity().getScaled(-1.0f));
-							
-							physicsBodies.get(j).setVelocity(physicsBodies.get(j).getVelocity().getScaled(-1.0f));
+							System.out.println("Inelastic collision.");
 							
 						}
 						

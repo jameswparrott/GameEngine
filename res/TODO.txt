@@ -13,3 +13,5 @@ TODO:
 - Physics engine
 
 - Add profiler
+
+- Add /** to each core class method and constructor for ease of use
