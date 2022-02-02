@@ -18,41 +18,55 @@ public class PhysicsBody {
 	
 	private Vector3D pos;
 	
+	private Vector3D angularAcceleration;
+	
+	private Vector3D angularVelocity;
+	
+	private static final Vector3D ZERO = new Vector3D(0, 0, 0);
+	
 	/**
 	 * Constructs a physics body.
-	 * @param mass mass of the physics body
-	 * @param boundary boundary of the physics body
-	 * @param material physics material of the physics body
+	 * @param mass 
+	 * @param boundary
+	 * @param material physics material
+	 * @param pos initial position
 	 */
-	public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material) {
+	public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D pos) {
 		
-		this(mass, boundary, material, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
+		this(mass, boundary, material, pos, ZERO, ZERO, ZERO, ZERO);
 		
 	}
 	
 	/**
 	 * Constructs a physics body.
-	 * @param mass mass of the physics body
-	 * @param boundary boundary of the physics body
-	 * @param material physics material of the physics body
-	 * @param pos initial position of the physics body
+	 * @param mass 
+	 * @param boundary
+	 * @param material physics material
+	 * @param pos initial position
+	 * @param velocity initial velocity
+	 * @param acceleration initial acceleration
 	 */
-	public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D pos) {
+	public PhysicsBody(	float mass, Boundary boundary, PhysicsMaterial material, 
+						Vector3D pos, Vector3D velocity, Vector3D acceleration) {
 		
-		this(mass, boundary, material, new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), pos);
+		this(mass, boundary, material, pos, velocity, acceleration, ZERO, ZERO);
 		
 	}
 	 
 	/**
 	 * Constructs a physics body.
-	 * @param mass mass of the physics body
-	 * @param boundary boundary of the physics body
-	 * @param material physics material of the physics body
-	 * @param acceleration initial acceleration of the physics body
-	 * @param velocity initial velocity of the physics body
-	 * @param pos initial position of the physics body
+	 * @param mass 
+	 * @param boundary
+	 * @param material physics material
+	 * @param pos initial position
+	 * @param velocity initial velocity
+	 * @param acceleration initial acceleration
+	 * @param angularVelocity initial angular velocity
+	 * @param angularAcceleration initial angular acceleration
 	 */
-	public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D acceleration, Vector3D velocity, Vector3D pos) {
+	public PhysicsBody(	float mass, Boundary boundary, PhysicsMaterial material, 
+						Vector3D pos, Vector3D velocity, Vector3D acceleration,
+						Vector3D angularVelocity, Vector3D angularAcceleration) {
 		
 		this.mass = mass;
 		
@@ -60,11 +74,15 @@ public class PhysicsBody {
 		
 		this.material = material;
 		
-		this.acceleration = acceleration;
+		this.pos = pos;
 		
 		this.velocity = velocity;
 		
-		this.pos = pos;
+		this.acceleration = acceleration;
+		
+		this.angularVelocity = angularVelocity;
+		
+		this.angularAcceleration = angularAcceleration;
 		
 	}
 	
@@ -72,6 +90,9 @@ public class PhysicsBody {
 		
 		//Velocity changes linearly wrt time
 		velocity = velocity.add(acceleration.getScaled(delta));
+		
+		//Angular velocity changes linearly wrt time
+		angularVelocity = angularVelocity.add(angularAcceleration.getScaled(delta));
 		
 		pos = pos.add(velocity.getScaled(delta));
 		
@@ -122,6 +143,30 @@ public class PhysicsBody {
 	public void setAcceleration(Vector3D acceleration) {
 		
 		this.acceleration = acceleration;
+		
+	}
+	
+	public Vector3D getAngularVelocity() {
+		
+		return angularVelocity;
+		
+	}
+	
+	public void setAngularVelocity(Vector3D angularVelocity) {
+		
+		this.angularVelocity = angularVelocity;
+		
+	}
+	
+	public Vector3D getAngularAcceleration() {
+		
+		return angularAcceleration;
+		
+	}
+	
+	public void setAngularAcceleration(Vector3D angularAcceleration) {
+		
+		this.angularAcceleration = angularAcceleration;
 		
 	}
 	

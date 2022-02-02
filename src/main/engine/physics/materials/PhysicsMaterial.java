@@ -4,19 +4,18 @@ public class PhysicsMaterial {
 	
 	private boolean permeable;
 	
-	//TODO: update elastic to be the coefficient of restitution of the material.
-	private boolean elastic;
+	private float restitution;
 	
 	/**
 	 * The type of material a physics body is made of.
 	 * @param permeable whether the physics body is permeable or not
-	 * @param elastic the type of collision this physics body will experience
+	 * @param restitution the coefficient of restitution this physics body will experience
 	 */
-	public PhysicsMaterial(boolean permeable, boolean elastic) {
+	public PhysicsMaterial(boolean permeable, float restitution) {
 		
 		this.permeable = permeable;
 		
-		this.elastic = elastic;
+		this.restitution = restitution;
 		
 	}
 	
@@ -26,9 +25,9 @@ public class PhysicsMaterial {
 		
 	}
 	
-	public boolean getElastic() {
+	public float getRestitution() {
 		
-		return elastic;
+		return restitution;
 		
 	}
 	

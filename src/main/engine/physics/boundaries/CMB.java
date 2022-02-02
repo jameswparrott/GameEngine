@@ -2,6 +2,7 @@ package main.engine.physics.boundaries;
 
 import java.util.ArrayList;
 
+import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
@@ -50,6 +51,18 @@ public class CMB extends Boundary{
 		} else {
 			
 			convexBoundary = quickHull(vertices);
+			
+		}
+		
+	}
+	
+	public void update(Transform transform) {
+		
+		setPos(transform.getPos());
+		
+		for (int i = 0; i < convexBoundary.size(); i ++) {
+			
+			convexBoundary.set(i, transform.getRot().toRotationMatrix().transform(convexBoundary.get(i)));
 			
 		}
 		
@@ -548,12 +561,6 @@ public class CMB extends Boundary{
 		float distanceToBoundary = distanceToCenter - centerToBoundaryA - centerToBoundaryB;
 		
 		return new IntersectData(GJK(this.getOffsetBoundary(), cmb.getOffsetBoundary()), distanceToCenter, distanceToBoundary);
-		
-	}
-	
-	public CollisionData collide(Boundary boundary) {
-		
-		return new CollisionData(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	

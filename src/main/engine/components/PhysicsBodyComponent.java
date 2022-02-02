@@ -11,8 +11,8 @@ public class PhysicsBodyComponent extends GameComponent {
 	private PhysicsBody physicsBody;
 	
 	/**
-	 * Constructs a physics body component. Essentially a physics body from the
-	 * physics package which will allow game objects to interact with each other.
+	 * Constructs a physics body component allowing game objects 
+	 * to interact with each other via the physics engine.
 	 * @param physicsBody physics body this component will use
 	 */
 	public PhysicsBodyComponent(PhysicsBody physicsBody) {
@@ -33,7 +33,13 @@ public class PhysicsBodyComponent extends GameComponent {
 		
 		getTransform().setPos(physicsBody.getPos());
 		
-		physicsBody.getBoundary().setPos(physicsBody.getPos());
+		getTransform().rotate(physicsBody.getAngularVelocity(), physicsBody.getAngularVelocity().lengthSq());
+		
+		//physicsBody.getBoundary().setPos(physicsBody.getPos());
+		
+		physicsBody.getBoundary().update(getTransform());
+		
+		//TODO: All the hard shit lmao
 		
 	}
 	

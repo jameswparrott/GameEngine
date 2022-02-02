@@ -344,7 +344,7 @@ public class Matrix4x4 {
 		
 		Matrix4x4 m3 = new Matrix4x4();
 		
-		for(int i = 0; i < 4; i++) {
+		for(byte i = 0; i < 4; i++) {
 			
 			for (byte j = 0; j < 4; j++) {
 				

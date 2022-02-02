@@ -1,5 +1,6 @@
 package main.engine.physics.boundaries;
 
+import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
@@ -18,6 +19,12 @@ public class Plane extends Boundary{
 		super(boundaryType.TYPE_PLANE, pos);
 		
 		this.normal = normal.getNorm();
+		
+	}
+	
+	public void update(Transform transform) {
+		
+		
 		
 	}
 	
@@ -114,12 +121,6 @@ public class Plane extends Boundary{
 //		return new IntersectData(distanceToBoundary < 0, distanceToCenter, distanceToBoundary);
 		
 		return null;
-		
-	}
-	
-	public CollisionData collide(Boundary boundary) {
-		
-		return new CollisionData(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	

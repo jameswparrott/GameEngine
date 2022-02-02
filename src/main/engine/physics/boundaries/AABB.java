@@ -1,7 +1,7 @@
 package main.engine.physics.boundaries;
 
+import main.engine.core.Transform;
 import main.engine.core.Vector3D;
-import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
 
 public class AABB extends Boundary{
@@ -22,6 +22,12 @@ public class AABB extends Boundary{
 		this.maxExtend = maxExtend;
 		
 		resize(maxExtend);
+		
+	}
+	
+	public void update(Transform transform) {
+		
+		
 		
 	}
 	
@@ -122,12 +128,6 @@ public class AABB extends Boundary{
 	public IntersectData intersect(CMB cmb) {
 		
 		return new IntersectData(false, 0, 0);
-		
-	}
-	
-	public CollisionData collide(Boundary boundary) {
-		
-		return new CollisionData(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0));
 		
 	}
 	
