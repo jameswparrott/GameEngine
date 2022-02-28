@@ -35,7 +35,7 @@ public class PhysicsEngine {
 		
 	}
 	
-	public void handleCollisions() {
+	public void handleCollisions(float delta) {
 		
 		for (int i = 0; i < physicsBodies.size(); i ++) {
 			
@@ -47,11 +47,11 @@ public class PhysicsEngine {
 					
 					if (intersectData.getIntersect()) {
 						
-						CollisionData collision = new CollisionData(physicsBodies.get(i), physicsBodies.get(j));
+						CollisionData collision = new CollisionData(physicsBodies.get(i), physicsBodies.get(j), delta);
 						
-						physicsBodies.get(i).setVelocity(collision.getV_a());
+						physicsBodies.get(i).setVelocity(collision.getVelocities()[0]);
 						
-						physicsBodies.get(j).setVelocity(collision.getV_b());
+						physicsBodies.get(j).setVelocity(collision.getVelocities()[1]);
 						
 					}
 					

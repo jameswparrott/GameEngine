@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import main.engine.core.Transform;
 import main.engine.core.Vector3D;
-import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
 import main.engine.rendering.Mesh;
 
@@ -240,10 +239,16 @@ public class CMB extends Boundary{
 	}
 	
 	/**
-	 * @param p The first set of vertices.
-	 * @param q The second set of vertices.
-	 * @param initial Any random initial direction.
-	 * @return True if the convex hulls intersect, false otherwise.
+	 * The Gilbert–Johnson–Keerthi distance algorithm is a method of determining the minimum 
+	 * distance between two convex sets. Unlike many other distance algorithms, it does not 
+	 * require that the geometry data be stored in any specific format, but instead relies 
+	 * solely on a support function to iteratively generate closer simplices to the correct 
+	 * answer using the configuration space obstacle (CSO) of two convex shapes, more 
+	 * commonly known as the Minkowski difference.
+	 *  
+	 * @param p An {@code ArrayList<Vector3D>} of vertices defining a convex hull.
+	 * @param q An {@code ArrayList<Vector3D>} of vertices defining a convex hull.
+	 * @return {@code true} if the convex hulls intersect, {@code false} otherwise.
 	 */
 	public boolean GJK(ArrayList<Vector3D> p, ArrayList<Vector3D> q) {
 		
@@ -554,11 +559,11 @@ public class CMB extends Boundary{
 		
 		float distanceToCenter = getPos().sub(cmb.getPos()).length();
 		
-		float centerToBoundaryA = getPos().sub(getBoundary().get(dirMaxInt(getBoundary(), cmb.getPos()))).length();
+		float centerToBoundaryA = getBoundary().get(dirMaxInt(getBoundary(),cmb.getPos().sub(getPos()))).length();
 		
-		float centerToBoundaryB = cmb.getPos().sub(cmb.getBoundary().get(dirMaxInt(cmb.getBoundary(), getPos()))).length();
+		float centerToBoundaryB = cmb.getBoundary().get(dirMaxInt(cmb.getBoundary(), getPos().sub(cmb.getPos()))).length();
 		
-		float distanceToBoundary = distanceToCenter - centerToBoundaryA - centerToBoundaryB;
+		float distanceToBoundary = distanceToCenter - (centerToBoundaryA + centerToBoundaryB);
 		
 		return new IntersectData(GJK(this.getOffsetBoundary(), cmb.getOffsetBoundary()), distanceToCenter, distanceToBoundary);
 		

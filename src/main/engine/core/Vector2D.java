@@ -6,6 +6,8 @@ public class Vector2D {
 	
 	private float y;
 	
+	public static final Vector2D ZERO = new Vector2D(0, 0);
+	
 	public Vector2D(float x, float y) {
 		
 		this.x = x;

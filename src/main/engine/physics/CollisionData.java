@@ -5,24 +5,56 @@ import main.engine.core.Vector3D;
 public class CollisionData {
 	
 	//Final velocities
-	private Vector3D v_a;
-	
-	private Vector3D v_b;
+	Vector3D[] velocities = new Vector3D[2];
 	
 	//Final angular momenta
-	private Vector3D l_a;
+	Vector3D[] angularVelocities = new Vector3D[2];
 	
-	private Vector3D l_b;
-	
-	public CollisionData(PhysicsBody a, PhysicsBody b) {
+	public CollisionData(PhysicsBody a, PhysicsBody b, float delta) {
 		
-		Vector3D[] velocities = new Vector3D[2];
+		rollBack(a, b, delta);
 		
 		velocities = calcCollision(a, b);
 		
-		v_a = velocities[0];
+	}
+	
+	private void rollBack(PhysicsBody a, PhysicsBody b, float delta) {
 		
-		v_b = velocities[1];
+		IntersectData intersect = a.getBoundary().intersect(b.getBoundary());
+		
+		Vector3D velocity_a = a.getVelocity();
+		
+		Vector3D velocity_b = b.getVelocity();
+		
+		System.out.println("Velocity A: " + velocity_a);
+		
+		System.out.println("Velocity B: " + velocity_b);
+		
+		float velocities = velocity_a.length() + velocity_b.length();
+		
+		float distanceToBoundary = intersect.getDistanceToBoundary();
+		
+		float distanceToCenter = intersect.getDistanceToCenter();
+		
+		System.out.println("Sum of velocities: " + velocities);
+		
+		System.out.println("Distance to boundary: " + distanceToBoundary);
+		
+		float dt = distanceToBoundary / velocities;
+		
+		System.out.println("Time of delta:" + delta);
+		
+		System.out.println("Time of collision: " + dt);
+		
+		a.setPos(a.getPos().add(a.getVelocity().getScaled(dt)));
+		
+		b.setPos(b.getPos().add(b.getVelocity().getScaled(dt)));
+		
+		//v(t) = (a(t + dt) - a(t))/dt
+		
+		//p(t) = (v(t + dt) - v(t))/dt
+		
+		//TODO: find time since last delta passed to the point where the actual collision happened
 		
 	}
 	
@@ -65,28 +97,16 @@ public class CollisionData {
 		return velocities;
 		
 	}
-
-	public Vector3D getV_a() {
+	
+	public Vector3D[] getVelocities() {
 		
-		return v_a;
-		
-	}
-
-	public Vector3D getV_b() {
-		
-		return v_b;
+		return this.velocities;
 		
 	}
-
-	public Vector3D getL_a() {
+	
+	public Vector3D[] getAngularVelocities() {
 		
-		return l_a;
-		
-	}
-
-	public Vector3D getL_b() {
-		
-		return l_b;
+		return this.angularVelocities;
 		
 	}
 

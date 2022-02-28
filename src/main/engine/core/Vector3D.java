@@ -8,6 +8,8 @@ public class Vector3D {
 	
 	private float z;
 	
+	public static final Vector3D ZERO = new Vector3D(0, 0, 0);
+	
 	public Vector3D(float x, float y, float z) {
 		
 		this.x = x;

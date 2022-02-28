@@ -17,7 +17,7 @@ public class PhysicsEngineComponent extends GameComponent {
 		
 		//handle collisions from previous step
 		
-		physicsEngine.handleCollisions();
+		physicsEngine.handleCollisions(delta);
 		
 		//simulate next step
 		

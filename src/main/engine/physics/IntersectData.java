@@ -1,7 +1,5 @@
 package main.engine.physics;
 
-import main.engine.core.Vector3D;
-
 public class IntersectData {
 	
 	private boolean intersect;
@@ -11,7 +9,7 @@ public class IntersectData {
 	private float distanceToBoundary;
 	
 	/**
-	 * Stores intersect data about two boundaries. 
+	 * Stores intersect data about two boundaries.
 	 * @param intersect true if the boundaries intersect, false otherwise
 	 * @param distanceToCenter distance between the centers of the two boundaries
 	 * @param distanceToBoundary minimal distance between the boundaries

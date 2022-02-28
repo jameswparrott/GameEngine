@@ -52,26 +52,26 @@ public class TestGame extends Game {
 		terrainObject.addComponent(terrainRenderer);
 		addObject(terrainObject);
 		
-		GameObject cube = new GameObject();
-		Mesh cubeMesh = new Mesh("Cube.obj");
-		Material cubeMaterial = new Material(new Texture("UV_Grid.png"), 1, 1);
-		MeshRenderer cubeRenderer = new MeshRenderer(cubeMesh, cubeMaterial);
-		cube.addComponent(cubeRenderer);
-		cube.getTransform().setPos(new Vector3D(7, 7, 7));
-		CMB cubeCMB = new CMB(new Vector3D(7, 7, 7), cubeMesh, false);
-		PhysicsMaterial cubePhysicsMaterial = new PhysicsMaterial(false, 1.0f);
-		PhysicsBody cubePhysics = new PhysicsBody(	10, 
-													cubeCMB, 
-													cubePhysicsMaterial, 
-													new Vector3D(7, 7, 7),
-													new Vector3D(0, 0.0f, 0.0f), 
-													new Vector3D(0, 0, 0),
-													new Vector3D(0, -0.3f, 0),
-													new Vector3D(0, 0, 0));
-		PhysicsBodyComponent cubePhysicsComponent = new PhysicsBodyComponent(cubePhysics);
-		pec.add(cubePhysicsComponent);
-		cube.addComponent(cubePhysicsComponent);
-		addObject(cube);
+//		GameObject cube = new GameObject();
+//		Mesh cubeMesh = new Mesh("Cube.obj");
+//		Material cubeMaterial = new Material(new Texture("UV_Grid.png"), 1, 1);
+//		MeshRenderer cubeRenderer = new MeshRenderer(cubeMesh, cubeMaterial);
+//		cube.addComponent(cubeRenderer);
+//		cube.getTransform().setPos(new Vector3D(7, 7, 7));
+//		CMB cubeCMB = new CMB(new Vector3D(7, 7, 7), cubeMesh, false);
+//		PhysicsMaterial cubePhysicsMaterial = new PhysicsMaterial(false, 1.0f);
+//		PhysicsBody cubePhysics = new PhysicsBody(	10, 
+//													cubeCMB, 
+//													cubePhysicsMaterial, 
+//													new Vector3D(7, 7, 7),
+//													new Vector3D(0, 0.0f, 0.0f), 
+//													new Vector3D(0, 0, 0),
+//													new Vector3D(0, -0.3f, 0),
+//													new Vector3D(0, 0, 0));
+//		PhysicsBodyComponent cubePhysicsComponent = new PhysicsBodyComponent(cubePhysics);
+//		pec.add(cubePhysicsComponent);
+//		cube.addComponent(cubePhysicsComponent);
+//		addObject(cube);
 		
 		GameObject monkeyObject = new GameObject();
 		Mesh monkeyMesh = new Mesh("monkey1.obj");
@@ -119,26 +119,26 @@ public class TestGame extends Game {
 		
 		monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(0));
 		
-		GameObject monkeyObject3 = new GameObject();
-		MeshRenderer monkeyRenderer3 = new MeshRenderer(monkeyMesh, monkeyMaterial);
-		Sphere cSphere = new Sphere(new Vector3D(10, 3, 0), 1.0f);
-		AABB cAABB = new AABB(new Vector3D(10, 3, 0), new Vector3D(1, 1, 1));
-		CMB cCMB = new CMB(new Vector3D(10, 3, 0), monkeyMesh, false);
-		PhysicsMaterial cMaterial = new PhysicsMaterial(false, 1.0f);
-		PhysicsBody monkeyPhysics3 = new PhysicsBody(	10, 
-														cCMB, 
-														cMaterial, 
-														new Vector3D(10, 3, 0), 
-														new Vector3D(-0.5f, 0.0f, 0), 
-														new Vector3D(0, 0, 0),
-														new Vector3D(0.0f, 0.0f, 0.0f),
-														new Vector3D(0, 0, 0));
-		PhysicsBodyComponent monkeyPhysicsComponent3 = new PhysicsBodyComponent(monkeyPhysics3);
-		monkeyObject3.addComponent(monkeyRenderer3);
-		monkeyObject3.addComponent(monkeyPhysicsComponent3);
-		//monkeyObject3.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(90));
-		pec.add(monkeyPhysicsComponent3);
-		addObject(monkeyObject3);
+//		GameObject monkeyObject3 = new GameObject();
+//		MeshRenderer monkeyRenderer3 = new MeshRenderer(monkeyMesh, monkeyMaterial);
+//		Sphere cSphere = new Sphere(new Vector3D(10, 3, 0), 1.0f);
+//		AABB cAABB = new AABB(new Vector3D(10, 3, 0), new Vector3D(1, 1, 1));
+//		CMB cCMB = new CMB(new Vector3D(10, 3, 0), monkeyMesh, false);
+//		PhysicsMaterial cMaterial = new PhysicsMaterial(false, 1.0f);
+//		PhysicsBody monkeyPhysics3 = new PhysicsBody(	10, 
+//														cCMB, 
+//														cMaterial, 
+//														new Vector3D(10, 3, 0), 
+//														new Vector3D(-0.5f, 0.0f, 0), 
+//														new Vector3D(0, 0, 0),
+//														new Vector3D(0.0f, 0.0f, 0.0f),
+//														new Vector3D(0, 0, 0));
+//		PhysicsBodyComponent monkeyPhysicsComponent3 = new PhysicsBodyComponent(monkeyPhysics3);
+//		monkeyObject3.addComponent(monkeyRenderer3);
+//		monkeyObject3.addComponent(monkeyPhysicsComponent3);
+//		//monkeyObject3.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(90));
+//		pec.add(monkeyPhysicsComponent3);
+//		addObject(monkeyObject3);
 		
 		GameObject pointLightObject = new GameObject();
 		PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 2.0f, 1.5f));
