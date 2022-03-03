@@ -82,7 +82,7 @@ public class TestGame extends Game {
 		CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
 		PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
 		PhysicsBody monkeyPhysics = new PhysicsBody(	10, 
-														aCMB, 
+														aSphere, 
 														aMaterial, 
 														new Vector3D(0, 3, 0),
 														new Vector3D(0.0f, 0.0f, 0.5f), 
@@ -104,7 +104,7 @@ public class TestGame extends Game {
 		CMB bCMB = new CMB(new Vector3D(0, 3, 10), monkeyMesh, false);
 		PhysicsMaterial bMaterial = new PhysicsMaterial(false, 1.0f);
 		PhysicsBody monkeyPhysics2 = new PhysicsBody(	10, 
-														bCMB, 
+														bSphere, 
 														bMaterial, 
 														new Vector3D(0, 3, 10), 
 														new Vector3D(0, 0.0f, -0.5f), 

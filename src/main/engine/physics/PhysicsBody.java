@@ -22,8 +22,6 @@ public class PhysicsBody {
 	
 	private Vector3D angularVelocity;
 	
-	private static final Vector3D ZERO = new Vector3D(0, 0, 0);
-	
 	/**
 	 * Constructs a physics body.
 	 * @param mass 
@@ -33,7 +31,7 @@ public class PhysicsBody {
 	 */
 	public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D pos) {
 		
-		this(mass, boundary, material, pos, ZERO, ZERO, ZERO, ZERO);
+		this(mass, boundary, material, pos, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO);
 		
 	}
 	
@@ -49,7 +47,7 @@ public class PhysicsBody {
 	public PhysicsBody(	float mass, Boundary boundary, PhysicsMaterial material, 
 						Vector3D pos, Vector3D velocity, Vector3D acceleration) {
 		
-		this(mass, boundary, material, pos, velocity, acceleration, ZERO, ZERO);
+		this(mass, boundary, material, pos, velocity, acceleration, Vector3D.ZERO, Vector3D.ZERO);
 		
 	}
 	 

@@ -1,17 +1,83 @@
-TODO:
+Game Engine TODOs:
 
-- Remove all AWT dependencies
+	+ Rendering Engine:
+	
+		+ Forward Rendering
+		
+		- Frustrum culling
+		
+		- Deferred Rendering
 
-- Need clean up methods for all OpenGL based classes (Shader, mesh, etc.)
+	+ Component System
+	
+	+ Audio Engine:
+	
+		+ Listener
+		
+		+ Source
+		
+		- Physics interaction
+		
+		- Music mixer
 
-- Proper text rendering with stb lib
+	+ Physics Engine:
+	
+		+ Basic boundaries 
+		
+		+ GJK collision detection
+	
+		- GJK minimum distance between polytypes
+		
+		- Collision rollback system
+		
+		- SFMO (Small Fast Moving Oject) collision system
+		
+		- Super boundaries for physics objects
+		
+		- SI (Sphere of Influence) calculations for player objects
 
-- Color text (material)
+	- Remove all AWT dependencies
+	
+	- Clean up methods for all OpenGL based classes (Shader, mesh, etc.)
+	
+	- Add engine profiler
+	
+	- Add documentation to each core class
+	
+	- GUI:
+	
+		- Buttons
+		
+		- Overlay/HUD
+		
+		- Proper text rendering with stb lib
+		
+		- Color text (material) and text positioning
+		
+	- Input object (dependency injection)
+		
+Game TODOs:
 
-- Proper terrain (Perlin noise)
-
-- Physics engine
-
-- Add profiler
-
-- Add /** to each core class method and constructor for ease of use
+	Space Cowboy:
+	
+		- 3D pixel art
+	
+		- Command ship
+		
+		- Collect bounties
+		
+		- Visit stations on planets/moons
+		
+		- Possible EVA
+		
+		- Shooting mechanics
+		
+		- Dogfight mechanics
+		
+		- Friendly AI/Crew
+		
+		- Varying enemy types
+		
+		- Boarding
+		
+		- Teleportation

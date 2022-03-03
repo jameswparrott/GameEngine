@@ -34,8 +34,6 @@ public class CollisionData {
 		
 		float distanceToBoundary = intersect.getDistanceToBoundary();
 		
-		float distanceToCenter = intersect.getDistanceToCenter();
-		
 		System.out.println("Sum of velocities: " + velocities);
 		
 		System.out.println("Distance to boundary: " + distanceToBoundary);

@@ -32,7 +32,11 @@ public abstract class Boundary {
 	
 	public abstract IntersectData intersect(Boundary boundary);
 	
-	public abstract void update(Transform transform);
+	public void update(Transform transform) {
+		
+		this.pos = transform.getTransformedPos();
+		
+	}
 	
 	public boundaryType getType() {
 		

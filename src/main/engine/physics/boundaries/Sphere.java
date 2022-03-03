@@ -1,8 +1,6 @@
 package main.engine.physics.boundaries;
 
-import main.engine.core.Transform;
 import main.engine.core.Vector3D;
-import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
 
 public class Sphere extends Boundary{
@@ -19,12 +17,6 @@ public class Sphere extends Boundary{
 		super(boundaryType.TYPE_SPHERE, pos);
 		
 		this.radius = radius;
-		
-	}
-	
-	public void update(Transform transform) {
-		
-		
 		
 	}
 	
