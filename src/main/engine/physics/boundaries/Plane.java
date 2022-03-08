@@ -2,7 +2,6 @@ package main.engine.physics.boundaries;
 
 import main.engine.core.Transform;
 import main.engine.core.Vector3D;
-import main.engine.physics.CollisionData;
 import main.engine.physics.IntersectData;
 
 public class Plane extends Boundary{
