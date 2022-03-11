@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.engine.core.Vector3D;
+import main.engine.profiling.Printer;
 
 public class PhysicsEngine {
 	
@@ -49,6 +50,14 @@ public class PhysicsEngine {
 					
 					if (intersectData.getIntersect()) {
 						
+						Printer printer = new Printer();
+						
+						printer.say("Collision detected");
+						
+						printer.print("PosA", a.getPos());
+						
+						printer.print("PosB", b.getPos());
+						
 						float del = getTimeOfCollision(a, b, intersectData.getDistanceToBoundary());
 						
 						rollBack(a, b, del);
@@ -73,7 +82,7 @@ public class PhysicsEngine {
 		
 	}
 	
-	public static void rollBack(PhysicsBody a, PhysicsBody b, float del) {
+	private static void rollBack(PhysicsBody a, PhysicsBody b, float del) {
 		
 		a.setPos(a.getPos().add(a.getVelocity().getScaled(del)));
 		
@@ -81,7 +90,7 @@ public class PhysicsEngine {
 		
 	}
 	
-	public static void calcCollision(PhysicsBody a, PhysicsBody b) {
+	private static void calcCollision(PhysicsBody a, PhysicsBody b) {
 		
 		Vector3D dx_i = a.getPos().sub(b.getPos());
 		
@@ -112,12 +121,15 @@ public class PhysicsEngine {
 		
 		float s_j = (m_j * dot_j * c_r) / len_sq;
 		
-		a.setVelocity(v_i.add(dx_i.getScaled(s_i)));
+		Vector3D final_i = v_i.add(dx_i.getScaled(s_i));
 		
-		b.setVelocity(v_j.add(dx_j.getScaled(s_j)));
+		Vector3D final_j = v_j.add(dx_j.getScaled(s_j));
+		
+		a.setVelocity(final_i);
+		
+		b.setVelocity(final_j);
 		
 	}
-
 	
 	public PhysicsBody getBody(int index) {
 		

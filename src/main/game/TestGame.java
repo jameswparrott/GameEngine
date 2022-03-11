@@ -77,17 +77,17 @@ public class TestGame extends Game {
 		Mesh monkeyMesh = new Mesh("monkey1.obj");
 		Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
 		MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
-		Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), 1.0f);
+		Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), 0.75f);
 		AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
 		CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
 		PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
 		PhysicsBody monkeyPhysics = new PhysicsBody(	10, 
-														aSphere, 
+														aCMB, 
 														aMaterial, 
 														new Vector3D(0, 3, 0),
 														new Vector3D(0.0f, 0.0f, 0.5f), 
 														new Vector3D(0, 0, 0),
-														new Vector3D(0.2f, 0.13f, 0.13f),
+														new Vector3D(0.0f, 0.0f, 0.0f),
 														new Vector3D(0, 0, 0));
 		PhysicsBodyComponent monkeyPhysicsComponent = new PhysicsBodyComponent(monkeyPhysics);
 		monkeyObject.addComponent(monkeyRenderer);
@@ -99,17 +99,17 @@ public class TestGame extends Game {
 		
 		GameObject monkeyObject2 = new GameObject();
 		MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
-		Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), 1.0f);
+		Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), 0.75f);
 		AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
 		CMB bCMB = new CMB(new Vector3D(0, 3, 10), monkeyMesh, false);
 		PhysicsMaterial bMaterial = new PhysicsMaterial(false, 1.0f);
 		PhysicsBody monkeyPhysics2 = new PhysicsBody(	10, 
-														bSphere, 
+														bCMB, 
 														bMaterial, 
 														new Vector3D(0, 3, 10), 
 														new Vector3D(0, 0.0f, -0.5f), 
 														new Vector3D(0, 0, 0),
-														new Vector3D(0, 0.0f, 0),
+														new Vector3D(0.0f, 0.0f, 0.0f),
 														new Vector3D(0, 0, 0));
 		PhysicsBodyComponent monkeyPhysicsComponent2 = new PhysicsBodyComponent(monkeyPhysics2);
 		monkeyObject2.addComponent(monkeyRenderer2);

@@ -21,7 +21,7 @@ public class CMB extends Boundary{
 	
 	private Vector3D dir;
 	
-	ArrayList<Vector3D> simplex;
+	private ArrayList<Vector3D> simplex;
 	
 	public CMB(Vector3D pos, Mesh mesh, boolean convex) {
 		
@@ -239,12 +239,11 @@ public class CMB extends Boundary{
 	}
 	
 	/**
-	 * The Gilbert–Johnson–Keerthi distance algorithm is a method of determining the minimum 
-	 * distance between two convex sets. Unlike many other distance algorithms, it does not 
-	 * require that the geometry data be stored in any specific format, but instead relies 
-	 * solely on a support function to iteratively generate closer simplices to the correct 
-	 * answer using the configuration space obstacle (CSO) of two convex shapes, more 
-	 * commonly known as the Minkowski difference.
+	 * The Gilbert–Johnson–Keerthi algorithm is a method of determining the intersection
+	 * of two convex sets. Unlike many other distance algorithms, it does not require
+	 * that the geometry data be stored in any specific format, but instead relies solely
+	 * on a support function to iteratively generate closer simplices to the correct 
+	 * answer using the Minkowski difference.
 	 *  
 	 * @param p An {@code ArrayList<Vector3D>} of vertices defining a convex hull.
 	 * @param q An {@code ArrayList<Vector3D>} of vertices defining a convex hull.
@@ -473,6 +472,92 @@ public class CMB extends Boundary{
 		
 	}
 	
+	/**
+	 * The Expanding Polytope Algorithm is an algorithm courtesy of Winterdev which uses
+	 * the simplex from GJK in order to calculate the distance between the boundaries of
+	 * two intersecting convex hulls.
+	 * 
+	 * @return distance between boundaries of convex hulls
+	 */
+	private float EPA() {
+		
+		//TODO: Find a better way of doing this lmao
+		
+		ArrayList<Vector3D> expPoly = simplex;
+		
+		ArrayList<Integer> indices = new ArrayList<Integer>();
+		
+		//First normal direction
+		Vector3D n1 = expPoly.get(1).sub(expPoly.get(0)).cross(expPoly.get(2).sub(expPoly.get(0)));
+		
+		if (n1.dot(expPoly.get(1)) > 0) {
+			
+			//The normal is in the correct direction
+			
+		} else {
+			
+			//Invert normal, flip indices
+			
+		}
+		
+		return 0;
+		
+	}
+	
+	private static Vector3D[] dirMaxTri(ArrayList<Vector3D> r, Vector3D v) {
+		
+		Vector3D[] answer = new Vector3D[3];
+		
+		float[] result = new float[3];
+		
+		float[] oldResult = new float[3];
+		
+		answer[0] = r.get(0);
+		answer[1] = r.get(1);
+		answer[2] = r.get(2);
+		
+		result[0] = r.get(0).dot(v);
+		result[1] = r.get(1).dot(v);
+		result[2] = r.get(2).dot(v);
+
+		oldResult[0] = r.get(0).dot(v);
+		oldResult[1] = r.get(1).dot(v);
+		oldResult[2] = r.get(2).dot(v);
+
+		for (int i = 2; i < r.size(); i++) {
+
+			result[0] = Math.max(result[0], r.get(i).dot(v));
+			
+			result[1] = Math.max(result[1], r.get(i).dot(v));
+			
+			result[2] = Math.max(result[0], r.get(i).dot(v));
+
+			if (result[0] > oldResult[0]) {
+
+				answer[0] = r.get(i);
+
+				oldResult[0] = result[0];
+
+			} else if (result[1] > oldResult[1]) {
+				
+				answer[1] = r.get(i);
+
+				oldResult[1] = result[1];
+				
+			} else if (result[2] > oldResult[2]) {
+				
+				answer[2] = r.get(i);
+
+				oldResult[2] = result[2];
+				
+			}
+
+		}
+
+		return answer;
+		
+	}
+	
 	private static Vector3D dirMaxVec(ArrayList<Vector3D> r, Vector3D v) {
 
 		float result = r.get(0).dot(v);
@@ -559,13 +644,23 @@ public class CMB extends Boundary{
 		
 		float distanceToCenter = getPos().sub(cmb.getPos()).length();
 		
-		float centerToBoundaryA = getBoundary().get(dirMaxInt(getBoundary(),cmb.getPos().sub(getPos()))).length();
+		boolean gjk = GJK(getOffsetBoundary(), cmb.getOffsetBoundary());
 		
-		float centerToBoundaryB = cmb.getBoundary().get(dirMaxInt(cmb.getBoundary(), getPos().sub(cmb.getPos()))).length();
+		Vector3D dirA = cmb.getPos().sub(getPos());
 		
-		float distanceToBoundary = distanceToCenter - (centerToBoundaryA + centerToBoundaryB);
+		Vector3D dirB = getPos().sub(cmb.getPos());
 		
-		return new IntersectData(GJK(this.getOffsetBoundary(), cmb.getOffsetBoundary()), distanceToCenter, distanceToBoundary);
+		Vector3D furthestA = dirMaxVec(getOffsetBoundary(), dirA);
+		
+		Vector3D furthestB = dirMaxVec(cmb.getOffsetBoundary(), dirB);
+		
+		float distanceToBoundaryA = getPos().sub(furthestA).length();
+		
+		float distanceToBoundaryB = cmb.getPos().sub(furthestB).length();
+		
+		float distanceToBoundary = distanceToCenter - distanceToBoundaryA - distanceToBoundaryB;
+		
+		return new IntersectData(gjk, distanceToCenter, distanceToBoundary);
 		
 	}
 	
