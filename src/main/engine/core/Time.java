@@ -1,48 +1,40 @@
 package main.engine.core;
 
-public class Time {
-	
-	private static final long SEC = 1000000000L;
-	
-	public static double getTime() {
-		
-		return (double)System.nanoTime() / (double)SEC;
-		
-	}
-	
-//	public static double getDelta() {
-//	
-//		return delta;
-//		
-//	}
-//
-//	public static void setDelta(double delta) {
-//		
-//		Time.delta = delta;
-//		
-//	}
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-//	public static final long SEC = 1000000000L;
-//	
-//	private static double delta;
-//	
-//	public static long getTime() {
-//		
-//		return System.nanoTime();
-//		
-//	}
-//	
-//	public static double getDelta() {
-//		
-//		return delta;
-//		
-//	}
-//	
-//	public static void setDelta(double delta) {
-//		
-//		Time.delta = delta;
-//		
-//	}
-	
-	
+public class Time {
+
+    private static final long SEC = 1000000000L;
+
+    public static double getTime() {
+
+        return (double) System.nanoTime() / (double) SEC;
+
+    }
+    
+    public static double getNanoTime() {
+        
+        return (double) System.nanoTime();
+        
+    }
+    
+    public static double getUnixTime() {
+        
+        return (double) System.currentTimeMillis();
+        
+    }
+    
+    public static String getLocalDate() {
+        
+        return LocalDate.now().toString();
+        
+    }
+    
+    public static String getLocalTime() {
+        
+        return LocalTime.now().toString();
+        
+    }
+
 }

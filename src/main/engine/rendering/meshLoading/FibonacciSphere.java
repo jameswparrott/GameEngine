@@ -7,63 +7,62 @@ import main.engine.rendering.Vertex;
 
 public class FibonacciSphere {
 
-	private int n;
-	
-	private float radius;
-	
-	private static final float PHI = 1.61803398874f;
-	
-	private static final float invPHI = 0.61803398875f;
-	
-	private static final float PI = 3.14159265358f;
-	
-	private Vertex[] vertices;
-	
-	private int[] indices;
-	
-	private Mesh mesh;
-	
-	public FibonacciSphere(int n, float radius) {
-		
-		this.n = n;
-		
-		this.radius = radius;
-		
-		vertices = new Vertex[n];
-		
-		indices = new int[n * 6];
-		
-		init();
-		
-		delaunayTri();
-		
-	}
-	
-	public void init() {
-		
-		float a, b, theta, phi, x, y, z;
-		
-		for (int i = 0; i < n; i ++) {
-			
-			a = (i * invPHI) % 1;
-			b = i / (float) n;
-			
-			theta = 2 * PI * (a);
-			phi = (float) Math.acos(1 - 2 * b);
-			
-			x = (float) (Math.cos(theta) * Math.sin(phi));
-			y = (float) (Math.sin(theta) * Math.sin(phi));
-			z = (float) (Math.cos(phi));
-			
-			vertices[i] = new Vertex(	new Vector3D(theta, 0, phi), 
-										new Vector2D(a, b));
-			
-		}
-		
-		indices[0] = 0;
-		indices[1] = 2;
-		indices[2] = 1;
-		
+    private int n;
+
+    private float radius;
+
+    private static final float PHI = 1.61803398874f;
+
+    private static final float invPHI = 0.61803398875f;
+
+    private static final float PI = 3.14159265358f;
+
+    private Vertex[] vertices;
+
+    private int[] indices;
+
+    private Mesh mesh;
+
+    public FibonacciSphere(int n, float radius) {
+
+        this.n = n;
+
+        this.radius = radius;
+
+        vertices = new Vertex[n];
+
+        indices = new int[n * 6];
+
+        init();
+
+        delaunayTri();
+
+    }
+
+    public void init() {
+
+        float a, b, theta, phi, x, y, z;
+
+        for (int i = 0; i < n; i++) {
+
+            a = (i * invPHI) % 1;
+            b = i / (float) n;
+
+            theta = 2 * PI * (a);
+            phi = (float) Math.acos(1 - 2 * b);
+
+            x = (float) (Math.cos(theta) * Math.sin(phi));
+            y = (float) (Math.sin(theta) * Math.sin(phi));
+            z = (float) (Math.cos(phi));
+
+            vertices[i] = new Vertex(new Vector3D(theta, 0, phi), new Vector2D(a, b));
+
+        }
+
+        indices[0] = 0;
+        indices[1] = 2;
+        indices[2] = 1;
+
 //		indices[3] = 0;
 //		indices[4] = 3;
 //		indices[5] = 2;
@@ -75,23 +74,21 @@ public class FibonacciSphere {
 //		indices[9] = 1;
 //		indices[10] = 2;
 //		indices[11] = 3;
-		
-	}
-	
-	public void addNoise() {
-		
-		
-		
-	}
-	
-	public void genMesh() {
-		
-		mesh =  new Mesh(vertices, indices, true);
-		
-	}
-	
-	private void delaunayTri() {
-		
+
+    }
+
+    public void addNoise() {
+
+    }
+
+    public void genMesh() {
+
+        mesh = new Mesh(vertices, indices, true);
+
+    }
+
+    private void delaunayTri() {
+
 //		List<Simplex> delaunaySimplices = new ArrayList<Simplex>();
 //		
 //		Simplex test = new Simplex(vertices[0].getPos(), vertices[1].getPos(), vertices[2].getPos(), vertices[3].getPos());
@@ -107,7 +104,7 @@ public class FibonacciSphere {
 //			System.out.println("Diff[" + i + "]: " + diff);
 //			
 //		}
-		
+
 //		for (int i = 5; i < n; i ++) {
 //			
 //			if (test.getCSphere().getCenter().sub(vertices[i].getPos()).lengthSq() < test.getCSphere().getRadiusSq()) {
@@ -125,19 +122,19 @@ public class FibonacciSphere {
 //			}
 //			
 //		}
-		
-	}
-	
-	public float getRadius() {
-		
-		return this.radius;
-		
-	}
-	
-	public Mesh getMesh() {
-		
-		return this.mesh;
-		
-	}
-	
+
+    }
+
+    public float getRadius() {
+
+        return this.radius;
+
+    }
+
+    public Mesh getMesh() {
+
+        return this.mesh;
+
+    }
+
 }
