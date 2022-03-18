@@ -41,8 +41,11 @@ public class TestGame extends Game {
         addComponent(aec);
 
         player = new Player(new Vector3D(3, 6.475f, 5));
+        
+        //player = new Player(Vector3D.ZERO);
+        
         addObject(player);
-
+        
         GameObject terrainObject = new GameObject();
         Terrain terrain = new Terrain(20);
         terrain.addPerlin(5);
@@ -90,8 +93,10 @@ public class TestGame extends Game {
         monkeyObject.addComponent(monkeyPhysicsComponent);
         pec.add(monkeyPhysicsComponent);
         addObject(monkeyObject);
+        
+        monkeyObject.getTransform().setPos(new Vector3D(0, 3, 0));
 
-        monkeyObject.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
+        //monkeyObject.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
 
         GameObject monkeyObject2 = new GameObject();
         MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
@@ -108,7 +113,7 @@ public class TestGame extends Game {
         pec.add(monkeyPhysicsComponent2);
         addObject(monkeyObject2);
 
-        monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(0));
+        //monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(0));
 
 //		GameObject monkeyObject3 = new GameObject();
 //		MeshRenderer monkeyRenderer3 = new MeshRenderer(monkeyMesh, monkeyMaterial);

@@ -61,8 +61,11 @@ public class Player extends GameObject {
 
         addComponent(listener);
 
-        getTransform().getPos().set(pos);
+        //Source of infinite problems, you're changing the reference to a zero vector
+        //getTransform().getPos().set(pos);
 
+        getTransform().setPos(pos);
+        
         movement = new Vector3D(0, 0, 0);
 
         forward = new Vector3D(0, 0, 1);

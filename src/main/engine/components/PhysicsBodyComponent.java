@@ -1,10 +1,6 @@
 package main.engine.components;
 
-import main.engine.core.Vector2D;
-import main.engine.core.Vector3D;
 import main.engine.physics.PhysicsBody;
-import main.game.Door;
-import main.game.Level;
 
 public class PhysicsBodyComponent extends GameComponent {
 

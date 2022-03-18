@@ -101,9 +101,8 @@ public class Vector2D {
             return new Vector2D(x / length, y / length);
 
         }
-
-        else
-            return new Vector2D(x, y);
+        
+        return new Vector2D(x, y);
 
     }
 

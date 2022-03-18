@@ -7,14 +7,14 @@ public class Vector3D {
     private float y;
 
     private float z;
-
-    public static final Vector3D ZERO = new Vector3D(0, 0, 0);
-
-    public static final Vector3D UP = new Vector3D(0, 1, 0);
-
-    public static final Vector3D RIGHT = new Vector3D(1, 0, 0);
-
-    public static final Vector3D FORWARD = new Vector3D(0, 0, 1);
+    
+    public static final Vector3D ZERO       = new Vector3D( 0,  0,  0);
+    public static final Vector3D FORWARD    = new Vector3D( 0,  0,  1);
+    public static final Vector3D BACKWARD   = new Vector3D( 0,  0, -1);
+    public static final Vector3D RIGHT      = new Vector3D( 1,  0,  0);
+    public static final Vector3D LEFT       = new Vector3D(-1,  0,  0);
+    public static final Vector3D UP         = new Vector3D( 0,  1,  0);
+    public static final Vector3D DOWN       = new Vector3D( 0, -1,  0);
 
     public Vector3D(float x, float y, float z) {
 
@@ -143,9 +143,8 @@ public class Vector3D {
             return new Vector3D(x / length, y / length, z / length);
 
         }
-
-        else
-            return new Vector3D(x, y, z);
+        
+        return new Vector3D(x, y, z);
 
     }
 

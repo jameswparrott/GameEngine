@@ -19,22 +19,20 @@ public class Transform {
     private Vector3D scale;
 
     public Transform() {
+        
+        pos = Vector3D.ZERO;
 
-        pos = new Vector3D(0, 0, 0);
-
-        rot = new Quaternion(0, 0, 0, 1);
+        rot = Quaternion.IDENTITY;
 
         scale = new Vector3D(1, 1, 1);
         
-        lastPos = null;
+        lastPos = Vector3D.ZERO;
         
-        lastRot = new Quaternion(0, 0, 0, 1);
+        lastRot = Quaternion.IDENTITY;
         
-        lastScale = new Vector3D(0, 0, 0);
-
-        parentMatrix = new Matrix4x4().initI();
-
-        update();
+        lastScale = Vector3D.ZERO;
+        
+        parentMatrix = Matrix4x4.IDENTITY;
 
     }
 

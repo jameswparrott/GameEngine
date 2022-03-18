@@ -3,6 +3,17 @@ package main.engine.core;
 public class Matrix4x4 {
 
     private float[][] m;
+    
+    public static final Matrix4x4 IDENTITY  = new Matrix4x4(new float[][] { { 1, 0, 0, 0}, 
+                                                                            { 0, 1, 0, 0}, 
+                                                                            { 0, 0, 1, 0}, 
+                                                                            { 0, 0, 0, 1}});
+    
+    private Matrix4x4(float[][] m) {
+        
+        this.m = m;
+        
+    }
 
     public Matrix4x4() {
 
@@ -10,101 +21,39 @@ public class Matrix4x4 {
 
     }
 
-    public Matrix4x4 initI() {
-
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                if (i == j) {
-
-                    m[i][j] = 1;
-
-                }
-
-                else
-
-                    m[i][j] = 0;
-
-            }
-
-        }
-
-        return this;
-
-    }
-
     public Matrix4x4 initTranslation(float x, float y, float z) {
-
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                if (i == j) {
-
-                    m[i][j] = 1;
-
-                }
-
-                else
-
-                    m[i][j] = 0;
-
-            }
-
-        }
+        
+        m[0][0] = 1;
 
         m[0][3] = x;
+        
+        m[1][1] = 1;
 
         m[1][3] = y;
+        
+        m[2][2] = 1;
 
         m[2][3] = z;
+        
+        m[3][3] = 1;
 
         return this;
 
     }
 
     public Matrix4x4 initRotation(float x, float y, float z) {
+        
+        Matrix4x4 rx = IDENTITY;
 
-        Matrix4x4 rx = new Matrix4x4();
+        Matrix4x4 ry = IDENTITY;
 
-        Matrix4x4 ry = new Matrix4x4();
-
-        Matrix4x4 rz = new Matrix4x4();
+        Matrix4x4 rz = IDENTITY;
 
         x = (float) Math.toRadians(x);
 
         y = (float) Math.toRadians(y);
 
         z = (float) Math.toRadians(z);
-
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                if (i == j) {
-
-                    rx.set(i, j, 1);
-
-                    ry.set(i, j, 1);
-
-                    rz.set(i, j, 1);
-
-                }
-
-                else {
-
-                    rx.set(i, j, 0);
-
-                    ry.set(i, j, 0);
-
-                    rz.set(i, j, 0);
-
-                }
-
-            }
-
-        }
 
         rx.set(1, 1, (float) Math.cos(x));
 
@@ -136,16 +85,6 @@ public class Matrix4x4 {
 
     public Matrix4x4 initScale(float x, float y, float z) {
 
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                m[i][j] = 0;
-
-            }
-
-        }
-
         m[0][0] = x;
 
         m[1][1] = y;
@@ -164,23 +103,13 @@ public class Matrix4x4 {
 
         float zRange = zNear - zFar;
 
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                m[i][j] = 0;
-
-            }
-
-        }
-
         m[0][0] = 1.0f / (tanHalfFOV * aspect);
 
         m[1][1] = 1.0f / tanHalfFOV;
 
         m[2][2] = (-zNear - zFar) / zRange;
 
-        m[2][3] = 2 * zFar * zNear / zRange;
+        m[2][3] = (2 * zFar * zNear) / zRange;
 
         m[3][2] = 1;
 
@@ -195,16 +124,6 @@ public class Matrix4x4 {
         float height = top - bottom;
 
         float depth = far - near;
-
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                m[i][j] = 0;
-
-            }
-
-        }
 
         m[0][0] = 2 / width;
 
@@ -232,16 +151,6 @@ public class Matrix4x4 {
 
         float depth = far - near;
 
-        for (byte i = 0; i < 4; i++) {
-
-            for (byte j = 0; j < 4; j++) {
-
-                m[i][j] = 0;
-
-            }
-
-        }
-
         m[0][0] = 2 / width;
 
         m[1][1] = 2 / height;
@@ -259,8 +168,8 @@ public class Matrix4x4 {
         Vector3D f = forward.getNorm();
 
         Vector3D u = up.getNorm();
-
-        Vector3D r = up.cross(f).getNorm();
+        
+        Vector3D r = forward.cross(up).getNorm();
 
         return initRotation(f, u, r);
 
@@ -280,29 +189,17 @@ public class Matrix4x4 {
 
         m[0][2] = r.getZ();
 
-        m[0][3] = 0;
-
         m[1][0] = u.getX();
 
         m[1][1] = u.getY();
 
         m[1][2] = u.getZ();
 
-        m[1][3] = 0;
-
         m[2][0] = f.getX();
 
         m[2][1] = f.getY();
 
         m[2][2] = f.getZ();
-
-        m[2][3] = 0;
-
-        m[3][0] = 0;
-
-        m[3][1] = 0;
-
-        m[3][2] = 0;
 
         m[3][3] = 1;
 
@@ -336,29 +233,31 @@ public class Matrix4x4 {
 
     }
 
-    public Matrix4x4 mult(Matrix4x4 m2) {
+    public Matrix4x4 mult(Matrix4x4 n) {
 
-        Matrix4x4 m3 = new Matrix4x4();
+        Matrix4x4 o = new Matrix4x4();
+        
+        float f;
 
         for (byte i = 0; i < 4; i++) {
 
             for (byte j = 0; j < 4; j++) {
 
-                float f = 0;
+                f = 0;
 
                 for (byte k = 0; k < 4; k++) {
 
-                    f = f + m[i][k] * m2.get(k, j);
+                    f += m[i][k] * n.get(k, j);
 
                 }
 
-                m3.set(i, j, f);
+                o.set(i, j, f);
 
             }
 
         }
 
-        return m3;
+        return o;
 
     }
 
