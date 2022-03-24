@@ -16,6 +16,8 @@ Game Engine TODOs:
 		
 		+ Source
 		
+		- Move all ALC related code into the audio engine constructor
+		
 		- Physics interaction
 		
 		- Music mixer

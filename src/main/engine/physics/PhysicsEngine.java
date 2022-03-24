@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.engine.core.Vector3D;
-import main.engine.profiling.Printer;
 
 public class PhysicsEngine {
 
@@ -49,14 +48,6 @@ public class PhysicsEngine {
                 if (!a.getMaterial().getPermeable() && !b.getMaterial().getPermeable()) {
 
                     if (intersectData.getIntersect()) {
-
-                        Printer printer = new Printer();
-
-                        printer.say("Collision detected");
-
-                        printer.print("PosA", a.getPos());
-
-                        printer.print("PosB", b.getPos());
 
                         float del = getTimeOfCollision(a, b, intersectData.getDistanceToBoundary());
 

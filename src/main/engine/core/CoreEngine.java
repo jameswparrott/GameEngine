@@ -209,12 +209,12 @@ public class CoreEngine {
 
         physicsEngine = new PhysicsEngine();
 
+        //TODO: Move all ALC related code into the audio engine constructor
         /*
          * Initializing OpenAL, creating a device (default if null is specified) and a
          * context which is made current. After create capabilities is called, calls to
          * OpenAL can be made.
          */
-
         long device = alcOpenDevice((ByteBuffer) null);
 
         ALCCapabilities deviceCapabilities = ALC.createCapabilities(device);

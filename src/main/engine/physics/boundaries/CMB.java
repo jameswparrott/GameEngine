@@ -1,6 +1,7 @@
 package main.engine.physics.boundaries;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import main.engine.core.Transform;
 import main.engine.core.Vector3D;
@@ -92,14 +93,12 @@ public class CMB extends Boundary {
         // Add this vertex to the result (i.e. vertex in convex hull)
         result.add(verts.get(index));
 
-        // Add this vertex to the base triangles (i.e. the base for the additional
-        // points)
+        // Add this vertex to the base triangles 
         baseA[0] = verts.get(index);
 
         baseB[2] = verts.get(index);
 
-        // Remove vertex from list of possible vertices (no need to keep checking for
-        // it)
+        // Remove vertex from list of possible vertices (no need to keep checking it)
         verts.remove(index);
 
         index = dirMaxInt(verts, new Vector3D(1, -1, 1));
@@ -487,100 +486,42 @@ public class CMB extends Boundary {
      */
     private float EPA(ArrayList<Vector3D> a, ArrayList<Vector3D> b) {
 
-        ArrayList<Vector3D> epaVertices = simplex;
+        float minDist = Float.MAX_VALUE;
+        
+        float tempDist;
+        
+        int face= 0;
+        
+        ArrayList<Vector3D> vertices = simplex;
 
-        ArrayList<Integer> epaIndices = new ArrayList<Integer>();
+        ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(  0, 1, 2, 
+                                                                            0, 2, 3, 
+                                                                            0, 3, 1, 
+                                                                            1, 3, 2));
 
         ArrayList<Vector3D> normals = new ArrayList<Vector3D>();
-
-        float distance = Float.MAX_VALUE;
-
-        // First normal direction
-        Vector3D n1 = epaVertices.get(0).calcNormal(epaVertices.get(1), epaVertices.get(2));
-
-        normals.add(n1);
-
-        if (n1.dot(epaVertices.get(0)) > 0) {
-
-            // T1
-            epaIndices.add(0);
-
-            epaIndices.add(1);
-
-            epaIndices.add(2);
-
-            // T2
-            epaIndices.add(0);
-
-            epaIndices.add(2);
-
-            epaIndices.add(3);
-
-            // T3
-            epaIndices.add(0);
-
-            epaIndices.add(3);
-
-            epaIndices.add(1);
-
-            // T4
-            epaIndices.add(1);
-
-            epaIndices.add(3);
-
-            epaIndices.add(2);
-
-        } else {
-
-            // Invert normal, flip indices
-
-            n1.scale(-1.0f);
-
-            // T1
-            epaIndices.add(0);
-
-            epaIndices.add(2);
-
-            epaIndices.add(1);
-
-            // T2
-            epaIndices.add(0);
-
-            epaIndices.add(1);
-
-            epaIndices.add(3);
-
-            // T3
-            epaIndices.add(0);
-
-            epaIndices.add(3);
-
-            epaIndices.add(2);
-
-            // T4
-            epaIndices.add(1);
-
-            epaIndices.add(2);
-
-            epaIndices.add(3);
-
+        
+        for (int i = 0; i < 4; i ++) {
+            
+            normals.add(vertices.get(3*i).calcNormal(vertices.get(3*i + 1), vertices.get(3*i + 2)));
+            
+            tempDist = distanceToFace(vertices.get(3*i), normals.get(i));
+            
+            if (tempDist < minDist) {
+                
+                minDist = tempDist;
+                
+                face = i;
+                
+            }
+            
         }
+        
+        
 
-        distance = n1.dot(epaVertices.get(0));
+        expand(vertices, indices, normals.get(face));
 
-        dir = n1;
-
-        float temp;
-
-        for (int i = 1; i < 4; i++) {
-
-            temp = 0;
-
-        }
-
-        expand(epaVertices, epaIndices, dir);
-
-        return distance;
+        return minDist;
 
     }
 
@@ -588,6 +529,14 @@ public class CMB extends Boundary {
 
         ArrayList<Vector3D> result = new ArrayList<Vector3D>();
 
+    }
+    
+    private float distanceToFace(Vector3D point, Vector3D normal) {
+        
+        //Point being a point on the triangle, and the normal is the triangle's normal
+        
+        return point.dot(normal.getNorm());
+        
     }
 
     private static Vector3D[] dirMaxTri(ArrayList<Vector3D> r, Vector3D v) {
