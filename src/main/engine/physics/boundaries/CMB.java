@@ -486,47 +486,108 @@ public class CMB extends Boundary {
      */
     private float EPA(ArrayList<Vector3D> a, ArrayList<Vector3D> b) {
 
-        float minDist = Float.MAX_VALUE;
+        float minDistance = Float.MAX_VALUE;
         
-        float tempDist;
+        float minSurfaceDistance = Float.MAX_VALUE;
         
-        int face= 0;
+        float tempMinDistance;
         
-        ArrayList<Vector3D> vertices = simplex;
-
-        ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(  0, 1, 2, 
-                                                                            0, 2, 3, 
-                                                                            0, 3, 1, 
-                                                                            1, 3, 2));
-
-        ArrayList<Vector3D> normals = new ArrayList<Vector3D>();
+        float tempMinSurfaceDistance;
         
-        for (int i = 0; i < 4; i ++) {
+        int face = 0;
+        
+        int surfaceFace = 0;
+        
+        ArrayList<Vector3D> vertices = new ArrayList<Vector3D>(simplex);
+        
+        Vector3D test = vertices.get(0).calcNormal(vertices.get(1), vertices.get(2));
+        
+        ArrayList<Integer> indices;
+        
+        if (test.dot(vertices.get(0)) > 0) {
+        	
+            indices = new ArrayList<Integer>(Arrays.asList( 0, 1, 2, 
+                                                            0, 2, 3, 
+                                                            0, 3, 1, 
+                                                            1, 3, 2));
+        	
+        } else {
             
-            normals.add(vertices.get(3*i).calcNormal(vertices.get(3*i + 1), vertices.get(3*i + 2)));
-            
-            tempDist = distanceToFace(vertices.get(3*i), normals.get(i));
-            
-            if (tempDist < minDist) {
-                
-                minDist = tempDist;
-                
-                face = i;
-                
-            }
+            indices = new ArrayList<Integer>(Arrays.asList( 0, 2, 1, 
+                                                            0, 3, 2, 
+                                                            0, 1, 3, 
+                                                            1, 2, 3));
             
         }
         
+        ArrayList<Vector3D> normals = new ArrayList<Vector3D>();
         
+        ArrayList<Boolean> surfaces = new ArrayList<Boolean>();
+        
+        Vector3D tempPoint;
+        
+        for (int i = 0; i < 4; i ++) {
+            
+            //Normal of the corresponding face
+            normals.add(vertices.get(indices.get(3*i)).calcNormal(  vertices.get(indices.get(3*i + 1)), 
+                                                                    vertices.get(indices.get(3*i + 2))));
+            
+            //Get the point furthest in the direction of the face normal on the Minkowski difference
+            tempPoint = dirMaxVec(a,normals.get(i)).sub(dirMaxVec(b,normals.get(i).getScaled(-1.0f)));
+            
+            //Is the face on the surface of the Minkowski difference (is it already in the face)
+            surfaces.add(   tempPoint.equals(vertices.get(indices.get(3*i))) || 
+                            tempPoint.equals(vertices.get(indices.get(3*i + 1))) || 
+                            tempPoint.equals(vertices.get(indices.get(3*i + 2))));
+            
+            //Get the temporary distance, distance from the origin to the face
+            tempMinDistance = distanceToFace(vertices.get(indices.get(3*i)), normals.get(i));
+            
+            //If the the temp distance is less than the current minimum distance
+            if (tempMinDistance <= tempMinDistance) {
+                
+                minDistance = tempMinDistance;
+                
+            }
+            
+            //If the face lives on the minkowski difference
+            if (surfaces.get(i)) {
+                
+                tempMinSurfaceDistance = tempMinDistance;
+                
+                if (tempMinSurfaceDistance <= minSurfaceDistance) {
+                    
+                    minSurfaceDistance = tempMinSurfaceDistance;
+                    
+                }
+                
+            }
+            
+            System.out.println("Temp: " + tempPoint.toString());
+            
+            System.out.println("Vertices: " + vertices.get(indices.get(3*i)).toString() + vertices.get(indices.get(3*i + 1)).toString() + vertices.get(indices.get(3*i + 2)).toString());
+            
+            System.out.println("Indices: " + indices.get(3*i) + indices.get(3*i + 1) + indices.get(3*i + 2));
+            
+            System.out.println("Normal: " + normals.get(i));
+            
+            System.out.println("On surface:" + surfaces.get(i));
+            
+        }
+        
+//        while (minDistance < minSurfaceDistance) {
+//            
+//            //recursively call expand adding vertices to 
+//            expand(vertices, indices, normals.get(face));
+//            
+//        }
 
-        expand(vertices, indices, normals.get(face));
-
-        return minDist;
+        return minDistance;
 
     }
 
     private void expand(ArrayList<Vector3D> vertices, ArrayList<Integer> indices, Vector3D dir) {
-
+        
         ArrayList<Vector3D> result = new ArrayList<Vector3D>();
 
     }
@@ -539,6 +600,9 @@ public class CMB extends Boundary {
         
     }
 
+    //If you subtract each element of a dirMaxTri array you will still get points on a Minkowski 
+    //  difference but they may not be unique.
+    @SuppressWarnings("unused")
     private static Vector3D[] dirMaxTri(ArrayList<Vector3D> r, Vector3D v) {
 
         Vector3D[] answer = new Vector3D[3];
@@ -695,7 +759,11 @@ public class CMB extends Boundary {
 
         float distanceToBoundary = distanceToCenter - distanceToBoundaryA - distanceToBoundaryB;
 
-        // float testDistance = EPA(getOffsetBoundary(), cmb.getOffsetBoundary());
+        if (gjk) {
+            
+            EPA(getOffsetBoundary(), cmb.getOffsetBoundary());
+            
+        }
 
         return new IntersectData(gjk, distanceToCenter, distanceToBoundary);
 
