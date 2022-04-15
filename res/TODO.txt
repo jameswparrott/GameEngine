@@ -60,7 +60,7 @@ Game Engine TODOs:
 		
 Game TODOs:
 
-	Space Cowboy:
+	Space Cowboy: (Space Mauraders? Space Pirates? Cowboy Void? BEBOP!)
 	
 		- 3D pixel art
 	

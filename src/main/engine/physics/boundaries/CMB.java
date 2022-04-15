@@ -478,9 +478,8 @@ public class CMB extends Boundary {
     }
 
     /**
-     * The Expanding Polytope Algorithm is an algorithm courtesy of Winterdev which
-     * uses the simplex from GJK in order to calculate the distance between the
-     * boundaries of two intersecting convex hulls.
+     * The Expanding Polytope Algorithm is an algorithm used to calculate the distance 
+     * between the boundaries of two intersecting convex hulls.
      * 
      * @return distance between boundaries of convex hulls
      */
@@ -490,13 +489,7 @@ public class CMB extends Boundary {
         
         float minSurfaceDistance = Float.MAX_VALUE;
         
-        float tempMinDistance;
-        
-        float tempMinSurfaceDistance;
-        
-        int face = 0;
-        
-        int surfaceFace = 0;
+        int minFace = 0;
         
         ArrayList<Vector3D> vertices = new ArrayList<Vector3D>(simplex);
         
@@ -524,7 +517,9 @@ public class CMB extends Boundary {
         
         ArrayList<Boolean> surfaces = new ArrayList<Boolean>();
         
-        Vector3D tempPoint;
+        ArrayList<Vector3D> points  = new ArrayList<Vector3D>();
+        
+        ArrayList<Float> distances  = new ArrayList<Float>();
         
         for (int i = 0; i < 4; i ++) {
             
@@ -533,56 +528,113 @@ public class CMB extends Boundary {
                                                                     vertices.get(indices.get(3*i + 2))));
             
             //Get the point furthest in the direction of the face normal on the Minkowski difference
-            tempPoint = dirMaxVec(a,normals.get(i)).sub(dirMaxVec(b,normals.get(i).getScaled(-1.0f)));
+            points.add(dirMaxVec(a,normals.get(i)).sub(dirMaxVec(b,normals.get(i).getScaled(-1.0f))));
             
             //Is the face on the surface of the Minkowski difference (is it already in the face)
-            surfaces.add(   tempPoint.equals(vertices.get(indices.get(3*i))) || 
-                            tempPoint.equals(vertices.get(indices.get(3*i + 1))) || 
-                            tempPoint.equals(vertices.get(indices.get(3*i + 2))));
+            surfaces.add(   points.get(i).equals(vertices.get(indices.get(3*i))) || 
+                            points.get(i).equals(vertices.get(indices.get(3*i + 1))) || 
+                            points.get(i).equals(vertices.get(indices.get(3*i + 2))));
             
             //Get the temporary distance, distance from the origin to the face
-            tempMinDistance = distanceToFace(vertices.get(indices.get(3*i)), normals.get(i));
+            distances.add(distanceToFace(vertices.get(indices.get(3*i)), normals.get(i)));
             
-            //If the the temp distance is less than the current minimum distance
-            if (tempMinDistance <= tempMinDistance) {
+            if (distances.get(i) < minDistance) {
                 
-                minDistance = tempMinDistance;
+                minDistance = distances.get(i);
                 
-            }
-            
-            //If the face lives on the minkowski difference
-            if (surfaces.get(i)) {
+                minFace = i;
                 
-                tempMinSurfaceDistance = tempMinDistance;
-                
-                if (tempMinSurfaceDistance <= minSurfaceDistance) {
+                if (surfaces.get(i)) {
                     
-                    minSurfaceDistance = tempMinSurfaceDistance;
+                    minSurfaceDistance = minDistance;
                     
                 }
                 
             }
             
-            System.out.println("Temp: " + tempPoint.toString());
+        }
+
+        //Minimum distance does not reach the Minkowski difference
+        if (minDistance < minSurfaceDistance) {
             
-            System.out.println("Vertices: " + vertices.get(indices.get(3*i)).toString() + vertices.get(indices.get(3*i + 1)).toString() + vertices.get(indices.get(3*i + 2)).toString());
+            //Expand in the direction of the minimum face's normal
+            Vector3D newPoint = points.get(minFace);
             
-            System.out.println("Indices: " + indices.get(3*i) + indices.get(3*i + 1) + indices.get(3*i + 2));
+            boolean twoFaces = false;
             
-            System.out.println("Normal: " + normals.get(i));
+            int secondMinFace = 0;
             
-            System.out.println("On surface:" + surfaces.get(i));
+            //First we get all normals that point towards the point
+            for (int i = 0; i < normals.size(); i ++) {
+                
+                //The new point sees this face
+                if (normals.get(i).dot(newPoint) > 0 && i != minFace) {
+                    
+                    twoFaces = true;
+                    
+                    secondMinFace = i;
+                    
+                }
+                
+            }
+            
+            vertices.add(newPoint);
+            
+            if (twoFaces) {
+                
+                if (indices.get(3*minFace) == indices.get(3*secondMinFace)) {
+                    
+                    //a
+                    
+                    if (indices.get(3*minFace + 1) == indices.get(3*secondMinFace + 1)) {
+                        
+                        //a, b
+                        
+                    } else {
+                        
+                        //a, c
+                        
+                    }
+                    
+                } else {
+                    
+                    //b, c
+                    
+                }
+                
+                //get both faces
+                Vector3D x = vertices.get(indices.get(3*minFace));
+                
+                Vector3D y = vertices.get(indices.get(3*minFace + 1));
+                
+                Vector3D z = vertices.get(indices.get(3*minFace + 2));
+                
+                Vector3D t = vertices.get(indices.get(3*secondMinFace));
+                
+                Vector3D u = vertices.get(indices.get(3*secondMinFace + 1));
+                
+                Vector3D v = vertices.get(indices.get(3*secondMinFace + 2));
+                
+            } else {
+                
+                Vector3D x = vertices.get(indices.get(3*minFace));
+                
+                Vector3D y = vertices.get(indices.get(3*minFace + 1));
+                
+                Vector3D z = vertices.get(indices.get(3*minFace + 2));
+                
+                //delete face
+                indices.remove(3*minFace + 2);
+                
+                indices.remove(3*minFace + 1);
+                
+                indices.remove(3*minFace);
+                
+            }
             
         }
-        
-//        while (minDistance < minSurfaceDistance) {
-//            
-//            //recursively call expand adding vertices to 
-//            expand(vertices, indices, normals.get(face));
-//            
-//        }
 
-        return minDistance;
+        return minSurfaceDistance;
 
     }
 
