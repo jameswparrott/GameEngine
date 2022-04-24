@@ -2,6 +2,7 @@ package main.engine.physics.boundaries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 import main.engine.core.Transform;
 import main.engine.core.Vector3D;
@@ -491,35 +492,19 @@ public class CMB extends Boundary {
         
         int minFace = 0;
         
-        ArrayList<Vector3D> vertices = new ArrayList<Vector3D>(simplex);
+        ArrayList<Vector3D> vertices    = new ArrayList<Vector3D>(simplex);
         
-        Vector3D test = vertices.get(0).calcNormal(vertices.get(1), vertices.get(2));
+        ArrayList<Integer>  indices;
         
-        ArrayList<Integer> indices;
+        ArrayList<Vector3D> normals     = new ArrayList<Vector3D>();
         
-        if (test.dot(vertices.get(0)) > 0) {
-        	
-            indices = new ArrayList<Integer>(Arrays.asList( 0, 1, 2, 
-                                                            0, 2, 3, 
-                                                            0, 3, 1, 
-                                                            1, 3, 2));
-        	
-        } else {
-            
-            indices = new ArrayList<Integer>(Arrays.asList( 0, 2, 1, 
-                                                            0, 3, 2, 
-                                                            0, 1, 3, 
-                                                            1, 2, 3));
-            
-        }
+        ArrayList<Boolean>  surfaces    = new ArrayList<Boolean>();
         
-        ArrayList<Vector3D> normals = new ArrayList<Vector3D>();
+        ArrayList<Vector3D> points      = new ArrayList<Vector3D>();
         
-        ArrayList<Boolean> surfaces = new ArrayList<Boolean>();
+        ArrayList<Float>    distances   = new ArrayList<Float>();
         
-        ArrayList<Vector3D> points  = new ArrayList<Vector3D>();
-        
-        ArrayList<Float> distances  = new ArrayList<Float>();
+        indices = initIndices(vertices);
         
         for (int i = 0; i < 4; i ++) {
             
@@ -553,102 +538,131 @@ public class CMB extends Boundary {
             }
             
         }
-
-        //Minimum distance does not reach the Minkowski difference
-        if (minDistance < minSurfaceDistance) {
+        
+        while (minDistance < minSurfaceDistance) {
             
-            //Expand in the direction of the minimum face's normal
-            Vector3D newPoint = points.get(minFace);
+            reconstruct(vertices, indices, normals, surfaces, points, distances, minFace);
             
-            boolean twoFaces = false;
+            minDistance = 1;
             
-            int secondMinFace = 0;
-            
-            //First we get all normals that point towards the point
-            for (int i = 0; i < normals.size(); i ++) {
-                
-                //The new point sees this face
-                if (normals.get(i).dot(newPoint) > 0 && i != minFace) {
-                    
-                    twoFaces = true;
-                    
-                    secondMinFace = i;
-                    
-                }
-                
-            }
-            
-            vertices.add(newPoint);
-            
-            if (twoFaces) {
-                
-                if (indices.get(3*minFace) == indices.get(3*secondMinFace)) {
-                    
-                    //a
-                    
-                    if (indices.get(3*minFace + 1) == indices.get(3*secondMinFace + 1)) {
-                        
-                        //a, b
-                        
-                    } else {
-                        
-                        //a, c
-                        
-                    }
-                    
-                } else {
-                    
-                    //b, c
-                    
-                }
-                
-                //get both faces
-                Vector3D x = vertices.get(indices.get(3*minFace));
-                
-                Vector3D y = vertices.get(indices.get(3*minFace + 1));
-                
-                Vector3D z = vertices.get(indices.get(3*minFace + 2));
-                
-                Vector3D t = vertices.get(indices.get(3*secondMinFace));
-                
-                Vector3D u = vertices.get(indices.get(3*secondMinFace + 1));
-                
-                Vector3D v = vertices.get(indices.get(3*secondMinFace + 2));
-                
-            } else {
-                
-                Vector3D x = vertices.get(indices.get(3*minFace));
-                
-                Vector3D y = vertices.get(indices.get(3*minFace + 1));
-                
-                Vector3D z = vertices.get(indices.get(3*minFace + 2));
-                
-                //delete face
-                indices.remove(3*minFace + 2);
-                
-                indices.remove(3*minFace + 1);
-                
-                indices.remove(3*minFace);
-                
-            }
+            minSurfaceDistance = 0;
             
         }
 
         return minSurfaceDistance;
 
     }
-
-    private void expand(ArrayList<Vector3D> vertices, ArrayList<Integer> indices, Vector3D dir) {
+    
+    private ArrayList<Integer> initIndices(ArrayList<Vector3D> vertices) {
         
-        ArrayList<Vector3D> result = new ArrayList<Vector3D>();
-
+        Vector3D test = vertices.get(0).calcNormal(vertices.get(1), vertices.get(2));
+        
+        if (test.dot(vertices.get(0)) > 0) {
+            
+            return new ArrayList<Integer>(Arrays.asList(    0, 1, 2, 
+                                                            0, 2, 3, 
+                                                            0, 3, 1, 
+                                                            1, 3, 2));
+            
+        } else {
+            
+            return new ArrayList<Integer>(Arrays.asList(    0, 2, 1, 
+                                                            0, 3, 2, 
+                                                            0, 1, 3, 
+                                                            1, 2, 3));
+            
+        }
+        
     }
     
-    private float distanceToFace(Vector3D point, Vector3D normal) {
+    private void reconstruct(   ArrayList<Vector3D> vertices, 
+                                ArrayList<Integer>  indices, 
+                                ArrayList<Vector3D> normals,
+                                ArrayList<Boolean>  surfaces,
+                                ArrayList<Vector3D> points,
+                                ArrayList<Float>    distances,
+                                int minFace) {
         
-        //Point being a point on the triangle, and the normal is the triangle's normal
+        Vector3D newPoint = points.get(minFace);
         
-        return point.dot(normal.getNorm());
+        ArrayList<Integer> toRemove = new ArrayList<Integer>();
+        
+        for (int i = 0; i < normals.size(); i ++) {
+            
+            if (canSeeFace(newPoint, vertices.get(indices.get(3*i)), normals.get(i))) {
+                
+                toRemove.add(i);
+                
+            }
+            
+        }
+        
+        System.out.println("Number of faces facing towards the new point: " + toRemove.size());
+        
+        vertices.add(newPoint);
+        
+        if (toRemove.size() > 1) {
+            
+            //case 2
+            int indexa = indices.get(3 * toRemove.get(0));
+            
+        } else if (toRemove.size() == 1){
+            
+            //case 1
+            indices.add(3 * toRemove.get(0));
+            indices.add(3 * toRemove.get(0) + 1);
+            indices.add(vertices.size() - 1);
+            
+            indices.add(3 * toRemove.get(0) + 1);
+            indices.add(3 * toRemove.get(0) + 2);
+            indices.add(vertices.size() - 1);
+            
+            indices.add(3 * toRemove.get(0) + 2);
+            indices.add(3 * toRemove.get(0));
+            indices.add(vertices.size() - 1);
+            
+        }
+        
+        for (int i = toRemove.size() - 1; i >= 0; i ++) {
+            
+            indices.remove(3*i + 2);
+            indices.remove(3*i + 1);
+            indices.remove(3*i);
+            
+            normals.remove(i);
+            surfaces.remove(i);
+            points.remove(i);
+            distances.remove(i);
+            
+        }
+        
+    }
+    
+    private boolean onSurface(Vector3D newPoint, ArrayList<Vector3D> vertices) {
+        
+        for (int i = 0; i < vertices.size(); i ++) {
+            
+            if (newPoint.equals(vertices.get(i))) {
+                
+                return true;
+                
+            }
+            
+        }
+        
+        return false;
+        
+    }
+    
+    private boolean canSeeFace(Vector3D newPoint, Vector3D pointOnTriangle, Vector3D normal) {
+        
+        return newPoint.sub(pointOnTriangle).dot(normal) > 0;
+        
+    }
+    
+    private float distanceToFace(Vector3D pointOnTriangle, Vector3D normal) {
+        
+        return pointOnTriangle.dot(normal.getNorm());
         
     }
 
