@@ -2,7 +2,6 @@ package main.engine.physics.boundaries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 import main.engine.core.Transform;
 import main.engine.core.Vector3D;
@@ -516,9 +515,9 @@ public class CMB extends Boundary {
             points.add(dirMaxVec(a,normals.get(i)).sub(dirMaxVec(b,normals.get(i).getScaled(-1.0f))));
             
             //Is the face on the surface of the Minkowski difference (is it already in the face)
-            surfaces.add(   points.get(i).equals(vertices.get(indices.get(3*i))) || 
-                            points.get(i).equals(vertices.get(indices.get(3*i + 1))) || 
-                            points.get(i).equals(vertices.get(indices.get(3*i + 2))));
+            surfaces.add(   points.get(i).equals(vertices.get(indices.get(3*i       ))) || 
+                            points.get(i).equals(vertices.get(indices.get(3*i + 1   ))) || 
+                            points.get(i).equals(vertices.get(indices.get(3*i + 2   ))));
             
             //Get the temporary distance, distance from the origin to the face
             distances.add(distanceToFace(vertices.get(indices.get(3*i)), normals.get(i)));
@@ -541,7 +540,141 @@ public class CMB extends Boundary {
         
         while (minDistance < minSurfaceDistance) {
             
-            reconstruct(vertices, indices, normals, surfaces, points, distances, minFace);
+            Vector3D newPoint = points.get(minFace);
+            
+            int numSeenFaces = 0;
+            
+            int seenFaceA = -1;
+            
+            int seenFaceB = -1;
+            
+            for (int i = 0; i < normals.size(); i++) {
+                
+                if (canSeeFace(newPoint, vertices.get(indices.get(3*i)), normals.get(i))) {
+                    
+                    numSeenFaces ++;
+                    
+                    /*
+                     * I postulate, but have yet to prove, that the maximum number of faces
+                     * seen by an additional point on the Minkowski difference is two. The 
+                     * result appears obvious, I will leave the proof as an exercie for the
+                     * reader.
+                     */
+                    if (numSeenFaces == 0) {
+                        
+                        seenFaceA = i;
+                        
+                    } else {
+                        
+                        //seenFaceB > seenFaceA
+                        seenFaceB = i;
+                        
+                    }
+                    
+                }
+                
+            }
+            
+            //Add in the new vertex
+            vertices.add(newPoint);
+            
+            if (numSeenFaces == 1) {
+                
+                //Remove a single face
+                
+                    //vertices indices normals surfaces points distances minface mindistance minsurfacedistance
+                
+                //No need to remove any vertices, vertices will only be added
+                
+                //Remove the indices for the removed face (in reverse order)
+                indices.remove(3 * seenFaceA + 2);
+                indices.remove(3 * seenFaceA + 1);
+                indices.remove(3 * seenFaceA);
+                
+                //Remove the normal of the corresponding face
+                normals.remove(vertices.get(seenFaceA));
+                
+                //Remove the corresponding surface on the minkowski difference
+                surfaces.remove(seenFaceA);
+                
+                //Remove any calculated points
+                points.remove(seenFaceA);
+                
+                //Remove the corresponding distance associated with the face
+                distances.remove(seenFaceA);
+                
+                //Reconstruct new faces
+                indices.add(3 * seenFaceA);
+                indices.add(3 * seenFaceA + 1);
+                indices.add(vertices.size() - 1); //Last vertex
+                
+                indices.add(3 * seenFaceA + 1);
+                indices.add(3 * seenFaceA + 2);
+                indices.add(vertices.size() - 1);
+                
+                indices.add(3 * seenFaceA + 2);
+                indices.add(3 * seenFaceA);
+                indices.add(vertices.size() - 1);
+                
+                //normals.add(vertices.get(indices.get(3 * seenFaceA)).calcNormal(a, b));
+                //normals.add();
+                //normals.add();
+                
+                //surfaces.add();
+                //surfaces.add();
+                //surfaces.add();
+                
+                //points.add();
+                //points.add();
+                //points.add();
+                
+                //distances.add();
+                //distances.add();
+                //distances.add();
+                
+            } else if (numSeenFaces == 2) {
+                
+                //Using the four unique points, delete both faces
+                
+                    //vertices indices normals surfaces points distances minface mindistance minsurfacedistance
+                
+                //No need to remove any vertices, vertices will only be added
+                
+                //Remove the normal of the corresponding face
+                normals.remove(vertices.get(seenFaceB));
+                normals.remove(vertices.get(seenFaceA));
+                
+                //Remove any calculated points
+                points.remove(seenFaceB);
+                points.remove(seenFaceA);
+                
+                //Remove the corresponding surface on the minkowski difference
+                surfaces.remove(seenFaceB);
+                surfaces.remove(seenFaceA);
+                
+                //Remove the corresponding distance associated with the face
+                distances.remove(seenFaceB);
+                distances.remove(seenFaceA);
+                
+                //Remove the indices for the removed face (in reverse order)
+                indices.remove(3 * seenFaceB + 2);
+                indices.remove(3 * seenFaceB + 1);
+                indices.remove(3 * seenFaceB);
+                
+                indices.remove(3 * seenFaceA + 2);
+                indices.remove(3 * seenFaceA + 1);
+                indices.remove(3 * seenFaceA);
+                
+                //Reconstruct new faces
+                
+            } else {
+                
+                //Should never happen "in theory", throw some kind of error
+                System.err.println("EPA encountered an unaccounted number of faces: " + numSeenFaces );
+                
+            }
+            
+            //Both branches lead to a net addition of two faces
             
             minDistance = 1;
             
@@ -574,6 +707,7 @@ public class CMB extends Boundary {
         }
         
     }
+    
     
     private void reconstruct(   ArrayList<Vector3D> vertices, 
                                 ArrayList<Integer>  indices, 
@@ -638,6 +772,7 @@ public class CMB extends Boundary {
         
     }
     
+    
     private boolean onSurface(Vector3D newPoint, ArrayList<Vector3D> vertices) {
         
         for (int i = 0; i < vertices.size(); i ++) {
@@ -654,17 +789,20 @@ public class CMB extends Boundary {
         
     }
     
+    
     private boolean canSeeFace(Vector3D newPoint, Vector3D pointOnTriangle, Vector3D normal) {
         
         return newPoint.sub(pointOnTriangle).dot(normal) > 0;
         
     }
     
+    
     private float distanceToFace(Vector3D pointOnTriangle, Vector3D normal) {
         
         return pointOnTriangle.dot(normal.getNorm());
         
     }
+    
 
     //If you subtract each element of a dirMaxTri array you will still get points on a Minkowski 
     //  difference but they may not be unique.
@@ -722,6 +860,7 @@ public class CMB extends Boundary {
         return answer;
 
     }
+    
 
     private static Vector3D dirMaxVec(ArrayList<Vector3D> r, Vector3D v) {
 
@@ -748,6 +887,7 @@ public class CMB extends Boundary {
         return answer;
 
     }
+    
 
     private static int dirMaxInt(ArrayList<Vector3D> r, Vector3D v) {
 
@@ -774,6 +914,7 @@ public class CMB extends Boundary {
         return answer;
 
     }
+    
 
     public IntersectData intersect(Boundary boundary) {
 
@@ -804,6 +945,7 @@ public class CMB extends Boundary {
         }
 
     }
+    
 
     public IntersectData intersect(CMB cmb) {
 
@@ -834,12 +976,14 @@ public class CMB extends Boundary {
         return new IntersectData(gjk, distanceToCenter, distanceToBoundary);
 
     }
+    
 
     public ArrayList<Vector3D> getBoundary() {
 
         return convexBoundary;
 
     }
+    
 
     public ArrayList<Vector3D> getOffsetBoundary() {
 
@@ -854,11 +998,13 @@ public class CMB extends Boundary {
         return newBoundary;
 
     }
+    
 
     public void setBoundary(ArrayList<Vector3D> boundary) {
 
         this.convexBoundary = boundary;
 
     }
+    
 
 }

@@ -14,7 +14,9 @@ public class Input {
 
     private static int width, height;
 
-    private static short NUM_KEYS = 348;
+//    private static short NUM_KEYS = 348;
+    
+    private static short NUM_KEYS = 400;
 
     private static byte NUM_BUTTONS = 5;
 
@@ -72,8 +74,17 @@ public class Input {
 
             if (action == GLFW_RELEASE) {
 
-                keys[key] = false;
-
+                try {
+                    
+                    keys[key] = false;
+                    
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    
+                    System.out.println("A key was released, but action not handled since the key is not accountd for in a key array.");
+                    System.out.println("Key: " + key);
+                    e.printStackTrace();
+                    
+                }
             }
 
         });

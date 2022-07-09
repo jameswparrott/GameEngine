@@ -85,8 +85,8 @@ public class TestGame extends Game {
         AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
         CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
         PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
-        PhysicsBody monkeyPhysics = new PhysicsBody(10, aCMB, aMaterial, new Vector3D(0, 3, 0),
-                                                    new Vector3D(0.0f, 0.0f, 0.5f), 
+        PhysicsBody monkeyPhysics = new PhysicsBody(10, aSphere, aMaterial, new Vector3D(0, 3, 0),
+                                                    new Vector3D(0.0f, 0.0f, 0.1f), 
                                                     new Vector3D(0, 0, 0), 
                                                     new Vector3D(0.0f, 0.0f, 0.0f),
                                                     new Vector3D(0, 0, 0));
@@ -106,9 +106,9 @@ public class TestGame extends Game {
         AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
         CMB bCMB = new CMB(new Vector3D(0, 3, 10), monkeyMesh, false);
         PhysicsMaterial bMaterial = new PhysicsMaterial(false, 1.0f);
-        PhysicsBody monkeyPhysics2 = new PhysicsBody(10, bCMB, bMaterial, 
+        PhysicsBody monkeyPhysics2 = new PhysicsBody(10, bSphere, bMaterial, 
                                                     new Vector3D(0, 3, 10),
-                                                    new Vector3D(0, 0.0f, -0.5f), 
+                                                    new Vector3D(0, 0.0f, -0.1f), 
                                                     new Vector3D(0, 0, 0), 
                                                     new Vector3D(0, 0, 0),
                                                     new Vector3D(0, 0, 0));
