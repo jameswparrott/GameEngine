@@ -1,5 +1,6 @@
 package main.engine.physics;
 
+import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
 import main.engine.physics.boundaries.Boundary;
 import main.engine.physics.materials.PhysicsMaterial;
@@ -17,6 +18,8 @@ public class PhysicsBody {
     private Vector3D velocity;
 
     private Vector3D pos;
+    
+    private Quaternion rot;
 
     private Vector3D angularAcceleration;
 

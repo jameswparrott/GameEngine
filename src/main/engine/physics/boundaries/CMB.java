@@ -284,7 +284,7 @@ public class CMB extends Boundary {
 
             if (calcSimplex()) {
 
-                System.out.println("Number of iterations: " + it);
+                System.out.println("Number of iterations for GJK to converge: " + it);
 
                 return true;
 
@@ -477,391 +477,6 @@ public class CMB extends Boundary {
 
     }
 
-    /**
-     * The Expanding Polytope Algorithm is an algorithm used to calculate the distance 
-     * between the boundaries of two intersecting convex hulls.
-     * 
-     * @return distance between boundaries of convex hulls
-     */
-    private float EPA(ArrayList<Vector3D> a, ArrayList<Vector3D> b) {
-
-        float minDistance = Float.MAX_VALUE;
-        
-        float minSurfaceDistance = Float.MAX_VALUE;
-        
-        int minFace = 0;
-        
-        ArrayList<Vector3D> vertices    = new ArrayList<Vector3D>(simplex);
-        
-        ArrayList<Integer>  indices;
-        
-        ArrayList<Vector3D> normals     = new ArrayList<Vector3D>();
-        
-        ArrayList<Boolean>  surfaces    = new ArrayList<Boolean>();
-        
-        ArrayList<Vector3D> points      = new ArrayList<Vector3D>();
-        
-        ArrayList<Float>    distances   = new ArrayList<Float>();
-        
-        indices = initIndices(vertices);
-        
-        for (int i = 0; i < 4; i ++) {
-            
-            //Normal of the corresponding face
-            normals.add(vertices.get(indices.get(3*i)).calcNormal(  vertices.get(indices.get(3*i + 1)), 
-                                                                    vertices.get(indices.get(3*i + 2))));
-            
-            //Get the point furthest in the direction of the face normal on the Minkowski difference
-            points.add(dirMaxVec(a,normals.get(i)).sub(dirMaxVec(b,normals.get(i).getScaled(-1.0f))));
-            
-            //Is the face on the surface of the Minkowski difference (is it already in the face)
-            surfaces.add(   points.get(i).equals(vertices.get(indices.get(3*i       ))) || 
-                            points.get(i).equals(vertices.get(indices.get(3*i + 1   ))) || 
-                            points.get(i).equals(vertices.get(indices.get(3*i + 2   ))));
-            
-            //Get the temporary distance, distance from the origin to the face
-            distances.add(distanceToFace(vertices.get(indices.get(3*i)), normals.get(i)));
-            
-            if (distances.get(i) < minDistance) {
-                
-                minDistance = distances.get(i);
-                
-                minFace = i;
-                
-                if (surfaces.get(i)) {
-                    
-                    minSurfaceDistance = minDistance;
-                    
-                }
-                
-            }
-            
-        }
-        
-        while (minDistance < minSurfaceDistance) {
-            
-            Vector3D newPoint = points.get(minFace);
-            
-            int numSeenFaces = 0;
-            
-            int seenFaceA = -1;
-            
-            int seenFaceB = -1;
-            
-            for (int i = 0; i < normals.size(); i++) {
-                
-                if (canSeeFace(newPoint, vertices.get(indices.get(3*i)), normals.get(i))) {
-                    
-                    numSeenFaces ++;
-                    
-                    /*
-                     * I postulate, but have yet to prove, that the maximum number of faces
-                     * seen by an additional point on the Minkowski difference is two. The 
-                     * result appears obvious, I will leave the proof as an exercie for the
-                     * reader.
-                     */
-                    if (numSeenFaces == 0) {
-                        
-                        seenFaceA = i;
-                        
-                    } else {
-                        
-                        //seenFaceB > seenFaceA
-                        seenFaceB = i;
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            //Add in the new vertex
-            vertices.add(newPoint);
-            
-            if (numSeenFaces == 1) {
-                
-                //Remove a single face
-                
-                    //vertices indices normals surfaces points distances minface mindistance minsurfacedistance
-                
-                //No need to remove any vertices, vertices will only be added
-                
-                //Remove the indices for the removed face (in reverse order)
-                indices.remove(3 * seenFaceA + 2);
-                indices.remove(3 * seenFaceA + 1);
-                indices.remove(3 * seenFaceA);
-                
-                //Remove the normal of the corresponding face
-                normals.remove(vertices.get(seenFaceA));
-                
-                //Remove the corresponding surface on the minkowski difference
-                surfaces.remove(seenFaceA);
-                
-                //Remove any calculated points
-                points.remove(seenFaceA);
-                
-                //Remove the corresponding distance associated with the face
-                distances.remove(seenFaceA);
-                
-                //Reconstruct new faces
-                indices.add(3 * seenFaceA);
-                indices.add(3 * seenFaceA + 1);
-                indices.add(vertices.size() - 1); //Last vertex
-                
-                indices.add(3 * seenFaceA + 1);
-                indices.add(3 * seenFaceA + 2);
-                indices.add(vertices.size() - 1);
-                
-                indices.add(3 * seenFaceA + 2);
-                indices.add(3 * seenFaceA);
-                indices.add(vertices.size() - 1);
-                
-                //normals.add(vertices.get(indices.get(3 * seenFaceA)).calcNormal(a, b));
-                //normals.add();
-                //normals.add();
-                
-                //surfaces.add();
-                //surfaces.add();
-                //surfaces.add();
-                
-                //points.add();
-                //points.add();
-                //points.add();
-                
-                //distances.add();
-                //distances.add();
-                //distances.add();
-                
-            } else if (numSeenFaces == 2) {
-                
-                //Using the four unique points, delete both faces
-                
-                    //vertices indices normals surfaces points distances minface mindistance minsurfacedistance
-                
-                //No need to remove any vertices, vertices will only be added
-                
-                //Remove the normal of the corresponding face
-                normals.remove(vertices.get(seenFaceB));
-                normals.remove(vertices.get(seenFaceA));
-                
-                //Remove any calculated points
-                points.remove(seenFaceB);
-                points.remove(seenFaceA);
-                
-                //Remove the corresponding surface on the minkowski difference
-                surfaces.remove(seenFaceB);
-                surfaces.remove(seenFaceA);
-                
-                //Remove the corresponding distance associated with the face
-                distances.remove(seenFaceB);
-                distances.remove(seenFaceA);
-                
-                //Remove the indices for the removed face (in reverse order)
-                indices.remove(3 * seenFaceB + 2);
-                indices.remove(3 * seenFaceB + 1);
-                indices.remove(3 * seenFaceB);
-                
-                indices.remove(3 * seenFaceA + 2);
-                indices.remove(3 * seenFaceA + 1);
-                indices.remove(3 * seenFaceA);
-                
-                //Reconstruct new faces
-                
-            } else {
-                
-                //Should never happen "in theory", throw some kind of error
-                System.err.println("EPA encountered an unaccounted number of faces: " + numSeenFaces );
-                
-            }
-            
-            //Both branches lead to a net addition of two faces
-            
-            minDistance = 1;
-            
-            minSurfaceDistance = 0;
-            
-        }
-
-        return minSurfaceDistance;
-
-    }
-    
-    private ArrayList<Integer> initIndices(ArrayList<Vector3D> vertices) {
-        
-        Vector3D test = vertices.get(0).calcNormal(vertices.get(1), vertices.get(2));
-        
-        if (test.dot(vertices.get(0)) > 0) {
-            
-            return new ArrayList<Integer>(Arrays.asList(    0, 1, 2, 
-                                                            0, 2, 3, 
-                                                            0, 3, 1, 
-                                                            1, 3, 2));
-            
-        } else {
-            
-            return new ArrayList<Integer>(Arrays.asList(    0, 2, 1, 
-                                                            0, 3, 2, 
-                                                            0, 1, 3, 
-                                                            1, 2, 3));
-            
-        }
-        
-    }
-    
-    
-    private void reconstruct(   ArrayList<Vector3D> vertices, 
-                                ArrayList<Integer>  indices, 
-                                ArrayList<Vector3D> normals,
-                                ArrayList<Boolean>  surfaces,
-                                ArrayList<Vector3D> points,
-                                ArrayList<Float>    distances,
-                                int minFace) {
-        
-        Vector3D newPoint = points.get(minFace);
-        
-        ArrayList<Integer> toRemove = new ArrayList<Integer>();
-        
-        for (int i = 0; i < normals.size(); i ++) {
-            
-            if (canSeeFace(newPoint, vertices.get(indices.get(3*i)), normals.get(i))) {
-                
-                toRemove.add(i);
-                
-            }
-            
-        }
-        
-        System.out.println("Number of faces facing towards the new point: " + toRemove.size());
-        
-        vertices.add(newPoint);
-        
-        if (toRemove.size() > 1) {
-            
-            //case 2
-            int indexa = indices.get(3 * toRemove.get(0));
-            
-        } else if (toRemove.size() == 1){
-            
-            //case 1
-            indices.add(3 * toRemove.get(0));
-            indices.add(3 * toRemove.get(0) + 1);
-            indices.add(vertices.size() - 1);
-            
-            indices.add(3 * toRemove.get(0) + 1);
-            indices.add(3 * toRemove.get(0) + 2);
-            indices.add(vertices.size() - 1);
-            
-            indices.add(3 * toRemove.get(0) + 2);
-            indices.add(3 * toRemove.get(0));
-            indices.add(vertices.size() - 1);
-            
-        }
-        
-        for (int i = toRemove.size() - 1; i >= 0; i ++) {
-            
-            indices.remove(3*i + 2);
-            indices.remove(3*i + 1);
-            indices.remove(3*i);
-            
-            normals.remove(i);
-            surfaces.remove(i);
-            points.remove(i);
-            distances.remove(i);
-            
-        }
-        
-    }
-    
-    
-    private boolean onSurface(Vector3D newPoint, ArrayList<Vector3D> vertices) {
-        
-        for (int i = 0; i < vertices.size(); i ++) {
-            
-            if (newPoint.equals(vertices.get(i))) {
-                
-                return true;
-                
-            }
-            
-        }
-        
-        return false;
-        
-    }
-    
-    
-    private boolean canSeeFace(Vector3D newPoint, Vector3D pointOnTriangle, Vector3D normal) {
-        
-        return newPoint.sub(pointOnTriangle).dot(normal) > 0;
-        
-    }
-    
-    
-    private float distanceToFace(Vector3D pointOnTriangle, Vector3D normal) {
-        
-        return pointOnTriangle.dot(normal.getNorm());
-        
-    }
-    
-
-    //If you subtract each element of a dirMaxTri array you will still get points on a Minkowski 
-    //  difference but they may not be unique.
-    @SuppressWarnings("unused")
-    private static Vector3D[] dirMaxTri(ArrayList<Vector3D> r, Vector3D v) {
-
-        Vector3D[] answer = new Vector3D[3];
-
-        float[] result = new float[3];
-
-        float[] oldResult = new float[3];
-
-        answer[0] = r.get(0);
-        answer[1] = r.get(1);
-        answer[2] = r.get(2);
-
-        result[0] = r.get(0).dot(v);
-        result[1] = r.get(1).dot(v);
-        result[2] = r.get(2).dot(v);
-
-        oldResult[0] = r.get(0).dot(v);
-        oldResult[1] = r.get(1).dot(v);
-        oldResult[2] = r.get(2).dot(v);
-
-        for (int i = 2; i < r.size(); i++) {
-
-            result[0] = Math.max(result[0], r.get(i).dot(v));
-
-            result[1] = Math.max(result[1], r.get(i).dot(v));
-
-            result[2] = Math.max(result[0], r.get(i).dot(v));
-
-            if (result[0] > oldResult[0]) {
-
-                answer[0] = r.get(i);
-
-                oldResult[0] = result[0];
-
-            } else if (result[1] > oldResult[1]) {
-
-                answer[1] = r.get(i);
-
-                oldResult[1] = result[1];
-
-            } else if (result[2] > oldResult[2]) {
-
-                answer[2] = r.get(i);
-
-                oldResult[2] = result[2];
-
-            }
-
-        }
-
-        return answer;
-
-    }
-    
-
     private static Vector3D dirMaxVec(ArrayList<Vector3D> r, Vector3D v) {
 
         float result = r.get(0).dot(v);
@@ -887,7 +502,6 @@ public class CMB extends Boundary {
         return answer;
 
     }
-    
 
     private static int dirMaxInt(ArrayList<Vector3D> r, Vector3D v) {
 
@@ -914,7 +528,6 @@ public class CMB extends Boundary {
         return answer;
 
     }
-    
 
     public IntersectData intersect(Boundary boundary) {
 
@@ -945,45 +558,32 @@ public class CMB extends Boundary {
         }
 
     }
-    
 
     public IntersectData intersect(CMB cmb) {
 
         float distanceToCenter = getPos().sub(cmb.getPos()).length();
 
         boolean gjk = GJK(getOffsetBoundary(), cmb.getOffsetBoundary());
-
-        Vector3D dirA = cmb.getPos().sub(getPos());
-
-        Vector3D dirB = getPos().sub(cmb.getPos());
-
-        Vector3D furthestA = dirMaxVec(getOffsetBoundary(), dirA);
-
-        Vector3D furthestB = dirMaxVec(cmb.getOffsetBoundary(), dirB);
-
-        float distanceToBoundaryA = getPos().sub(furthestA).length();
-
-        float distanceToBoundaryB = cmb.getPos().sub(furthestB).length();
-
-        float distanceToBoundary = distanceToCenter - distanceToBoundaryA - distanceToBoundaryB;
+        
+        float distanceToBoundary = 0;
 
         if (gjk) {
             
-            EPA(getOffsetBoundary(), cmb.getOffsetBoundary());
+            Polytope poly = new Polytope(simplex, getOffsetBoundary(), cmb.getOffsetBoundary());
+            
+            distanceToBoundary = poly.EPA();
             
         }
 
         return new IntersectData(gjk, distanceToCenter, distanceToBoundary);
 
     }
-    
 
     public ArrayList<Vector3D> getBoundary() {
 
         return convexBoundary;
 
     }
-    
 
     public ArrayList<Vector3D> getOffsetBoundary() {
 
@@ -998,13 +598,11 @@ public class CMB extends Boundary {
         return newBoundary;
 
     }
-    
 
     public void setBoundary(ArrayList<Vector3D> boundary) {
 
         this.convexBoundary = boundary;
 
     }
-    
 
 }

@@ -110,9 +110,16 @@ public class Vector3D {
 
     }
 
-    public Vector3D calcNormal(Vector3D a, Vector3D b) {
+    public Vector3D calcNormal(Vector3D b, Vector3D c) {
 
-        return a.sub(this).cross(b.sub(this));
+        /* CCW orientation is implied
+         *          A = this
+         *        ***
+         *      *****
+         *    *******
+         *  B*******C
+         */
+        return b.sub(this).cross(c.sub(this));
 
     }
 

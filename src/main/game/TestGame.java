@@ -40,9 +40,9 @@ public class TestGame extends Game {
         addComponent(pec);
         addComponent(aec);
 
-        player = new Player(new Vector3D(3, 6.475f, 5));
+        //player = new Player(new Vector3D(3, 6.475f, 5));
         
-        //player = new Player(Vector3D.ZERO);
+        player = new Player(Vector3D.ZERO);
         
         addObject(player);
         
@@ -81,12 +81,12 @@ public class TestGame extends Game {
         Mesh monkeyMesh = new Mesh("monkey1.obj");
         Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
         MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
-        Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), 0.75f);
+        Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), monkeyMesh);
         AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
         CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
         PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
         PhysicsBody monkeyPhysics = new PhysicsBody(10, aSphere, aMaterial, new Vector3D(0, 3, 0),
-                                                    new Vector3D(0.0f, 0.0f, 0.1f), 
+                                                    new Vector3D(0.0f, 0.0f, 0.3f), 
                                                     new Vector3D(0, 0, 0), 
                                                     new Vector3D(0.0f, 0.0f, 0.0f),
                                                     new Vector3D(0, 0, 0));
@@ -97,49 +97,28 @@ public class TestGame extends Game {
         addObject(monkeyObject);
         
         monkeyObject.getTransform().setPos(new Vector3D(0, 3, 0));
-
-        //monkeyObject.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(180));
+        
+        monkeyObject.getTransform().setRot(new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(110.0f)));
 
         GameObject monkeyObject2 = new GameObject();
         MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
-        Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), 0.75f);
+        Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), monkeyMesh);
         AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
         CMB bCMB = new CMB(new Vector3D(0, 3, 10), monkeyMesh, false);
         PhysicsMaterial bMaterial = new PhysicsMaterial(false, 1.0f);
         PhysicsBody monkeyPhysics2 = new PhysicsBody(10, bSphere, bMaterial, 
                                                     new Vector3D(0, 3, 10),
-                                                    new Vector3D(0, 0.0f, -0.1f), 
+                                                    new Vector3D(0, 0.0f, -0.3f), 
                                                     new Vector3D(0, 0, 0), 
-                                                    new Vector3D(0, 0, 0),
+                                                    new Vector3D(0, 0.0f, 0),
                                                     new Vector3D(0, 0, 0));
         PhysicsBodyComponent monkeyPhysicsComponent2 = new PhysicsBodyComponent(monkeyPhysics2);
         monkeyObject2.addComponent(monkeyRenderer2);
         monkeyObject2.addComponent(monkeyPhysicsComponent2);
         pec.add(monkeyPhysicsComponent2);
         addObject(monkeyObject2);
-
-        //monkeyObject2.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(0));
-
-//		GameObject monkeyObject3 = new GameObject();
-//		MeshRenderer monkeyRenderer3 = new MeshRenderer(monkeyMesh, monkeyMaterial);
-//		Sphere cSphere = new Sphere(new Vector3D(10, 3, 0), 1.0f);
-//		AABB cAABB = new AABB(new Vector3D(10, 3, 0), new Vector3D(1, 1, 1));
-//		CMB cCMB = new CMB(new Vector3D(10, 3, 0), monkeyMesh, false);
-//		PhysicsMaterial cMaterial = new PhysicsMaterial(false, 1.0f);
-//		PhysicsBody monkeyPhysics3 = new PhysicsBody(	10, 
-//														cCMB, 
-//														cMaterial, 
-//														new Vector3D(10, 3, 0), 
-//														new Vector3D(-0.5f, 0.0f, 0), 
-//														new Vector3D(0, 0, 0),
-//														new Vector3D(0.0f, 0.0f, 0.0f),
-//														new Vector3D(0, 0, 0));
-//		PhysicsBodyComponent monkeyPhysicsComponent3 = new PhysicsBodyComponent(monkeyPhysics3);
-//		monkeyObject3.addComponent(monkeyRenderer3);
-//		monkeyObject3.addComponent(monkeyPhysicsComponent3);
-//		//monkeyObject3.getTransform().rotate(new Vector3D(0, 1, 0), (float) -Math.toRadians(90));
-//		pec.add(monkeyPhysicsComponent3);
-//		addObject(monkeyObject3);
+        
+        monkeyObject2.getTransform().setRot(new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(70.0f)));
 
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 2.0f, 1.5f));

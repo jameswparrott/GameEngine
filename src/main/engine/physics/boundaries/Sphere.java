@@ -2,11 +2,18 @@ package main.engine.physics.boundaries;
 
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
+import main.engine.rendering.Mesh;
 
 public class Sphere extends Boundary {
 
     private float radius;
 
+    public Sphere(Vector3D pos, Mesh mesh) {
+        
+        this(pos, getMaxRadius(mesh));
+        
+    }
+    
     /**
      * Constructs a sphere for a physics body to use in collision detection.
      * 
@@ -19,6 +26,26 @@ public class Sphere extends Boundary {
 
         this.radius = radius;
 
+    }
+    
+    private static float getMaxRadius(Mesh mesh) {
+        
+        float result = 0.0f;
+        
+        for (int i = 0; i < mesh.getPositions().size(); i ++) {
+            
+            float dist = mesh.getPositions().get(i).lengthSq();
+            
+            if (dist > result) {
+                
+                result = dist;
+                
+            }
+            
+        }
+        
+        return (float) Math.sqrt(result);
+        
     }
 
     public float getRadius() {
