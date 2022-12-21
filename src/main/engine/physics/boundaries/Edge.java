@@ -17,6 +17,12 @@ public class Edge {
         
     }
     
+    public boolean reverse(Edge edge) {
+        
+        return a.equals(edge.getB()) && b.equals(edge.getA());
+        
+    }
+    
     public boolean shared(Edge edge) {
         
         return a.equals(edge.getB()) && b.equals(edge.getA());

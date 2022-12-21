@@ -29,9 +29,9 @@ public class PhysicsBodyComponent extends GameComponent {
     public void update(float delta) {
 
         getTransform().setPos(physicsBody.getPos());
-
-        getTransform().rotate(physicsBody.getAngularVelocity(), physicsBody.getAngularVelocity().length());
-
+        
+        getTransform().setRot(physicsBody.getRot());
+        
         physicsBody.getBoundary().update(getTransform());
 
     }

@@ -28,7 +28,7 @@ Game Engine TODOs:
 		
 		+ GJK collision detection
 	
-		- GJK minimum distance between polytypes
+		- GJK minimum distance between polytypes (EPA)
 		
 		- Collision rollback system
 		

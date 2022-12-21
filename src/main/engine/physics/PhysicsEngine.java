@@ -50,6 +50,16 @@ public class PhysicsEngine {
                     if (intersectData.getIntersect()) {
 
                         float del = getTimeOfCollision(a, b, intersectData.getDistanceToBoundary());
+                        
+                        System.out.println("Pos a: " + a.getPos());
+                        
+//                        for (int i = 0; i < a.getBoundary(); i ++) {
+//                            
+//                            
+//                            
+//                        }
+                        
+                        System.out.println("Pos b: " + b.getPos());
 
                         rollBack(a, b, del);
 

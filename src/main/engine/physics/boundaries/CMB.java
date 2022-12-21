@@ -1,8 +1,8 @@
 package main.engine.physics.boundaries;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import main.engine.core.Quaternion;
 import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
@@ -24,6 +24,8 @@ public class CMB extends Boundary {
     private Vector3D dir;
 
     private ArrayList<Vector3D> simplex;
+    
+    private Quaternion rot;
 
     public CMB(Vector3D pos, Mesh mesh, boolean convex) {
 
@@ -42,6 +44,8 @@ public class CMB extends Boundary {
     public CMB(Vector3D pos, ArrayList<Vector3D> vertices, boolean convex) {
 
         super(boundaryType.TYPE_CMB, pos);
+        
+        this.rot = Quaternion.IDENTITY;
 
         dir = new Vector3D(1, 1, 1);
 
@@ -53,8 +57,10 @@ public class CMB extends Boundary {
 
         } else {
 
-            convexBoundary = quickHull(vertices);
+            //convexBoundary = quickHull(vertices);
 
+            convexBoundary = qHull(vertices);
+            
         }
 
     }
@@ -62,15 +68,78 @@ public class CMB extends Boundary {
     public void update(Transform transform) {
 
         setPos(transform.getPos());
-
-        for (int i = 0; i < convexBoundary.size(); i++) {
-
-            convexBoundary.set(i, transform.getRot().toRotationMatrix().transform(convexBoundary.get(i)));
-
-        }
+        
+//        if (transform.hasRotChanged()) {
+//
+//            for (int i = 0; i < convexBoundary.size(); i++) {
+//    
+//                convexBoundary.set(i, transform.getRot().toRotationMatrix().transform(convexBoundary.get(i)));
+//    
+//            }
+//        
+//        }
+        
+        this.rot = transform.getRot();
 
     }
 
+    private static ArrayList<Vector3D> qHull(ArrayList<Vector3D> vertices){
+        
+        ArrayList<Vector3D> verts  = vertices;
+        
+        ArrayList<Vector3D> base   = new ArrayList<Vector3D>();
+        
+        ArrayList<Vector3D> result = new ArrayList<Vector3D>();
+        
+        int index = 0;
+        
+        for (int i = 0; i < 3; i ++) {
+            
+            index = dirMaxInt(verts, verts.get(i));
+            
+            base.add(verts.get(index));
+            
+            verts.remove(index);
+            
+        }
+        
+        index = 0;
+        
+        //Coplanar
+        while(true) {
+            
+            if (verts.get(index).sub(base.get(0)).dot(base.get(0).calcNormal(base.get(1), base.get(2))) > 0) {
+                
+                base.add(verts.get(index));
+                
+                verts.remove(index);
+                
+                break;
+                
+            }
+            
+            index ++;
+            
+        }
+        
+        //base, initial simplex found
+        Polytope convexHull = new Polytope(base);
+        
+        //Compute convex hull
+        convexHull.quickHull(verts);
+        
+        return result;
+        
+    }
+    
+    private static ArrayList<Vector3D> expand(){
+        
+        ArrayList<Vector3D> result = new ArrayList<Vector3D>();
+        
+        return result;
+        
+    }
+    
     private static ArrayList<Vector3D> quickHull(ArrayList<Vector3D> vertices) {
 
         ArrayList<Vector3D> verts = vertices;
@@ -120,6 +189,14 @@ public class CMB extends Boundary {
         baseB[0] = verts.get(index);
 
         verts.remove(index);
+        
+//        System.out.println(result.get(0));
+//        
+//        System.out.println(result.get(1));
+//        
+//        System.out.println(result.get(2));
+//        
+//        System.out.println();
 
         // Point on the plane, a vertex of the triangle
         Vector3D p_point = result.get(0);
@@ -145,6 +222,14 @@ public class CMB extends Boundary {
         findHull(result, setA, baseA, p_normal);
 
         findHull(result, setB, baseB, p_normal.getScaled(-1.0f));
+        
+        System.out.println("QuickHull: ");
+        
+        for (int i = 0; i < result.size(); i ++) {
+            
+            System.out.println(result.get(i));
+            
+        }
 
         return result;
 
@@ -256,8 +341,6 @@ public class CMB extends Boundary {
      */
     public boolean GJK(ArrayList<Vector3D> p, ArrayList<Vector3D> q) {
 
-        // Vector3D initial = p.get(0).sub(q.get(0));
-
         Vector3D initial = new Vector3D(1, 1, 1);
 
         Vector3D a = dirMaxVec(p, initial).sub(dirMaxVec(q, initial.getScaled(-1)));
@@ -308,24 +391,21 @@ public class CMB extends Boundary {
 
         switch (simplex.size()) {
 
-        // Note: There will never be a case 1 or a case 5;
-
         case 2:
-
-            // Case 2, a line
+            
             return line();
 
         case 3:
-
-            // Case 3, a triangle
+            
             return triangle();
 
         case 4:
-
-            // Case 4, a tetrahedron
+            
             return tetrahedron();
 
         default:
+            
+            // Note: There should never be a case 1 or 5;
 
             System.err.println("Calc Simplex encountered a case outside of 2 to 4");
 
@@ -478,28 +558,8 @@ public class CMB extends Boundary {
     }
 
     private static Vector3D dirMaxVec(ArrayList<Vector3D> r, Vector3D v) {
-
-        float result = r.get(0).dot(v);
-
-        float oldResult = r.get(0).dot(v);
-
-        Vector3D answer = r.get(0);
-
-        for (int i = 1; i < r.size(); i++) {
-
-            result = Math.max(result, r.get(i).dot(v));
-
-            if (result > oldResult) {
-
-                answer = r.get(i);
-
-                oldResult = result;
-
-            }
-
-        }
-
-        return answer;
+        
+        return r.get(dirMaxInt(r, v));
 
     }
 
@@ -569,9 +629,9 @@ public class CMB extends Boundary {
 
         if (gjk) {
             
-            Polytope poly = new Polytope(simplex, getOffsetBoundary(), cmb.getOffsetBoundary());
+            Polytope poly = new Polytope(simplex);
             
-            distanceToBoundary = poly.EPA();
+            distanceToBoundary = poly.EPA(getOffsetBoundary(), cmb.getOffsetBoundary());
             
         }
 
@@ -591,9 +651,13 @@ public class CMB extends Boundary {
 
         for (int i = 0; i < convexBoundary.size(); i++) {
 
-            newBoundary.add(convexBoundary.get(i).add(getPos()));
-
+            newBoundary.add(rot.toRotationMatrix().transform(convexBoundary.get(i)).add(getPos()));
+            
         }
+        
+        //System.out.println(convexBoundary.get(0));
+        
+        //System.out.println(newBoundary.get(0));
 
         return newBoundary;
 

@@ -70,6 +70,12 @@ public class Transform {
         return !(pos.equals(lastPos) && rot.equals(lastRot) && scale.equals(lastScale));
 
     }
+    
+    public boolean hasRotChanged() {
+        
+        return !rot.equals(lastRot);
+        
+    }
 
     public void rotate(Vector3D axis, float angle) {
 

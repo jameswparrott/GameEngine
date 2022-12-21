@@ -35,7 +35,7 @@ public class PhysicsBody {
      */
     public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D pos) {
 
-        this(mass, boundary, material, pos, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO, Vector3D.ZERO);
+        this(mass, boundary, material, pos, Vector3D.ZERO, Vector3D.ZERO, Quaternion.IDENTITY, Vector3D.ZERO, Vector3D.ZERO);
 
     }
 
@@ -52,7 +52,7 @@ public class PhysicsBody {
     public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D pos, Vector3D velocity,
             Vector3D acceleration) {
 
-        this(mass, boundary, material, pos, velocity, acceleration, Vector3D.ZERO, Vector3D.ZERO);
+        this(mass, boundary, material, pos, velocity, acceleration, Quaternion.IDENTITY, Vector3D.ZERO, Vector3D.ZERO);
 
     }
 
@@ -69,7 +69,7 @@ public class PhysicsBody {
      * @param angularAcceleration initial angular acceleration
      */
     public PhysicsBody(float mass, Boundary boundary, PhysicsMaterial material, Vector3D pos, Vector3D velocity,
-            Vector3D acceleration, Vector3D angularVelocity, Vector3D angularAcceleration) {
+            Vector3D acceleration, Quaternion rot, Vector3D angularVelocity, Vector3D angularAcceleration) {
 
         this.mass = mass;
 
@@ -82,6 +82,8 @@ public class PhysicsBody {
         this.velocity = velocity;
 
         this.acceleration = acceleration;
+        
+        this.rot = rot;
 
         this.angularVelocity = angularVelocity;
 
@@ -98,6 +100,8 @@ public class PhysicsBody {
         angularVelocity = angularVelocity.add(angularAcceleration.getScaled(delta));
 
         pos = pos.add(velocity.getScaled(delta));
+        
+        rot = new Quaternion(angularVelocity, angularVelocity.length()).mult(rot).getNorm();
 
     }
 
@@ -147,6 +151,12 @@ public class PhysicsBody {
 
         this.acceleration = acceleration;
 
+    }
+    
+    public Quaternion getRot() {
+        
+        return this.rot;
+        
     }
 
     public Vector3D getAngularVelocity() {
