@@ -93,39 +93,7 @@ public class Enemy extends GameObject {
     private void idleUpdate() {
 
     }
-
-    private void chaseUpdate(Vector3D direction, float delta) {
-
-        // getTransform().getPos().add(direction.getNorm().scale(moveSpeed * delta));
-
-        if (direction.length() > 1) {
-
-            direction.normalize().scale(-1).setY(0);
-
-            Vector3D oldPos = getTransform().getPos();
-
-            Vector3D newPos = getTransform().getPos().add(direction.getScaled(moveSpeed * delta));
-
-            Vector3D collision = TestGame.getLevel().collisionCheck(oldPos, newPos, 0.15f, 0.15f);
-
-            Vector3D movement = direction.scale(moveSpeed * delta);
-
-            movement = movement.mul(collision);
-
-            // System.out.println(collision.toString());
-
-            if (movement.sub(direction).length() != 0) {
-
-                TestGame.getLevel().openDoors(oldPos);
-
-            }
-
-            getTransform().setPos(getTransform().getPos().add(movement));
-
-        }
-
-    }
-
+    
     private void attackUpdate() {
 
     }
@@ -171,8 +139,6 @@ public class Enemy extends GameObject {
             break;
 
         case chase:
-
-            chaseUpdate(direction, delta);
 
             break;
 

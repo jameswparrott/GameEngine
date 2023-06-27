@@ -15,8 +15,6 @@ import main.engine.rendering.Material;
 import main.engine.rendering.Mesh;
 import main.engine.rendering.Texture;
 import main.engine.rendering.Vertex;
-import main.engine.rendering.meshLoading.PrimitiveModel2D;
-import main.engine.rendering.meshLoading.PrimitiveModel2D.Primitive2D;
 
 public class Level extends GameObject {
 
@@ -24,15 +22,13 @@ public class Level extends GameObject {
 
     private int NUM_DIV;
 
-    private static final int RED = 0xFF0000;
+    private static final int RED   = 0xFF0000;
 
     private static final int GREEN = 0x00FF00;
 
-    private static final int BLUE = 0x0000FF;
+    private static final int BLUE  = 0x0000FF;
 
     private Bitmap level;
-
-    private GameObject map;
 
     private ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 
@@ -48,37 +44,34 @@ public class Level extends GameObject {
 
         NUM_DIV = 256 / (NUM_ROW * NUM_ROW);
 
+        //generateLevel(mapFile, texFile);
+        
         generateLevel(mapFile, texFile);
 
         this.player = player;
 
     }
-
+    
+    @SuppressWarnings("unused")
     private void generateLevel(String mapFile, String texFile) {
 
         level = new Bitmap(mapFile).flipY();
 
-        float[] texCoords = new float[4];
+        //float[] texCoords = new float[4];
+        
+        float[] texCoords = new float[9];
 
         Door door;
 
-        Material material = new Material(new Texture(texFile), 1, 8);
+        Material material = new Material(new Texture(texFile), 1, 8, new Texture("default-normalMap.png"));
 
 //		material.addTexture("diffuse", new Texture(texFile));
 //		
 //		material.addFloat("specularIntensity", 1);
 //		
 //		material.addFloat("specularExponent", 8);
-//		
-//		material.addTexture("nMap", new Texture("default-normalMap.png"));
-
-        PrimitiveModel2D wall;
-
-        Mesh wallMesh;
-
-        MeshRenderer wallRenderer;
-
-        GameObject wallObject;
+		
+		//material.addTexture("nMap", new Texture("default-normalMap.png"));
 
         for (int i = 0; i < level.getWidth(); i++) {
 
@@ -113,24 +106,6 @@ public class Level extends GameObject {
                     addIndices(true);
 
                     addVertices(i, j, true, true, false, 0, texCoords);
-
-                    // Horribly inefficient
-
-//					wall = new PrimitiveModel2D(Primitive2D.rectangle, 1, 1, texCoords);
-//					
-//					wallMesh = wall.getMesh();
-//					
-//					wallRenderer = new MeshRenderer(wallMesh, material);
-//					
-//					wallObject = new GameObject();
-//					
-//					wallObject.addComponent(wallRenderer);
-//					
-//					wallObject.getTransform().setPos(i + 0.5f, 0.5f, j);
-//					
-//					wallObject.getTransform().setRot(new Quaternion(new Vector3D(0, 1, 0), (float) - Math.toRadians(180)));
-//					
-//					addChild(wallObject);
 
                 }
 
@@ -225,39 +200,52 @@ public class Level extends GameObject {
 
     private float[] texChannel(int i, int j, int channel) {
 
-        float[] result = new float[4];
+        //float[] result = new float[4];
+        
+        float[] result = new float[6];
 
         int yTex = 0;
 
         if (channel == RED) {
+            
+            //Returns the number of the texture read from left to right top to bottom
+            yTex = ((level.getPixel(i, j) & RED  ) >> 16) / NUM_DIV;
 
-            yTex = ((level.getPixel(i, j) & RED) >> 16) / NUM_DIV;
+        } else if (channel == GREEN) {
 
-        }
+            yTex = ((level.getPixel(i, j) & GREEN) >>  8) / NUM_DIV;
 
-        if (channel == GREEN) {
+        } else if (channel == BLUE) {
 
-            yTex = ((level.getPixel(i, j) & GREEN) >> 8) / NUM_DIV;
-
-        }
-
-        if (channel == BLUE) {
-
-            yTex = ((level.getPixel(i, j) & BLUE)) / NUM_DIV;
+            yTex = ((level.getPixel(i, j) & BLUE )      ) / NUM_DIV;
 
         }
 
+        //Get the initial texture coordinate for the x axis
         int xTex = yTex % NUM_ROW;
-
+        
+        //Get the initial texture coordinate for the y axis
         yTex /= NUM_ROW;
 
+//        result[0] = (float) xTex / (float) NUM_ROW;
+//
+//        result[1] = result[0] + 1f / (float) NUM_ROW;
+//
+//        result[2] = 1f - (float) yTex / (float) NUM_ROW;
+//
+//        result[3] = result[2] - 1f / (float) NUM_ROW;
+        
         result[0] = (float) xTex / (float) NUM_ROW;
+        
+        result[1] = result[0] + 1f / (float) (2 * NUM_ROW);
 
-        result[1] = result[0] + 1f / (float) NUM_ROW;
+        result[2] = result[0] + 1f / (float) NUM_ROW;
+        
+        result[3] = 1f - (float) yTex / (float) NUM_ROW;
+        
+        result[4] = result[3] - 1f / (float) (2 * NUM_ROW);
 
-        result[2] = 1f - (float) yTex / (float) NUM_ROW;
-
-        result[3] = result[2] - 1f / (float) NUM_ROW;
+        result[5] = result[3] - 1f / (float) NUM_ROW;
 
         return result;
 
@@ -265,82 +253,187 @@ public class Level extends GameObject {
 
     private void addIndices(boolean flip) {
 
+//        if (flip) {
+//
+//            indices.add(vertices.size() + 1);
+//            indices.add(vertices.size() + 2);
+//            indices.add(vertices.size() + 0);
+//            indices.add(vertices.size() + 2);
+//            indices.add(vertices.size() + 3);
+//            indices.add(vertices.size() + 0);
+//
+//            return;
+//        }
+//
+//        indices.add(vertices.size() + 0);
+//        indices.add(vertices.size() + 2);
+//        indices.add(vertices.size() + 1);
+//        indices.add(vertices.size() + 0);
+//        indices.add(vertices.size() + 3);
+//        indices.add(vertices.size() + 2);
+        
         if (flip) {
 
+            //1x1
+            indices.add(vertices.size() + 0);
             indices.add(vertices.size() + 1);
-
-            indices.add(vertices.size() + 2);
-
-            indices.add(vertices.size() + 0);
-
-            indices.add(vertices.size() + 2);
-
+            indices.add(vertices.size() + 4);
+            indices.add(vertices.size() + 4);
             indices.add(vertices.size() + 3);
-
             indices.add(vertices.size() + 0);
-
+            
+            //2x1
+            indices.add(vertices.size() + 1);
+            indices.add(vertices.size() + 2);
+            indices.add(vertices.size() + 5);
+            indices.add(vertices.size() + 5);
+            indices.add(vertices.size() + 4);
+            indices.add(vertices.size() + 1);
+            
+            //1x2
+            indices.add(vertices.size() + 3);
+            indices.add(vertices.size() + 4);
+            indices.add(vertices.size() + 7);
+            indices.add(vertices.size() + 7);
+            indices.add(vertices.size() + 6);
+            indices.add(vertices.size() + 3);
+            
+            //2x2
+            indices.add(vertices.size() + 4);
+            indices.add(vertices.size() + 5);
+            indices.add(vertices.size() + 8);
+            indices.add(vertices.size() + 8);
+            indices.add(vertices.size() + 7);
+            indices.add(vertices.size() + 4);
+            
             return;
+            
         }
-
+        
+        //1x1
         indices.add(vertices.size() + 0);
-
-        indices.add(vertices.size() + 2);
-
+        indices.add(vertices.size() + 4);
         indices.add(vertices.size() + 1);
-
+        indices.add(vertices.size() + 4);
         indices.add(vertices.size() + 0);
-
         indices.add(vertices.size() + 3);
-
+        
+        //2x1
+        indices.add(vertices.size() + 1);
+        indices.add(vertices.size() + 5);
         indices.add(vertices.size() + 2);
-
+        indices.add(vertices.size() + 5);
+        indices.add(vertices.size() + 1);
+        indices.add(vertices.size() + 4);
+        
+        //1x2
+        indices.add(vertices.size() + 3);
+        indices.add(vertices.size() + 7);
+        indices.add(vertices.size() + 4);
+        indices.add(vertices.size() + 7);
+        indices.add(vertices.size() + 3);
+        indices.add(vertices.size() + 6);
+        
+        //2x2
+        indices.add(vertices.size() + 4);
+        indices.add(vertices.size() + 8);
+        indices.add(vertices.size() + 5);
+        indices.add(vertices.size() + 8);
+        indices.add(vertices.size() + 4);
+        indices.add(vertices.size() + 7);
+        
     }
 
     private void addVertices(int i, int j, boolean x, boolean y, boolean z, float offset, float[] texCoords) {
 
+//        if (x && z) {
+//            
+//            vertices.add(new Vertex(new Vector3D(i    , offset, j    ), new Vector2D(texCoords[0], texCoords[3])));
+//            vertices.add(new Vertex(new Vector3D(i + 1, offset, j    ), new Vector2D(texCoords[1], texCoords[3])));
+//            vertices.add(new Vertex(new Vector3D(i + 1, offset, j + 1), new Vector2D(texCoords[1], texCoords[2])));
+//            vertices.add(new Vertex(new Vector3D(i    , offset, j + 1), new Vector2D(texCoords[0], texCoords[2])));
+//        
+//            return;
+//        
+//        } else if (x && y) {
+//
+//            vertices.add(new Vertex(new Vector3D(i    , 0, j + offset), new Vector2D(texCoords[0], texCoords[3])));
+//            vertices.add(new Vertex(new Vector3D(i + 1, 0, j + offset), new Vector2D(texCoords[1], texCoords[3])));
+//            vertices.add(new Vertex(new Vector3D(i + 1, 1, j + offset), new Vector2D(texCoords[1], texCoords[2])));
+//            vertices.add(new Vertex(new Vector3D(i    , 1, j + offset), new Vector2D(texCoords[0], texCoords[2])));
+//
+//            return;
+//
+//        } else if (y && z) {
+//
+//            vertices.add(new Vertex(new Vector3D(i + offset, 0, j    ), new Vector2D(texCoords[0], texCoords[3])));
+//            vertices.add(new Vertex(new Vector3D(i + offset, 0, j + 1), new Vector2D(texCoords[1], texCoords[3])));
+//            vertices.add(new Vertex(new Vector3D(i + offset, 1, j + 1), new Vector2D(texCoords[1], texCoords[2])));
+//            vertices.add(new Vertex(new Vector3D(i + offset, 1, j    ), new Vector2D(texCoords[0], texCoords[2])));
+//
+//            return;
+//
+//        }
+        
         if (x && z) {
+            
+            vertices.add(new Vertex(new Vector3D(i       , offset, j       ), new Vector2D(texCoords[0], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f, offset, j       ), new Vector2D(texCoords[1], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + 1   , offset, j       ), new Vector2D(texCoords[2], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i       , offset, j + 0.5f), new Vector2D(texCoords[0], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f, offset, j + 0.5f), new Vector2D(texCoords[1], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + 1   , offset, j + 0.5f), new Vector2D(texCoords[2], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i       , offset, j + 1   ), new Vector2D(texCoords[0], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f, offset, j + 1   ), new Vector2D(texCoords[1], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + 1   , offset, j + 1   ), new Vector2D(texCoords[2], texCoords[5])));
 
-            vertices.add(new Vertex(new Vector3D(i, offset, j), new Vector2D(texCoords[0], texCoords[3])));
+            return;
+        
+        } else if (x && y) {
 
-            vertices.add(new Vertex(new Vector3D(i + 1, offset, j), new Vector2D(texCoords[1], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i       ,    0, j + offset), new Vector2D(texCoords[0], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f,    0, j + offset), new Vector2D(texCoords[1], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + 1   ,    0, j + offset), new Vector2D(texCoords[2], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i       , 0.5f, j + offset), new Vector2D(texCoords[0], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f, 0.5f, j + offset), new Vector2D(texCoords[1], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + 1   , 0.5f, j + offset), new Vector2D(texCoords[2], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i       ,    1, j + offset), new Vector2D(texCoords[0], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f,    1, j + offset), new Vector2D(texCoords[1], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + 1   ,    1, j + offset), new Vector2D(texCoords[2], texCoords[5])));
+            
+            vertices.add(new Vertex(new Vector3D(i       ,    0, j + offset), new Vector2D(texCoords[0], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f,    0, j + offset), new Vector2D(texCoords[1], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + 1   ,    0, j + offset), new Vector2D(texCoords[2], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i       , 0.5f, j + offset), new Vector2D(texCoords[0], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f, 0.5f, j + offset), new Vector2D(texCoords[1], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + 1   , 0.5f, j + offset), new Vector2D(texCoords[2], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i       ,    1, j + offset), new Vector2D(texCoords[0], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + 0.5f,    1, j + offset), new Vector2D(texCoords[1], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + 1   ,    1, j + offset), new Vector2D(texCoords[2], texCoords[5])));
+                        
+            return;
 
-            vertices.add(new Vertex(new Vector3D(i + 1, offset, j + 1), new Vector2D(texCoords[1], texCoords[2])));
+        } else if (y && z) {
 
-            vertices.add(new Vertex(new Vector3D(i, offset, j + 1), new Vector2D(texCoords[0], texCoords[2])));
+            vertices.add(new Vertex(new Vector3D(i + offset,    0, j       ), new Vector2D(texCoords[0], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + offset,    0, j + 0.5f), new Vector2D(texCoords[1], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + offset,    0, j + 1   ), new Vector2D(texCoords[2], texCoords[3])));
+            vertices.add(new Vertex(new Vector3D(i + offset, 0.5f, j       ), new Vector2D(texCoords[0], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + offset, 0.5f, j + 0.5f), new Vector2D(texCoords[1], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + offset, 0.5f, j + 1   ), new Vector2D(texCoords[2], texCoords[4])));
+            vertices.add(new Vertex(new Vector3D(i + offset,    1, j       ), new Vector2D(texCoords[0], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + offset,    1, j + 0.5f), new Vector2D(texCoords[1], texCoords[5])));
+            vertices.add(new Vertex(new Vector3D(i + offset,    1, j + 1   ), new Vector2D(texCoords[2], texCoords[5])));
 
             return;
 
-        }
-
-        if (x && y) {
-
-            vertices.add(new Vertex(new Vector3D(i, 0, j + offset), new Vector2D(texCoords[0], texCoords[3])));
-
-            vertices.add(new Vertex(new Vector3D(i + 1, 0, j + offset), new Vector2D(texCoords[1], texCoords[3])));
-
-            vertices.add(new Vertex(new Vector3D(i + 1, 1, j + offset), new Vector2D(texCoords[1], texCoords[2])));
-
-            vertices.add(new Vertex(new Vector3D(i, 1, j + offset), new Vector2D(texCoords[0], texCoords[2])));
-
+        } else {
+            
+            System.err.println("Invalid faces given.");
+            
             return;
-
+            
         }
-
-        if (y && z) {
-
-            vertices.add(new Vertex(new Vector3D(i + offset, 0, j), new Vector2D(texCoords[0], texCoords[3])));
-
-            vertices.add(new Vertex(new Vector3D(i + offset, 0, j + 1), new Vector2D(texCoords[1], texCoords[3])));
-
-            vertices.add(new Vertex(new Vector3D(i + offset, 1, j + 1), new Vector2D(texCoords[1], texCoords[2])));
-
-            vertices.add(new Vertex(new Vector3D(i + offset, 1, j), new Vector2D(texCoords[0], texCoords[2])));
-
-            return;
-
-        }
-
-        System.err.println("Invalid faces given.");
 
     }
 

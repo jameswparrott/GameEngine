@@ -31,11 +31,17 @@ public class Bitmap {
             pixels = new int[width * height];
 
             image.getRGB(0, 0, width, height, pixels, 0, width);
+            
+            System.out.println("Bitmap Image Width: " + width + " and Height: " + height);
+            
+            System.out.println("Pixels Length: " + pixels.length);
 
             System.out.println("loaded " + fileName);
 
         } catch (IOException e) {
+            
             e.printStackTrace();
+            
         }
 
     }

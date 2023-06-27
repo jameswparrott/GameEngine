@@ -9,8 +9,8 @@ import main.engine.physics.IntersectData;
 import main.engine.rendering.Mesh;
 
 public class CMB extends Boundary {
-
-    // TODO: Add GJK optimizations if possible (not important)
+    
+    // TODO: Implement a way to return the convex hull of an object
 
     // TODO: Add option to return lengths from GJK algorithm
 
@@ -59,7 +59,7 @@ public class CMB extends Boundary {
 
             //convexBoundary = quickHull(vertices);
 
-            convexBoundary = qHull(vertices);
+            convexBoundary = quickHull(vertices);
             
         }
 
@@ -82,250 +82,36 @@ public class CMB extends Boundary {
         this.rot = transform.getRot();
 
     }
-
-    private static ArrayList<Vector3D> qHull(ArrayList<Vector3D> vertices){
-        
-        ArrayList<Vector3D> verts  = vertices;
-        
-        ArrayList<Vector3D> base   = new ArrayList<Vector3D>();
-        
-        ArrayList<Vector3D> result = new ArrayList<Vector3D>();
-        
-        int index = 0;
-        
-        for (int i = 0; i < 3; i ++) {
-            
-            index = dirMaxInt(verts, verts.get(i));
-            
-            base.add(verts.get(index));
-            
-            verts.remove(index);
-            
-        }
-        
-        index = 0;
-        
-        //Coplanar
-        while(true) {
-            
-            if (verts.get(index).sub(base.get(0)).dot(base.get(0).calcNormal(base.get(1), base.get(2))) > 0) {
-                
-                base.add(verts.get(index));
-                
-                verts.remove(index);
-                
-                break;
-                
-            }
-            
-            index ++;
-            
-        }
-        
-        //base, initial simplex found
-        Polytope convexHull = new Polytope(base);
-        
-        //Compute convex hull
-        convexHull.quickHull(verts);
-        
-        return result;
-        
-    }
-    
-    private static ArrayList<Vector3D> expand(){
-        
-        ArrayList<Vector3D> result = new ArrayList<Vector3D>();
-        
-        return result;
-        
-    }
     
     private static ArrayList<Vector3D> quickHull(ArrayList<Vector3D> vertices) {
-
-        ArrayList<Vector3D> verts = vertices;
-
-        Vector3D[] baseA = new Vector3D[3];
-
-        Vector3D[] baseB = new Vector3D[3];
-
-        ArrayList<Vector3D> result = new ArrayList<Vector3D>();
-
-        ArrayList<Vector3D> setA = new ArrayList<Vector3D>();
-
-        ArrayList<Vector3D> setB = new ArrayList<Vector3D>();
-
-        int index = 0;
-
-        // Find the index of the vertex furthest in the (0,1,0) direction
-        index = dirMaxInt(verts, new Vector3D(0, 1, 0));
-
-        // Add this vertex to the result (i.e. vertex in convex hull)
-        result.add(verts.get(index));
-
-        // Add this vertex to the base triangles 
-        baseA[0] = verts.get(index);
-
-        baseB[2] = verts.get(index);
-
-        // Remove vertex from list of possible vertices (no need to keep checking it)
-        verts.remove(index);
-
-        index = dirMaxInt(verts, new Vector3D(1, -1, 1));
-
-        result.add(verts.get(index));
-
-        baseA[1] = verts.get(index);
-
-        baseB[1] = verts.get(index);
-
-        verts.remove(index);
-
-        index = dirMaxInt(verts, new Vector3D(-1, -1, -1));
-
-        result.add(verts.get(index));
-
-        baseA[2] = verts.get(index);
-
-        baseB[0] = verts.get(index);
-
-        verts.remove(index);
         
-//        System.out.println(result.get(0));
-//        
-//        System.out.println(result.get(1));
-//        
-//        System.out.println(result.get(2));
-//        
-//        System.out.println();
-
-        // Point on the plane, a vertex of the triangle
-        Vector3D p_point = result.get(0);
-
-        // Normal of the plane
-        Vector3D p_normal = result.get(2).sub(result.get(1)).cross(result.get(0).sub(result.get(1)));
-
-        for (int i = 0; i < verts.size(); i++) {
-
-            // Which side of the plane is this vertex on?
-            if (p_normal.dot(verts.get(i).sub(p_point)) > 0) {
-
-                setA.add(verts.get(i));
-
-            } else if (p_normal.dot(verts.get(i).sub(p_point)) < 0) {
-
-                setB.add(verts.get(i));
-
-            }
-
-        }
-
-        findHull(result, setA, baseA, p_normal);
-
-        findHull(result, setB, baseB, p_normal.getScaled(-1.0f));
+        //Create output polytope
+        Polytope polytope = new Polytope(vertices);
         
-        System.out.println("QuickHull: ");
+        //Find maximal initial simplex
+        //CREATE_SIMPLEX(polytope, vertices);
         
-        for (int i = 0; i < result.size(); i ++) {
-            
-            System.out.println(result.get(i));
-            
-        }
-
-        return result;
-
-    }
-
-    private static void findHull(ArrayList<Vector3D> result, ArrayList<Vector3D> subset, Vector3D[] base,
-            Vector3D norm) {
-
-        if (subset.isEmpty()) {
-
-            return;
-
-        }
-
-        ArrayList<Vector3D> setA = new ArrayList<Vector3D>();
-
-        ArrayList<Vector3D> setB = new ArrayList<Vector3D>();
-
-        ArrayList<Vector3D> setC = new ArrayList<Vector3D>();
-
-        Vector3D[] a_base = new Vector3D[3];
-
-        Vector3D[] b_base = new Vector3D[3];
-
-        Vector3D[] c_base = new Vector3D[3];
-
-        int index = 0;
-
-        index = dirMaxInt(subset, norm);
-
-        result.add(subset.get(index));
-
-        a_base[0] = subset.get(index);
-
-        a_base[1] = base[0];
-
-        a_base[2] = base[1];
-
-        Vector3D p_normal = a_base[0].sub(a_base[1]).cross(a_base[2].sub(a_base[1]));
-
-        for (int i = 0; i < subset.size(); i++) {
-
-            if (p_normal.dot(subset.get(i).sub(a_base[0])) > 0) {
-
-                setA.add(subset.get(i));
-
-            }
-
-        }
-
-        findHull(result, setA, a_base, p_normal);
-
-        b_base[0] = subset.get(index);
-
-        b_base[1] = base[1];
-
-        b_base[2] = base[2];
-
-        p_normal = b_base[0].sub(b_base[1]).cross(b_base[2].sub(b_base[1]));
-
-        for (int i = 0; i < subset.size(); i++) {
-
-            if (p_normal.dot(subset.get(i).sub(b_base[0])) > 0) {
-
-                setB.add(subset.get(i));
-
-            }
-
-        }
-
-        findHull(result, setB, b_base, p_normal);
-
-        c_base[0] = subset.get(index);
-
-        c_base[1] = base[2];
-
-        c_base[2] = base[0];
-
-        p_normal = c_base[0].sub(c_base[1]).cross(c_base[2].sub(c_base[1]));
-
-        for (int i = 0; i < subset.size(); i++) {
-
-            if (p_normal.dot(subset.get(i).sub(c_base[0])) > 0) {
-
-                setC.add(subset.get(i));
-
-            }
-
-        }
-
-        findHull(result, setC, c_base, p_normal);
-
-        subset.remove(index);
-
-        return;
-
+        //Divide pointcloud into four groups, allocating each group to a face if a point could be 
+        //assigned to multiple faces, assign it to one randomly it does not matter
+        //Any points inside the polytope will be removed
+        //ADD_TO_OUTSIDE_SET(face, vertices);
+        
+        //While ∃ a face with outside vertices
+        
+            //Find the point furthest from the face in its outside set
+            //CALCULATE_EYE_POINT(face, outsideSet);
+        
+            //Calculate the horizon which will produce a list of horizon edges, an ordered list of
+            //edges from the view of the eye point, it will also mark the faces seen by the eye point
+            //as no longer in the convex hull, then place all of their outside set points on the 
+            //list of unclaimed vertices
+            //CALCULATE_HORIZON(eyePoint, NULL, currFace, listHorizonEdges, listUnclaimedVertices);
+        
+            //Construct a cone from the eye point and all of the horizon edges
+        
+        //Return the polytope's vertices
+        return polytope.getVertices();
+        
     }
 
     /**

@@ -25,8 +25,6 @@ import main.engine.core.Vector3D;
 
 public class Player extends GameObject {
 
-    private static final Vector3D yAxis = new Vector3D(0, 1, 0);
-
     private Vector3D movement;
 
     private Vector3D forward;
@@ -154,7 +152,7 @@ public class Player extends GameObject {
 
         if (Input.getKeyHeld(GLFW_KEY_LEFT_SHIFT)) {
 
-            movement = movement.sub(yAxis);
+            movement = movement.sub(Vector3D.UP);
 
             moveAmount *= 0.75f;
 
@@ -162,7 +160,7 @@ public class Player extends GameObject {
 
         if (Input.getKeyHeld(GLFW_KEY_SPACE)) {
 
-            movement = movement.add(yAxis);
+            movement = movement.add(Vector3D.UP);
 
             moveAmount *= 0.75f;
 
@@ -229,7 +227,7 @@ public class Player extends GameObject {
 
             if (!yrot) {
 
-                getTransform().rotate(yAxis, (float) Math.toRadians(dx * sensitivity));
+                getTransform().rotate(Vector3D.UP, (float) Math.toRadians(dx * sensitivity));
 
             }
 

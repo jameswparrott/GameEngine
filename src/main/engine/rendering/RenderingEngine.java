@@ -84,6 +84,12 @@ public class RenderingEngine {
         return ambientLight;
 
     }
+    
+    public void setAmbientLight(Vector3D ambientLight) {
+        
+        this.ambientLight = ambientLight;
+        
+    }
 
     public void render(GameObject object) {
 

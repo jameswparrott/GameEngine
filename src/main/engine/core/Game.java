@@ -14,6 +14,8 @@ public abstract class Game {
     private PhysicsEngine physicsEngine;
 
     private AudioEngine audioEngine;
+    
+    private RenderingEngine renderingEngine;
 
     public Game() {
 
@@ -36,6 +38,12 @@ public abstract class Game {
     public void addAudioEngine(AudioEngine audioEngine) {
 
         this.audioEngine = audioEngine;
+
+    }
+    
+    public void addRenderingEngine(RenderingEngine renderingEngine) {
+
+        this.renderingEngine = renderingEngine;
 
     }
 
@@ -106,6 +114,12 @@ public abstract class Game {
     public AudioEngine getAudioEngine() {
 
         return audioEngine;
+
+    }
+    
+    public RenderingEngine getRenderingEngine() {
+
+        return renderingEngine;
 
     }
 

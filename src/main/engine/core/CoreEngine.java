@@ -167,13 +167,9 @@ public class CoreEngine {
 
             // Center the window
             glfwSetWindowPos(
-
                     window,
-
                     (vidmode.width() - pWidth.get(0)) / 2,
-
                     (vidmode.height() - pHeight.get(0)) / 2
-
             );
 
         }
@@ -266,6 +262,8 @@ public class CoreEngine {
         game.addPhysicsEngine(physicsEngine);
 
         game.addAudioEngine(audioEngine);
+        
+        game.addRenderingEngine(renderingEngine);
 
         game.init();
 

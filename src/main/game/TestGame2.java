@@ -1,7 +1,25 @@
 package main.game;
 
+import main.engine.components.AudioEngineComponent;
+import main.engine.components.DirectionalLight;
+import main.engine.components.MeshRenderer;
+import main.engine.components.PhysicsBodyComponent;
+import main.engine.components.PhysicsEngineComponent;
+import main.engine.components.PointLight;
+import main.engine.core.CoreEngine;
 import main.engine.core.Game;
+import main.engine.core.GameObject;
+import main.engine.core.Quaternion;
 import main.engine.core.Vector3D;
+import main.engine.physics.PhysicsBody;
+import main.engine.physics.boundaries.AABB;
+import main.engine.physics.boundaries.Sphere;
+import main.engine.physics.materials.PhysicsMaterial;
+import main.engine.rendering.Material;
+import main.engine.rendering.Mesh;
+import main.engine.rendering.TextObject;
+import main.engine.rendering.Texture;
+import main.engine.rendering.meshLoading.Terrain;
 
 public class TestGame2 extends Game {
 
@@ -11,33 +29,175 @@ public class TestGame2 extends Game {
 
     public void init() {
 
-        player = new Player(new Vector3D(16, 0.475f, 16));
+        PhysicsEngineComponent pec = new PhysicsEngineComponent(getPhysicsEngine());
+        AudioEngineComponent aec = new AudioEngineComponent(getAudioEngine());
 
+        addComponent(pec);
+        addComponent(aec);
+
+        //player = new Player(new Vector3D(3, 6.475f, 5));
+        
+        player = new Player(Vector3D.ZERO);
+        
         addObject(player);
+        
+        GameObject terrainObject = new GameObject();
+        Terrain terrain = new Terrain(20);
+        terrain.addPerlin(5);
+        terrain.genMesh();
+        Material terrainMaterial = new Material(new Texture("tiledfloor.png"), 0.5f, 1.0f,
+                                                new Texture("tiledfloor_normal.png"));
+        MeshRenderer terrainRenderer = new MeshRenderer(terrain.getMesh(), terrainMaterial);
+        terrainObject.addComponent(terrainRenderer);
+        addObject(terrainObject);
 
-        level = new Level("level4.png", "wolf3D-64-full.png", 8, player);
+//      GameObject cube = new GameObject();
+//      Mesh cubeMesh = new Mesh("Cube.obj");
+//      Material cubeMaterial = new Material(new Texture("UV_Grid.png"), 1, 1);
+//      MeshRenderer cubeRenderer = new MeshRenderer(cubeMesh, cubeMaterial);
+//      cube.addComponent(cubeRenderer);
+//      cube.getTransform().setPos(new Vector3D(7, 7, 7));
+//      CMB cubeCMB = new CMB(new Vector3D(7, 7, 7), cubeMesh, false);
+//      PhysicsMaterial cubePhysicsMaterial = new PhysicsMaterial(false, 1.0f);
+//      PhysicsBody cubePhysics = new PhysicsBody(  10, 
+//                                                  cubeCMB, 
+//                                                  cubePhysicsMaterial, 
+//                                                  new Vector3D(7, 7, 7),
+//                                                  new Vector3D(0, 0.0f, 0.0f), 
+//                                                  new Vector3D(0, 0, 0),
+//                                                  new Vector3D(0, -0.3f, 0),
+//                                                  new Vector3D(0, 0, 0));
+//      PhysicsBodyComponent cubePhysicsComponent = new PhysicsBodyComponent(cubePhysics);
+//      pec.add(cubePhysicsComponent);
+//      cube.addComponent(cubePhysicsComponent);
+//      addObject(cube);
 
-        addObject(level);
+//        GameObject monkeyObject = new GameObject();
+//        Mesh monkeyMesh = new Mesh("monkey1.obj");
+//        Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
+//        MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
+//        Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), monkeyMesh);
+//        AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
+//        CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
+//        PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
+//        PhysicsBody monkeyPhysics = new PhysicsBody(10, aCMB, aMaterial, new Vector3D(0, 3, 0),
+//                                                    new Vector3D(0.0f, 0.0f, 0.0f), 
+//                                                    new Vector3D(0, 0, 0), 
+//                                                    new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(0.0f)),
+//                                                    new Vector3D(0.0f, 0.0f, 0.0f),
+//                                                    new Vector3D(0, 0, 0));
+//        PhysicsBodyComponent monkeyPhysicsComponent = new PhysicsBodyComponent(monkeyPhysics);
+//        monkeyObject.addComponent(monkeyRenderer);
+//        monkeyObject.addComponent(monkeyPhysicsComponent);
+//        pec.add(monkeyPhysicsComponent);
+//        addObject(monkeyObject);
+        
+        Mesh monkeyMesh = new Mesh("monkey1.obj");
+        Material monkeyMaterial = new Material(new Texture("bricks.jpg"), 1, 8, new Texture("bricks_normal.jpg"));
+        
+//        GameObject monkeyObject = new GameObject();
+//        MeshRenderer monkeyRenderer = new MeshRenderer(monkeyMesh, monkeyMaterial);
+//        Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), monkeyMesh);
+//        AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
+//        CMB aCMB = new CMB(new Vector3D(0, 3, 0), monkeyMesh, false);
+//        PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
+//        PhysicsBody monkeyPhysics = new PhysicsBody(10, aCMB, aMaterial, new Vector3D(0, 3, 0),
+//                                                    new Vector3D(0.0f, 0.0f, 0.0f), 
+//                                                    new Vector3D(0, 0, 0), 
+//                                                    new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(45.0f)),
+//                                                    new Vector3D(0.0f, 0.0f, 0.0f),
+//                                                    new Vector3D(0, 0, 0));
+//        PhysicsBodyComponent monkeyPhysicsComponent = new PhysicsBodyComponent(monkeyPhysics);
+//        monkeyObject.addComponent(monkeyRenderer);
+//        monkeyObject.addComponent(monkeyPhysicsComponent);
+//        pec.add(monkeyPhysicsComponent);
+//        addObject(monkeyObject);
+//
+//        GameObject monkeyObject2 = new GameObject();
+//        MeshRenderer monkeyRenderer2 = new MeshRenderer(monkeyMesh, monkeyMaterial);
+//        Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), monkeyMesh);
+//        AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
+//        CMB bCMB = new CMB(new Vector3D(0, 3, 10), monkeyMesh, false);
+//        PhysicsMaterial bMaterial = new PhysicsMaterial(false, 1.0f);
+//        PhysicsBody monkeyPhysics2 = new PhysicsBody(30, bCMB, bMaterial, 
+//                                                    new Vector3D(0, 3, 10),
+//                                                    new Vector3D(0, 0.0f, -0.5f), 
+//                                                    new Vector3D(0, 0, 0), 
+//                                                    new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(0.0f)),
+//                                                    new Vector3D(0, 0.0f, 0),
+//                                                    new Vector3D(0, 0, 0));
+//        PhysicsBodyComponent monkeyPhysicsComponent2 = new PhysicsBodyComponent(monkeyPhysics2);
+//        monkeyObject2.addComponent(monkeyRenderer2);
+//        monkeyObject2.addComponent(monkeyPhysicsComponent2);
+//        pec.add(monkeyPhysicsComponent2);
+//        addObject(monkeyObject2);
+        
+        //monkeyObject2.getTransform().setRot(new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(70.0f)));
 
-        // Camera mainCamera = new Camera((float) Math.toRadians(70.0f), (float)
-        // CoreEngine.getWidth() / (float) CoreEngine.getHeight(), 0.01f, 1000.0f);
+        Mesh boxMesh = new Mesh("box1.obj");
+        Material boxMaterial = new Material(new Texture("008-brownstone.png"), 1, 8, new Texture("008-brownstone_normal.png"));
+        
+        GameObject box1Object = new GameObject();
+        MeshRenderer box1Renderer = new MeshRenderer(boxMesh, boxMaterial);
+        Sphere aSphere = new Sphere(new Vector3D(0, 3, 0), boxMesh);
+        AABB aAABB = new AABB(new Vector3D(0, 3, 0), new Vector3D(1, 1, 1));
+        //CMB aCMB = new CMB(new Vector3D(0, 3, 0), boxMesh, false);
+        PhysicsMaterial aMaterial = new PhysicsMaterial(false, 1.0f);
+        PhysicsBody box1Physics = new PhysicsBody(10, aAABB, aMaterial, new Vector3D(0, 3, 0),
+                                                    new Vector3D(0.0f, 0.0f, 0.0f), 
+                                                    new Vector3D(0, 0, 0), 
+                                                    new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(0.0f)),
+                                                    new Vector3D(0.0f, 0.0f, 0.0f),
+                                                    new Vector3D(0, 0, 0));
+        PhysicsBodyComponent box1PhysicsComponent = new PhysicsBodyComponent(box1Physics);
+        box1Object.addComponent(box1Renderer);
+        box1Object.addComponent(box1PhysicsComponent);
+        pec.add(box1PhysicsComponent);
+        addObject(box1Object);
 
-        // GameObject cameraObject = new GameObject();
+//        GameObject box2Object = new GameObject();
+//        MeshRenderer box2Renderer = new MeshRenderer(boxMesh, boxMaterial);
+//        Sphere bSphere = new Sphere(new Vector3D(0, 3, 10), boxMesh);
+//        AABB bAABB = new AABB(new Vector3D(0, 3, 10), new Vector3D(1, 1, 1));
+//        CMB bCMB = new CMB(new Vector3D(0, 3, 10), boxMesh, false);
+//        PhysicsMaterial bMaterial = new PhysicsMaterial(false, 1.0f);
+//        PhysicsBody box2Physics = new PhysicsBody(30, bCMB, bMaterial, 
+//                                                    new Vector3D(0, 3, 10),
+//                                                    new Vector3D(0, 0.0f, -0.5f), 
+//                                                    new Vector3D(0, 0, 0), 
+//                                                    new Quaternion(new Vector3D(0, 1, 0), (float) -Math.toRadians(0.0f)),
+//                                                    new Vector3D(0, 0.0f, 0),
+//                                                    new Vector3D(0, 0, 0));
+//        PhysicsBodyComponent box2PhysicsComponent = new PhysicsBodyComponent(box2Physics);
+//        box2Object.addComponent(box2Renderer);
+//        box2Object.addComponent(box2PhysicsComponent);
+//        pec.add(box2PhysicsComponent);
+//        addObject(box2Object);
+        
+        GameObject pointLightObject = new GameObject();
+        PointLight pointLight = new PointLight(new Vector3D(0, 1, 0), 0.01f, new Vector3D(0.0f, 2.0f, 1.5f));
+        pointLightObject.addComponent(pointLight);
+        pointLightObject.getTransform().setPos(0, 0.1f, 0);
+        addObject(pointLightObject);
 
-        // cameraObject.addComponent(mainCamera);
+        GameObject directionalLightObject = new GameObject();
+        DirectionalLight directionalLight = new DirectionalLight(new Vector3D(0.5f, 0.5f, 0.5f), 0.5f);
+        directionalLightObject.addComponent(directionalLight);
+        directionalLightObject.getTransform()
+                .setRot(new Quaternion(new Vector3D(1, 0, 0), (float) -Math.toRadians(45.0)));
+        addObject(directionalLightObject);
 
-        // cameraObject.addChild(spotLightObject0);
+        GameObject textObject = new TextObject("Bottom Text", "AdventurerFont.png", 16, 16);
+        textObject.getTransform().setPos(0, 0, 0);
+        addHudObject(textObject);
 
-        // addObject(cameraObject);
-
-        // spotLightObject0.getTransform().getPos().set(0.4f, -0.5f, 0.1f);
-
-//		addObject(new GameObject().addComponent(new Camera(
-//				
-//				(float) Math.toRadians(70.0f), (float) CoreEngine.getWidth() / (float) CoreEngine.getHeight(), 0.01f, 1000.0f)));
+        GameObject cross = new TextObject(".", "AdventurerFont.png", 16, 16);
+        cross.getTransform().setScale(0.5f, 0.5f, 0.5f);
+        cross.getTransform().setPos(CoreEngine.getCenter().getX(), CoreEngine.getCenter().getY(), 0);
+        addHudObject(cross);
 
     }
-
+    
     public static Level getLevel() {
 
         return level;
