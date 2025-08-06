@@ -44,6 +44,14 @@ public class Face {
         return point.equals(a) || point.equals(b) || point.equals(c);
         
     }
+
+    public boolean convergesWith(Vector3D point, float epsilon){
+
+        float projected = point.dot(n);
+
+        return Math.abs(projected - distToOrigin) < epsilon;
+
+    }
     
     public boolean sharesEdge(Edge edge) {
         

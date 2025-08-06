@@ -61,6 +61,7 @@ import main.engine.audio.AudioEngine;
 import main.engine.physics.PhysicsEngine;
 import main.engine.rendering.RenderingEngine;
 import main.game.TestGame;
+import main.game.TestGame2;
 
 public class CoreEngine {
 
@@ -70,7 +71,7 @@ public class CoreEngine {
 
     private static int height;
 
-    private static double framerate;
+    private static double frameRate;
 
     private static long window;
 
@@ -78,15 +79,11 @@ public class CoreEngine {
 
     private RenderingEngine renderingEngine;
 
-    private PhysicsEngine physicsEngine;
-
     private AudioEngine audioEngine;
 
+    private PhysicsEngine physicsEngine;
+
     private Game game;
-
-    private IntBuffer pWidth; // int*
-
-    private IntBuffer pHeight; // int*
 
     public CoreEngine() {
 
@@ -96,7 +93,7 @@ public class CoreEngine {
 
         height = 720;
 
-        framerate = 60.0;
+        frameRate = 60.0;
 
         title = "Game Engine v0.4.9";
 
@@ -120,7 +117,7 @@ public class CoreEngine {
 
         System.out.println("LWJGL version " + Version.getVersion());
 
-        // Setup an error callback. The default implementation
+        // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -155,9 +152,11 @@ public class CoreEngine {
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
 
-            pWidth = stack.mallocInt(1); // int*
+            // int*
+            IntBuffer pWidth = stack.mallocInt(1); // int*
 
-            pHeight = stack.mallocInt(1); // int*
+            // int*
+            IntBuffer pHeight = stack.mallocInt(1); // int*
 
             // Get the window size passed to glfwCreateWindow
             glfwGetWindowSize(window, pWidth, pHeight);
@@ -166,6 +165,7 @@ public class CoreEngine {
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
             // Center the window
+            assert vidmode != null;
             glfwSetWindowPos(
                     window,
                     (vidmode.width() - pWidth.get(0)) / 2,
@@ -205,7 +205,6 @@ public class CoreEngine {
 
         physicsEngine = new PhysicsEngine();
 
-        //TODO: Move all ALC related code into the audio engine constructor
         /*
          * Initializing OpenAL, creating a device (default if null is specified) and a
          * context which is made current. After create capabilities is called, calls to
@@ -257,7 +256,7 @@ public class CoreEngine {
 
         audioEngine = new AudioEngine();
 
-        game = new TestGame();
+        game = new TestGame2();
 
         game.addPhysicsEngine(physicsEngine);
 
@@ -284,7 +283,7 @@ public class CoreEngine {
 
         double frameCount = 0;
 
-        final double frameTime = 1.0 / framerate;
+        final double frameTime = 1.0 / frameRate;
 
         double unprocessedTime = 0;
 
@@ -354,16 +353,6 @@ public class CoreEngine {
                 }
 
                 if (frameCount >= 1.0d) {
-
-                    // System.out.println("FPS: " + frames);
-
-                    passedTimeString = Double.toString(passedTime);
-
-                    passedTimeString = passedTimeString.substring(0, 5);
-
-                    // System.out.println("Run time: " + passedTimeString + " seconds");
-
-                    // System.out.println("Frame time/delta: " + frameTime);
 
                     frames = 0;
 
@@ -483,9 +472,9 @@ public class CoreEngine {
 
     }
 
-    public static double getFramerate() {
+    public static double getFrameRate() {
 
-        return framerate;
+        return frameRate;
 
     }
 
@@ -503,7 +492,7 @@ public class CoreEngine {
 
     public static Vector2D getCenter() {
 
-        return new Vector2D(getWidth() / 2, getHeight() / 2);
+        return new Vector2D(getWidth() / 2.0f, getHeight() / 2.0f);
 
     }
 

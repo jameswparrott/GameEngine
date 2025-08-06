@@ -8,17 +8,15 @@ public abstract class Boundary {
 
     public enum boundaryType {
 
-        TYPE_PLANE,
-
         TYPE_SPHERE,
 
         TYPE_AABB,
 
-        TYPE_CMB;
+        TYPE_CMB
 
-    };
+    }
 
-    private boundaryType type;
+    private final boundaryType type;
 
     private Vector3D pos;
 
@@ -31,6 +29,12 @@ public abstract class Boundary {
     }
 
     public abstract IntersectData intersect(Boundary boundary);
+
+    public abstract IntersectData intersectWith(Sphere sphere);
+
+    public abstract IntersectData intersectWith(AABB aabb);
+
+    public abstract IntersectData intersectWith(CMB cmb);
 
     public void update(Transform transform) {
 

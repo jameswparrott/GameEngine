@@ -11,7 +11,7 @@ public class PhysicsEngine {
 
     public PhysicsEngine() {
 
-        physicsBodies = new ArrayList<PhysicsBody>();
+        physicsBodies = new ArrayList<>();
 
     }
 
@@ -23,9 +23,9 @@ public class PhysicsEngine {
 
     public void simulate(float delta) {
 
-        for (int i = 0; i < physicsBodies.size(); i++) {
+        for (PhysicsBody physicsBody : physicsBodies) {
 
-            physicsBodies.get(i).integrate(delta);
+            physicsBody.integrate(delta);
 
         }
 
@@ -47,19 +47,17 @@ public class PhysicsEngine {
 
                 if (!a.getMaterial().getPermeable() && !b.getMaterial().getPermeable()) {
 
-                    if (intersectData.getIntersect()) {
+                    if (intersectData.intersect()) {
 
-                        float del = getTimeOfCollision(a, b, intersectData.getDistanceToBoundary());
-                        
+                        System.out.println("Distance to boundary: " + intersectData.penetrationDepth());
+
+                        float del = getTimeOfCollision(a, b, intersectData.penetrationDepth());
+
                         System.out.println("Pos a: " + a.getPos());
-                        
-//                        for (int i = 0; i < a.getBoundary(); i ++) {
-//                            
-//                            
-//                            
-//                        }
-                        
+
                         System.out.println("Pos b: " + b.getPos());
+
+                        System.out.println("Delta: " + del);
 
                         rollBack(a, b, del);
 
@@ -79,7 +77,13 @@ public class PhysicsEngine {
 
     private static float getTimeOfCollision(PhysicsBody a, PhysicsBody b, float distanceToBoundary) {
 
-        return distanceToBoundary / (a.getVelocity().length() + b.getVelocity().length());
+        Vector3D relativeVelocity = b.getVelocity().sub(a.getVelocity());
+
+        Vector3D dir = b.getPos().sub(a.getPos()).normalize();
+
+        float speed = Math.abs(relativeVelocity.dot(dir));
+
+        return distanceToBoundary / speed;
 
     }
 
@@ -132,13 +136,13 @@ public class PhysicsEngine {
 
     }
 
-    public PhysicsBody getBody(int index) {
+    public PhysicsBody getPhysicsBody(int index) {
 
         return physicsBodies.get(index);
 
     }
 
-    public int getNumBodies() {
+    public int getNumPhysicsBodies() {
 
         return physicsBodies.size();
 

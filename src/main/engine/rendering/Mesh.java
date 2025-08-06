@@ -17,7 +17,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import main.engine.core.Util;
 import main.engine.core.Vector3D;
@@ -191,7 +190,7 @@ public class Mesh {
 
             Vector3D v2 = vertices[i2].getPos().sub(vertices[i0].getPos());
 
-            Vector3D normal = v1.cross(v2).getNorm();
+            Vector3D normal = v1.cross(v2).getNormal();
 
             vertices[i0].setNormal(vertices[i0].getNormal().add(normal));
 
@@ -203,7 +202,7 @@ public class Mesh {
 
         for (int i = 0; i < vertices.length; i++) {
 
-            vertices[i].setNormal(vertices[i].getNormal().getNorm());
+            vertices[i].setNormal(vertices[i].getNormal().getNormal());
 
         }
 
@@ -248,7 +247,7 @@ public class Mesh {
 
         for (int i = 0; i < vertices.length; i++) {
 
-            vertices[i].setTangent(vertices[i].getTangent().getNorm());
+            vertices[i].setTangent(vertices[i].getTangent().getNormal());
 
         }
 

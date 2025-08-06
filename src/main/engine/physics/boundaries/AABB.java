@@ -1,14 +1,11 @@
 package main.engine.physics.boundaries;
 
-import main.engine.core.Transform;
 import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 
-public class AABB extends Boundary {
+public class AABB extends Boundary implements Support {
 
-    private Vector3D maxExtend;
-
-    private float dxyz, dxy, dyz, dxz;
+    private final Vector3D maxExtend;
 
     /**
      * Constructs an Axis-Aligned Bounding Box for a physics body to use in
@@ -24,125 +21,69 @@ public class AABB extends Boundary {
 
         this.maxExtend = maxExtend;
 
-        resize(maxExtend);
-
     }
 
-    public void update(Transform transform) {
-
-    }
-
-    private void resize(Vector3D maxExtend) {
-
-        dxyz = maxExtend.length();
-
-        dxy = maxExtend.getXY().length();
-
-        dyz = maxExtend.getYZ().length();
-
-        dxz = maxExtend.getXZ().length();
-
-    }
-
+    @Override
     public IntersectData intersect(Boundary boundary) {
 
-        switch (boundary.getType()) {
+        return boundary.intersectWith(this);
 
-        case TYPE_PLANE:
+    }
+    @Override
+    public IntersectData intersectWith(Sphere sphere) {
 
-            return intersect((Plane) boundary);
+        Vector3D closestPoint = sphere.getPos().clamp(getMin(), getMax());
 
-        case TYPE_SPHERE:
+        Vector3D delta = sphere.getPos().sub(closestPoint);
 
-            return intersect((Sphere) boundary);
+        float distance = delta.length();
 
-        case TYPE_CMB:
+        float penetration = sphere.getRadius() - distance;
 
-            return intersect((CMB) boundary);
-
-        case TYPE_AABB:
-
-            return intersect((AABB) boundary);
-
-        default:
-
-            System.err.println("AABB attempted to intersect with an undefined boundary");
-
-            return new IntersectData(false, 0, 0);
-
-        }
+        return new IntersectData(penetration > 0, sphere.getPos().sub(getPos()).length(), penetration);
 
     }
 
-    public IntersectData intersect(AABB aabb) {
+    @Override
+    public IntersectData intersectWith(AABB aabb) {
 
-        float distanceToCenter = getPos().sub(aabb.getPos()).length();
+        boolean overlapX = getMin().getX() <= aabb.getMax().getX() && getMax().getX() >= aabb.getMin().getX();
+        boolean overlapY = getMin().getY() <= aabb.getMax().getY() && getMax().getY() >= aabb.getMin().getY();
+        boolean overlapZ = getMin().getZ() <= aabb.getMax().getZ() && getMax().getZ() >= aabb.getMin().getZ();
 
-        // Gets maximum component from B_min - A_max and A_min - B_max
-        float minimumDistance = aabb.getMin().sub(getMax()).getMax(getMin().sub(aabb.getMax())).max();
+        boolean overlap = overlapX && overlapY && overlapZ;
 
-        float diffDxyz = distanceToCenter - aabb.dxyz - dxyz;
+        float dx = Math.min(getMax().getX(), aabb.getMax().getX()) - Math.max(getMin().getX(), aabb.getMin().getX());
+        float dy = Math.min(getMax().getY(), aabb.getMax().getY()) - Math.max(getMin().getY(), aabb.getMin().getY());
+        float dz = Math.min(getMax().getZ(), aabb.getMax().getZ()) - Math.max(getMin().getZ(), aabb.getMin().getZ());
 
-        float diffDxy = distanceToCenter - aabb.dxy - dxy;
+        float distanceToBoundary = Math.min(dx, Math.min(dy, dz));
 
-        float diffDyz = distanceToCenter - aabb.dyz - dyz;
-
-        float diffDxz = distanceToCenter - aabb.dxz - dxz;
-
-        float diffDx = distanceToCenter - aabb.getMaxExtend().getX() - getMaxExtend().getX();
-
-        float diffDy = distanceToCenter - aabb.getMaxExtend().getY() - getMaxExtend().getY();
-
-        float diffDz = distanceToCenter - aabb.getMaxExtend().getZ() - getMaxExtend().getZ();
-
-        float distanceToBoundary = Math.min(diffDxyz,
-                Math.min(Math.min(diffDxy, Math.min(diffDyz, diffDxz)), Math.min(diffDx, Math.min(diffDy, diffDz))));
-
-        return new IntersectData(minimumDistance < 0, distanceToCenter, distanceToBoundary);
+        return new IntersectData(overlap, getPos().sub(aabb.getPos()).length(), distanceToBoundary);
 
     }
 
-    public IntersectData intersect(Plane plane) {
+    @Override
+    public IntersectData intersectWith(CMB cmb) {
 
-        float distanceToCenter = 0;
-
-        float distanceToBoundary = 0;
-
-        boolean intersect = false;
-
-        return new IntersectData(intersect, distanceToCenter, distanceToBoundary);
+        return cmb.intersectWith(this);
 
     }
 
-    public IntersectData intersect(Sphere sphere) {
+    @Override
+    public Vector3D support(Vector3D dir) {
 
-        float distanceToCenter = 0;
-
-        float distanceToBoundary = 0;
-
-        boolean intersect = false;
-
-        return new IntersectData(false, 0, 0);
-
-    }
-
-    public IntersectData intersect(CMB cmb) {
-
-        return new IntersectData(false, 0, 0);
+        return new Vector3D(
+                getPos().getX() + (dir.getX() >= 0 ? getMaxExtend().getX() : getMinExtend().getX()),
+                getPos().getY() + (dir.getY() >= 0 ? getMaxExtend().getY() : getMinExtend().getY()),
+                getPos().getZ() + (dir.getZ() >= 0 ? getMaxExtend().getZ() : getMinExtend().getZ())
+        );
 
     }
 
     public Vector3D getMaxExtend() {
 
         return maxExtend;
-
-    }
-
-    public void setMaxExtend(Vector3D maxExtend) {
-
-        this.maxExtend = maxExtend;
-
-        resize(maxExtend);
 
     }
 
@@ -161,30 +102,6 @@ public class AABB extends Boundary {
     public Vector3D getMin() {
 
         return getPos().add(getMinExtend());
-
-    }
-
-    public float getDxyz() {
-
-        return dxyz;
-
-    }
-
-    public float getDxy() {
-
-        return dxy;
-
-    }
-
-    public float getDyz() {
-
-        return dyz;
-
-    }
-
-    public float getDxz() {
-
-        return dxz;
 
     }
 

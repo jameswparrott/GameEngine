@@ -45,7 +45,7 @@ public class IndexedModel {
 
             Vector3D v2 = positions.get(i2).sub(positions.get(i0));
 
-            Vector3D normal = v1.cross(v2).getNorm();
+            Vector3D normal = v1.cross(v2).getNormal();
 
             normals.get(i0).set(normals.get(i0).add(normal));
 
@@ -57,7 +57,7 @@ public class IndexedModel {
 
         for (int i = 0; i < normals.size(); i++) {
 
-            normals.get(i).set(normals.get(i).getNorm());
+            normals.get(i).set(normals.get(i).getNormal());
 
         }
 

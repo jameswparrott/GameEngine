@@ -25,7 +25,9 @@ public class PointLight extends BaseLight {
 
         float c = attenuation.getX() - COLOR_DEPTH * intensity * color.max();
 
-        this.range = (float) (-b + Math.sqrt((b * b) - (4 * a * c))) / (2 * a);
+        this.range = (float) (b + Math.sqrt(Math.abs((b * b) - (4 * a * c)))) / (2 * a);
+
+        System.out.println("Pointlight range: " + range);
 
         setShader(ForwardPoint.getInstance());
 

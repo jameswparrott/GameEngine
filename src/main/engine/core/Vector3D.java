@@ -1,5 +1,9 @@
 package main.engine.core;
 
+import org.lwjgl.system.CallbackI;
+
+import java.util.Vector;
+
 public class Vector3D {
 
     private float x;
@@ -80,7 +84,7 @@ public class Vector3D {
 
     public Vector3D getMax(Vector3D v) {
 
-        return new Vector3D(x > v.getX() ? x : v.getX(), y > v.getY() ? y : v.getY(), z > v.getZ() ? z : v.getZ());
+        return new Vector3D(Math.max(x, v.getX()), Math.max(y, v.getY()), Math.max(z, v.getZ()));
 
     }
 
@@ -92,7 +96,7 @@ public class Vector3D {
 
     public Vector3D getMin(Vector3D v) {
 
-        return new Vector3D(x < v.getX() ? x : v.getX(), y < v.getY() ? y : v.getY(), z < v.getZ() ? z : v.getZ());
+        return new Vector3D(Math.min(x, v.getX()), Math.min(y, v.getY()), Math.min(z, v.getZ()));
 
     }
 
@@ -141,7 +145,7 @@ public class Vector3D {
 
     }
 
-    public Vector3D getNorm() {
+    public Vector3D getNormal() {
 
         float length = length();
 
@@ -226,6 +230,14 @@ public class Vector3D {
     public Vector3D getScaled(float c) {
 
         return new Vector3D(x * c, y * c, z * c);
+
+    }
+
+    public Vector3D clamp(Vector3D min, Vector3D max){
+
+        return new Vector3D(Math.max(min.getX(), Math.min(x, max.getX())),
+                            Math.max(min.getY(), Math.min(y, max.getY())),
+                            Math.max(min.getZ(), Math.min(z, max.getZ())));
 
     }
 
@@ -323,9 +335,17 @@ public class Vector3D {
 
     }
 
-    public boolean equals(Vector3D v) {
+    public boolean epsilonEquals(Vector3D v){
 
-        return (x == v.getX()) && (y == v.getY()) && (z == v.getZ());
+        return epsilonEquals(v, 1e-6f);
+
+    }
+
+    public boolean epsilonEquals(Vector3D v, float epsilon) {
+
+        return Math.abs(x - v.getX()) < epsilon &&
+               Math.abs(y - v.getY()) < epsilon &&
+               Math.abs(z - v.getZ()) < epsilon;
 
     }
 

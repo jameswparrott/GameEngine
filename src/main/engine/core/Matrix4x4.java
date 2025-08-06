@@ -165,11 +165,11 @@ public class Matrix4x4 {
 
     public Matrix4x4 initRotation(Vector3D forward, Vector3D up) {
 
-        Vector3D f = forward.getNorm();
+        Vector3D f = forward.getNormal();
 
-        Vector3D u = up.getNorm();
+        Vector3D u = up.getNormal();
         
-        Vector3D r = forward.cross(up).getNorm();
+        Vector3D r = forward.cross(up).getNormal();
 
         return initRotation(f, u, r);
 

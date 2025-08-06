@@ -4,9 +4,9 @@ import main.engine.core.Vector3D;
 import main.engine.physics.IntersectData;
 import main.engine.rendering.Mesh;
 
-public class Sphere extends Boundary {
+public class Sphere extends Boundary implements Support {
 
-    private float radius;
+    private final float radius;
 
     public Sphere(Vector3D pos, Mesh mesh) {
         
@@ -27,78 +27,16 @@ public class Sphere extends Boundary {
         this.radius = radius;
 
     }
-    
-    private static float getMaxRadius(Mesh mesh) {
-        
-        float result = 0.0f;
-        
-        for (int i = 0; i < mesh.getPositions().size(); i ++) {
-            
-            float dist = mesh.getPositions().get(i).lengthSq();
-            
-            if (dist > result) {
-                
-                result = dist;
-                
-            }
-            
-        }
-        
-        return (float) Math.sqrt(result);
-        
-    }
 
-    public float getRadius() {
-
-        return this.radius;
-
-    }
-
-    public void setRadius(float radius) {
-
-        this.radius = radius;
-
-    }
-
+    @Override
     public IntersectData intersect(Boundary boundary) {
 
-        switch (boundary.getType()) {
-
-        case TYPE_PLANE:
-
-            return intersect((Plane) boundary);
-
-        case TYPE_SPHERE:
-
-            return intersect((Sphere) boundary);
-
-        case TYPE_CMB:
-
-            return intersect((CMB) boundary);
-
-        case TYPE_AABB:
-
-            return intersect((AABB) boundary);
-
-        default:
-
-            System.err.println("Sphere attempted to intersect with an undefined boundary");
-
-            return new IntersectData(false, 0, 0);
-
-        }
+        return boundary.intersectWith(this);
 
     }
 
-    /**
-     * Returns intersect data containing information about the intersection. If the
-     * intersection occurs, the distance between the two centers, and the minimal
-     * distance between the boundaries.
-     * 
-     * @param sphere sphere to test intersection against
-     * @return intersect data
-     */
-    public IntersectData intersect(Sphere sphere) {
+    @Override
+    public IntersectData intersectWith(Sphere sphere) {
 
         float distanceToCenter = getPos().sub(sphere.getPos()).length();
 
@@ -108,45 +46,50 @@ public class Sphere extends Boundary {
 
     }
 
-    /**
-     * Returns intersect data containing information about the intersection. If the
-     * intersection occurs, the distance between the two centers, and the minimal
-     * distance between the boundaries.
-     * 
-     * @param plane plane to test intersection against
-     * @return intersect data
-     */
-    public IntersectData intersect(Plane plane) {
+    @Override
+    public IntersectData intersectWith(AABB aabb) {
 
-        return new IntersectData(false, 0, 0);
+        return aabb.intersectWith(this);
 
     }
 
-    /**
-     * Returns intersect data containing information about the intersection. If the
-     * intersection occurs, the distance between the two centers, and the minimal
-     * distance between the boundaries.
-     * 
-     * @param aabb aabb to test intersection against
-     * @return intersect data
-     */
-    public IntersectData intersect(AABB aabb) {
+    @Override
+    public IntersectData intersectWith(CMB cmb) {
 
-        return new IntersectData(false, 0, 0);
+        return cmb.intersectWith(this);
 
     }
 
-    /**
-     * Returns intersect data containing information about the intersection. If the
-     * intersection occurs, the distance between the two centers, and the minimal
-     * distance between the boundaries.
-     * 
-     * @param cmb cmb to test intersection against
-     * @return intersect data
-     */
-    public IntersectData intersect(CMB cmb) {
+    @Override
+    public Vector3D support(Vector3D dir) {
 
-        return new IntersectData(false, 0, 0);
+        return getPos().add(dir.getNormal().getScaled(radius));
+
+    }
+
+    private static float getMaxRadius(Mesh mesh) {
+
+        float result = 0.0f;
+
+        for (int i = 0; i < mesh.getPositions().size(); i ++) {
+
+            float dist = mesh.getPositions().get(i).lengthSq();
+
+            if (dist > result) {
+
+                result = dist;
+
+            }
+
+        }
+
+        return (float) Math.sqrt(result);
+
+    }
+
+    public float getRadius() {
+
+        return this.radius;
 
     }
 

@@ -17,21 +17,15 @@ public class Edge {
         
     }
     
-    public boolean reverse(Edge edge) {
-        
-        return a.equals(edge.getB()) && b.equals(edge.getA());
-        
-    }
-    
     public boolean shared(Edge edge) {
         
-        return a.equals(edge.getB()) && b.equals(edge.getA());
+        return (a.epsilonEquals(edge.getB()) && b.epsilonEquals(edge.getA())) || (a.epsilonEquals(edge.getA()) && b.epsilonEquals(edge.getB()));
         
     }
     
     public boolean linkedTo(Edge edge) {
         
-        return b.equals(edge.getA());
+        return b.epsilonEquals(edge.getA());
         
     }
     

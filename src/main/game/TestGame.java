@@ -49,7 +49,7 @@ public class TestGame extends Game {
         
         addObject(player);
         
-        level = new Level("level13.png", "wolf3D-64-full.png", 8, player); 
+        level = new Level("level4.png", "wolf3D-64-full.png", 8, player);
         
         addObject(level);
         
