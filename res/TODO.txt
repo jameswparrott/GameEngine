@@ -27,6 +27,10 @@ Game Engine TODOs:
 		+ Basic boundaries 
 		
 		+ GJK collision detection
+
+		- Contact manifolds
+
+		- Impulse based resolution
 	
 		- GJK minimum distance between polytypes (EPA)
 		
@@ -37,6 +41,8 @@ Game Engine TODOs:
 		- Super boundaries for physics objects
 		
 		- SI (Sphere of Influence) calculations for player objects
+
+		- Implement Merging-and-Splitting algorithm for particle simulations
 
 	- Remove all AWT dependencies
 	
@@ -60,7 +66,7 @@ Game Engine TODOs:
 		
 Game TODOs:
 
-	Space Cowboy: (Space Mauraders? Space Pirates? Cowboy Void? BEBOP!)
+	Space Cowboy: (Space Mauraders? Space Pirates? Cowboy BEBOP!)
 	
 		- 3D pixel art
 	
